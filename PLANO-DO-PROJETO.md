@@ -20,13 +20,11 @@ Um app de organização de estudos, vendido por licença de uso, que deixa cada 
 - **Quem compra e quem usa:** o próprio aluno compra a licença e usa o app. Não há pais, escola ou professor acompanhando.
 - **Licença:** vitalícia. Paga uma vez, usa para sempre; não há renovação nem vencimento.
 - **Como a venda e o pagamento acontecem:** pela Hotmart. O app não cobra nada; só recebe o aviso da Hotmart de que a compra foi aprovada.
-- **Frequência:** [AINDA NÃO RESPONDIDO]
-- **Custo:** [AINDA NÃO RESPONDIDO]
-- **Último caso:** [AINDA NÃO RESPONDIDO]
+- **Custo de não resolver:** sem login e sem licença, não há produto para vender.
 
 ## A solução
 
-O app mantém tudo o que a versão atual já faz (abaixo). O que muda na versão nova depende do Problema 1. [AINDA NÃO RESPONDIDO]
+O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para ser vendido: conta com email e senha, dados guardados com segurança fora do navegador (não se perdem ao trocar de aparelho), licença vitalícia liberada e bloqueada sozinha pela Hotmart, e uma tela para você administrar as licenças sem ver os estudos de ninguém. O conteúdo de fábrica (resumos, questões, flashcards) passa a ser um só, igual para todos; o que cada aluno cria ou responde é só dele.
 
 **O que ele NÃO faz (v1), proposta:**
 - Grupos de estudo ou chat entre alunos (a versão atual também não tem)
@@ -128,29 +126,116 @@ Quem fica sem licença ativa não vê nada além da tela de entrada.
 |---|---|---|
 | Claude | construir o sistema | a assinatura que você já tem |
 | React + Vite | a interface | grátis |
-| Supabase | banco, login e arquivos | grátis até crescer |
-| Vercel | colocar no ar | grátis |
+| Supabase | banco, login e o receptor do aviso da Hotmart | grátis para construir e testar; **plano Pro (cerca de US$ 25/mês) antes de vender** — no grátis o projeto "dorme" depois de uma semana sem uso e não tem cópia de segurança automática |
+| Vercel | colocar no ar | grátis para construir; **plano Pro (cerca de US$ 20/mês) antes de vender** — o plano grátis da Vercel é só para uso não comercial |
+| Envio de email (ex.: Resend) | email de confirmação de conta e de "esqueci a senha" | grátis até alguns milhares de emails por mês; o email embutido do Supabase só aguenta poucos envios por hora e não serve para vendas |
+| Hotmart | vender e cobrar | a taxa da Hotmart sobre cada venda |
 | GitHub | guardar o código | grátis |
 
-**Total por mês:** R$ 0 no início
-**O que custaria a alternativa pronta:** [AINDA NÃO RESPONDIDO]
+**Total por mês:** R$ 0 até o lançamento; depois, perto de US$ 45/mês (Supabase Pro + Vercel Pro), mais a taxa da Hotmart por venda. Valores a conferir nos sites no dia da contratação.
+**O que custaria a alternativa pronta:** não se aplica (o app é o produto que você vende).
 
 ## Prazo
 
-- **Quer usar de verdade em:** lançamento (início das vendas) em dezembro de 2026, [AINDA NÃO RESPONDIDO: dia]
-- **Horas por semana disponíveis:** [AINDA NÃO RESPONDIDO]
+- **Quer usar de verdade em:** lançamento (início das vendas) em dezembro de 2026. `[PENDENTE: dia exato]`
+- **Horas por semana disponíveis:** `[PENDENTE]`
+
+### O que entra no lançamento e o que vem logo depois (proposta)
+
+Com até cinco semanas, o lançamento leva o que o aluno usa toda semana e o que faz a venda funcionar. O resto chega como atualização gratuita para quem já comprou (a licença é vitalícia).
+
+**No lançamento (v1):**
+- Login, licença pela Hotmart (liberação e bloqueio automáticos) e a tela Licenças
+- Entrada por série, metas e avisos no topo
+- Quadro (a tela do dia a dia), Cronograma, Banco de resumos, Flashcards, Questões (com caderno de erros) e Foco
+- Conteúdo de fábrica (resumos, questões, flashcards, matérias, semana sugerida) trazido da versão atual
+
+**Logo depois (v1.1):**
+- Simulados (provas anteriores com cartão-resposta e treino com o banco do app)
+- Desempenho (gráficos e os três assuntos que mais precisam de atenção)
+- Espaço para cálculo com caneta (precisa ser testado num tablet de verdade antes)
+- Tela para você editar o conteúdo de fábrica dentro do app (até lá, o conteúdo é atualizado pela construção)
 
 ---
 
 # 2. Insights do Mercado
 
-[AINDA NÃO RESPONDIDO]
+## Benchmark
+
+`[PENDENTE: benchmark não pesquisado]` — nesta conversa não houve busca de concorrentes. Nenhum nome, preço ou funcionalidade de concorrente foi escrito aqui para não inventar. Vale olhar antes de definir o preço da licença na Hotmart.
+
+## Por que ainda vale construir o meu
+
+O app já existe, foi feito para uma aluna real e cobre do 9º ano ao 3º ano com o foco em vestibular mudando por série. A versão nova transforma isso num produto vendável: login, dados que não se perdem e licença paga uma vez.
+
+## Referências de interface
+
+- **Gosta de:** o visual da versão atual, que serve de base (arquivo em `referencia/pauta-de-estudos-v1.html`).
+- **Usa mais em:** computador, tablet (com caneta) e celular. Mobile primeiro.
+- **Cor principal:** #0b6e8a (azul-petróleo da versão atual; no tema escuro, #4cc0de)
+- **Cores de aviso:** atrasado #c4321f, atenção #8a5300 (escurecido de #b9700a em 25/11/2026 para o texto ficar legível: contraste 4,5:1), em dia #1f7a4d
+- **Fontes:** Bricolage Grotesque (títulos) e DM Sans (texto), as mesmas da versão atual
+- **Tema:** claro e escuro, seguindo o aparelho
+- **Logo:** sem logo por enquanto; o nome "Pauta de Estudos" no topo
 
 ---
 
 # 3. Arquitetura
 
-[AINDA NÃO RESPONDIDO]
+## Mapa de telas
+
+```
+Tela de entrada (Entrar / Criar conta / Esqueci a senha)
+├── Sem licença ativa → aviso com o WhatsApp do suporte e botão Sair
+├── Aluno
+│   ├── Primeira entrada: escolher a série
+│   ├── Quadro (início)
+│   ├── Cronograma
+│   ├── Questões
+│   │   ├── Resolver questão
+│   │   └── Caderno de erros
+│   ├── Foco
+│   └── Mais
+│       ├── Banco de resumos
+│       ├── Flashcards (e o jogo em tela cheia)
+│       └── Minha conta (nome, série, metas, sair)
+└── Administradora
+    ├── Licenças (início)
+    └── Minha conta
+```
+
+**Navegação:** celular com barra inferior de 5 itens (Quadro, Cronograma, Questões, Foco, Mais); computador e tablet deitado com menu lateral com todos os itens. As metas e avisos ficam no topo de todas as telas do aluno.
+
+## Processos automáticos
+
+### Aviso da Hotmart (compra aprovada, reembolso, chargeback)
+- **Gatilho:** a Hotmart chama o endereço do app a cada evento de compra do produto Pauta de Estudos.
+- **Passos:** 1. confere o código secreto da Hotmart (hottok); sem ele, recusa. 2. guarda o aviso inteiro no registro de eventos. 3. compra aprovada: cria ou reativa a licença do email do comprador. 4. reembolso, chargeback ou cancelamento: bloqueia a licença daquele email.
+- **Resultado:** a licença fica certa sem você tocar em nada.
+- **Se der errado:** o aviso fica no registro com o erro; a tela Licenças mostra "avisos com erro" para você liberar à mão. A Hotmart tenta reenviar sozinha.
+
+### Primeira entrada do aluno
+- **Gatilho:** o aluno cria a conta com o email da compra.
+- **Passos:** 1. o app cria o perfil dele como aluno. 2. confere se existe licença ativa para aquele email. 3. sem licença: mostra o aviso com o WhatsApp. 4. com licença: pede a série e abre o Quadro.
+
+## Modelagem de dados
+
+O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
+
+- **Contas e venda:** perfis, licenças, avisos da Hotmart.
+- **Conteúdo de fábrica (igual para todos, só a administradora muda):** matérias, resumos, flashcards e questões do app, vestibulares.
+- **Do aluno (só ele vê):** tarefas, cronograma, resumos e questões próprias, resumos lidos, respostas de flashcards e de questões, caderno de erros, sessões de foco.
+
+## A pergunta de um ano
+
+- **Sua, como vendedora:** "quantas licenças vendi por mês, e quantas foram reembolsadas?" → a tabela de licenças guarda data de compra, origem e data de bloqueio desde o primeiro dia.
+- **Do aluno:** "eu melhorei desde que comecei?" → toda resposta de questão e de flashcard é guardada com data, mesmo antes de existir a tela Desempenho. Quando ela chegar (v1.1), já terá histórico.
+
+## Melhorias para a v2
+
+- Simulados, Desempenho, espaço para cálculo e editor de conteúdo — cortados do lançamento pelo prazo (ver lista acima).
+- Aplicativo de loja (Android e iOS) — o app abre no navegador do celular e pode ser fixado na tela inicial.
+- Grupos de estudo — fora do escopo desde a versão atual.
 
 ---
 
@@ -163,8 +248,20 @@ Quem fica sem licença ativa não vê nada além da tela de entrada.
 
 # A conta que vai chegar depois
 
-Nada aqui ainda.
+Coisas que você sabe que precisa, mas não tinha o dado na hora.
+
+- `[PENDENTE: dia exato do lançamento]` — custo: sem ele não dá para dizer se o corte acima é suficiente.
+- `[PENDENTE: horas por semana]` — custo: idem.
+- `[PENDENTE: conferência do conteúdo de fábrica por um professor]` — custo: vender resumos e questões com erro é risco de reputação e de reembolso.
+- `[PENDENTE: termos de uso e política de privacidade]` — custo: o app guarda dados de alunos, muitos menores de idade (LGPD). Precisa existir antes de vender; vale uma conversa com um advogado.
+- `[PENDENTE: produto criado na Hotmart, com o código secreto (hottok) e o endereço do aviso configurados]` — custo: sem isso a liberação automática não funciona; até lá, só a liberação manual.
+- `[PENDENTE: conta de envio de email (ex.: Resend) e domínio próprio]` — custo: sem ela, a confirmação de conta e o "esqueci a senha" travam com poucos alunos.
+- `[PENDENTE: preço da licença]` — custo: não muda o app, mas muda a conta do negócio.
+- `[PENDENTE: benchmark de concorrentes]` — custo: decidir preço sem referência.
 
 # Decidir depois de usar
 
-Nada aqui ainda.
+Coisas que só dá para saber usando. Não é dívida, é calendário.
+
+- `[DESCOBRIR NO USO: o aluno pode estar logado em vários aparelhos ao mesmo tempo?]` — por enquanto ficou: pode (sem limite). Se aparecer compartilhamento de senha, limitar depois.
+- `[DESCOBRIR NO USO: quantos dias uma tarefa concluída fica visível no Quadro]` — por enquanto ficou: 30 dias.
