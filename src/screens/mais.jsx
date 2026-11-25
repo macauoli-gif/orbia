@@ -2,7 +2,7 @@
 import { Icon, PageHeader } from '../components/index.jsx'
 
 const ITENS = [
-  ['resumos', 'Banco de resumos', 'Resumos do app e os seus', 'resumos'],
+  ['resumos', 'Banco de resumos', 'Seus PDFs anotados e resumos digitados', 'resumos'],
   ['flashcards', 'Flashcards', 'Pergunta na frente, resposta no verso', 'flashcards'],
   ['conta', 'Minha conta', 'Nome, série, metas e sair', 'conta'],
 ]

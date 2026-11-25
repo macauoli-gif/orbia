@@ -6,13 +6,15 @@ import * as dados from '../lib/dados.js'
 import { useEstudo } from '../lib/EstudoContext.jsx'
 import {
   CORES, ESPESSURAS, TAMANHO_TEXTO, larguraTraco, normalizarPonto, apagarTracosEm,
-  paginaVazia, paginaTemAlgo, limparTextosVazios, empilhar, desfazer,
+  paginaVazia, paginaTemAlgo, limparTextosVazios, empilhar, desfazer, posicaoNovoTexto, papelDoToque,
 } from '../lib/anotacoes.js'
-import { abrirPdf, desenharPagina, fecharPdf } from '../components/pdf.js'
+import { abrirPdf, desenharPagina, fecharPdf, foiCancelado, densidadeTela } from '../components/pdf.js'
 import { Confirmar, Icon, MateriaChip, avisar } from '../components/index.jsx'
 import { FormPdf } from './resumos.jsx'
 
 const ESPERA_SALVAR_MS = 700
+// Página na largura da tela; no computador largo, até 1200 px (folha maior que isso só cansa a vista).
+const LARGURA_MAXIMA = 1200
 
 const FERRAMENTAS = [
   ['mover', 'Mover', 'Rolar a página sem escrever'],
@@ -56,6 +58,7 @@ export default function EditorPdf({ goto, params }) {
       if (!r || bytes.erro) { setErro(bytes.erro || 'Resumo não encontrado.'); return }
       try {
         aberto = await abrirPdf(bytes.data)
+        if (!vivo) { fecharPdf(aberto); return } // saiu enquanto abria
         const tamanhos = await Promise.all(Array.from({ length: aberto.numPages }, async (_, i) => {
           const vp = (await aberto.getPage(i + 1)).getViewport({ scale: 1 })
           return vp.height / vp.width
@@ -73,13 +76,13 @@ export default function EditorPdf({ goto, params }) {
   // A largura das páginas acompanha a tela.
   useEffect(() => {
     if (!area.current) return
-    const obs = new ResizeObserver(([e]) => setLargura(Math.floor(Math.min(e.contentRect.width, 900))))
+    const obs = new ResizeObserver(([e]) => setLargura(Math.floor(Math.min(e.contentRect.width, LARGURA_MAXIMA))))
     obs.observe(area.current)
     return () => obs.disconnect()
   }, [doc])
 
   // Ao sair do editor, salva o que ainda estiver esperando.
-  useEffect(() => () => { for (const p of [...pendentes.current.keys()]) salvarAgora(p) }, [])
+  useEffect(() => () => salvarPendentes(), [])
 
   function salvarAgora(pagina) {
     clearTimeout(pendentes.current.get(pagina))
@@ -89,6 +92,9 @@ export default function EditorPdf({ goto, params }) {
       if (r.erro) { setSituacao('erro'); avisar('Não conseguimos salvar a anotação. Confira sua internet.', true) }
       else if (pendentes.current.size === 0) setSituacao('salvo')
     })
+  }
+  function salvarPendentes() {
+    for (const p of [...pendentes.current.keys()]) salvarAgora(p)
   }
   function agendarSalvar(pagina) {
     setSituacao('salvando')
@@ -115,7 +121,7 @@ export default function EditorPdf({ goto, params }) {
   }
 
   const marcarCaneta = () => { if (!canetaVista) setCanetaVista(true) }
-  const sair = () => { for (const p of [...pendentes.current.keys()]) salvarAgora(p); goto('resumos') }
+  const sair = () => { salvarPendentes(); goto('resumos') }
 
   if (erro) {
     return (
@@ -208,7 +214,7 @@ export default function EditorPdf({ goto, params }) {
 }
 
 function desenharTracos(canvas, tracos, w, h, atual) {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2.5)
+  const dpr = densidadeTela()
   if (canvas.width !== Math.round(w * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr) }
   const ctx = canvas.getContext('2d')
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -241,7 +247,7 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
   const caixa = useRef(null)
   const telaPdf = useRef(null)
   const tinta = useRef(null)
-  const gesto = useRef(null)       // o que o dedo/caneta está fazendo agora
+  const gesto = useRef(null)       // o gesto em andamento: { id, tipo do ponteiro, ação }
   const [visivel, setVisivel] = useState(false)
   const [falhou, setFalhou] = useState(false)
   const [editandoTexto, setEditandoTexto] = useState(null)
@@ -256,8 +262,12 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
   useEffect(() => {
     if (!visivel) return
     let vivo = true
-    doc.getPage(numero).then((p) => vivo && desenharPagina(p, telaPdf.current, largura)).catch(() => vivo && setFalhou(true))
-    return () => { vivo = false }
+    let tarefa = null
+    doc.getPage(numero)
+      .then((p) => { if (!vivo) return; tarefa = desenharPagina(p, telaPdf.current, largura); return tarefa.promise })
+      .catch((e) => { if (vivo && !foiCancelado(e)) setFalhou(true) })
+    // Tablet girou ou saiu da tela: cancela o desenho em andamento.
+    return () => { vivo = false; tarefa?.cancel() }
   }, [visivel, largura, doc, numero])
 
   useEffect(() => { desenharTracos(tinta.current, anot.tracos, largura, altura) }, [anot.tracos, largura, altura])
@@ -270,21 +280,26 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
 
   function aoDescer(e) {
     if (e.pointerType === 'pen') aoVerCaneta()
-    // Com caneta por perto (ou "Só caneta"), o dedo rola a página em vez de escrever.
-    if (e.pointerType === 'touch' && dedoRola) { gesto.current = { tipo: 'rolar', y: e.clientY }; return }
     if (e.button > 0) return
+    // Quem decide se este toque escreve, rola ou é a palma: lib/anotacoes.js.
+    const papel = papelDoToque({ tipo: e.pointerType, ativo: gesto.current?.ponteiro || null, canetaVista: dedoRola, soCaneta: dedoRola })
+    if (papel === 'ignorar') return
     e.preventDefault()
-    tinta.current.setPointerCapture(e.pointerId)
+    if (papel === 'rolar') { gesto.current = { id: e.pointerId, ponteiro: e.pointerType, tipo: 'rolar', y: e.clientY }; return }
+    if (papel === 'assumir') desenharTracos(tinta.current, anot.tracos, largura, altura) // descarta o traço da palma
+    try { tinta.current.setPointerCapture(e.pointerId) } catch (_) { /* ponteiro já saiu: segue sem captura */ }
     const p = ponto(e)
+    const base = { id: e.pointerId, ponteiro: e.pointerType }
     if (ferramenta === 'caneta') {
-      gesto.current = { tipo: 'caneta', traco: { cor, espessura, pontos: [p] } }
+      gesto.current = { ...base, tipo: 'caneta', traco: { cor, espessura, pontos: [p] } }
       desenharTracos(tinta.current, anot.tracos, largura, altura, gesto.current.traco)
     } else if (ferramenta === 'borracha') {
       // Cópia de trabalho: vários traços apagados no mesmo gesto, sem um "voltar" o outro.
-      gesto.current = { tipo: 'borracha', primeiro: true, tracos: anot.tracos }
+      gesto.current = { ...base, tipo: 'borracha', primeiro: true, tracos: anot.tracos }
       apagar(p)
     } else if (ferramenta === 'texto') {
-      const novo = { id: 't' + Date.now().toString(36), x: Math.min(p[0], 0.85), y: Math.min(p[1], 0.95), texto: '', cor }
+      gesto.current = null
+      const novo = { id: 't' + Date.now().toString(36), ...posicaoNovoTexto(p), texto: '', cor }
       aoMudar({ ...anot, textos: [...anot.textos, novo] })
       setEditandoTexto(novo.id)
     }
@@ -301,9 +316,11 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
 
   function aoMover(e) {
     const g = gesto.current
-    if (!g) return
+    if (!g || g.id !== e.pointerId) return // outro dedo ou a palma: não mexe no gesto
     if (g.tipo === 'rolar') { window.scrollBy(0, g.y - e.clientY); g.y = e.clientY; return }
-    const eventos = e.nativeEvent.getCoalescedEvents?.() || [e.nativeEvent]
+    // Pontos intermediários do movimento (traço mais liso). Alguns aparelhos devolvem a lista vazia.
+    const juntos = e.nativeEvent.getCoalescedEvents?.() || []
+    const eventos = juntos.length ? juntos : [e.nativeEvent]
     if (g.tipo === 'caneta') {
       const antes = g.traco.pontos.length
       for (const ev of eventos) g.traco.pontos.push(ponto(ev))
@@ -314,8 +331,9 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
     }
   }
 
-  function aoSubir() {
+  function aoSubir(e) {
     const g = gesto.current
+    if (!g || g.id !== e.pointerId) return
     gesto.current = null
     if (g?.tipo === 'caneta') aoMudar({ ...anot, tracos: [...anot.tracos, g.traco] })
   }
@@ -344,6 +362,7 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
                 <textarea value={t.texto} autoFocus={editandoTexto === t.id} rows={Math.max(1, t.texto.split('\n').length)}
                   aria-label="Texto da anotação" placeholder="Digite aqui"
                   style={{ width: Math.max(4, Math.min(28, Math.max(...t.texto.split('\n').map((l) => l.length)) + 2)) + 'ch' }}
+                  onFocus={() => { if (editandoTexto !== t.id) aoMudar(anot) }}
                   onChange={(e) => mudarTexto(t.id, e.target.value)}
                   onBlur={() => { setEditandoTexto(null); if (!t.texto.trim()) tirarTexto(t.id) }} />
                 <button className="tirar" aria-label="Apagar esta caixa de texto" onMouseDown={(e) => e.preventDefault()} onClick={() => tirarTexto(t.id)}><Icon nome="fechar" tamanho={14} /></button>

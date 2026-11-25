@@ -259,7 +259,7 @@ Matéria e tarefa (opcionais), tempo de foco (padrão 25 min) e de pausa (padrã
 **Quem acessa:** aluno, ao abrir um resumo em PDF.
 
 **O que aparece**
-Título e matéria no topo, botão Voltar e a situação do salvamento ("Salvando…" / "Salvo"). Barra de ferramentas: Mover (rolar sem escrever), Caneta, Borracha, Texto; três cores (azul-escuro, vermelho, verde) e três espessuras; Desfazer; Limpar página; "Só caneta". As páginas do PDF uma abaixo da outra, na largura da tela, cada uma com o número.
+Título e matéria no topo, botão Voltar e a situação do salvamento ("Salvando…" / "Salvo"). Barra de ferramentas: Mover (rolar sem escrever), Caneta, Borracha, Texto; três cores (azul-escuro, vermelho, verde) e três espessuras; Desfazer; Limpar página; "Só caneta". As páginas do PDF uma abaixo da outra, na largura da tela (no computador, até 1200 px), cada uma com o número.
 
 **Ações**
 - **Caneta:** escreve por cima da página. Com caneta digital, a espessura acompanha a pressão. Quando o app percebe uma caneta, o toque do dedo passa a rolar a página em vez de escrever (ou sempre, com "Só caneta").
@@ -376,7 +376,7 @@ que já existem em referencia/pauta-de-estudos-v1.html.
 - [ ] Quem entra sem licença (ana) ou com licença bloqueada (lucas) vê só a tela Sem licença, com o WhatsApp do suporte.
 - [ ] A administradora vê a tela Licenças e não tem como chegar a nenhuma tela de estudo.
 - [ ] Responder uma questão mostra a correção, a resposta comentada e a explicação de cada alternativa.
-- [ ] Trocar a série muda a semana sugerida, as metas e o que aparece primeiro em resumos e questões.
+- [ ] Trocar a série muda a semana sugerida, as metas e o que aparece primeiro em questões.
 - [ ] Todas as telas funcionam no celular (375 px) sem rolagem horizontal, e no tema escuro.
 - [ ] Cada lista tem estado vazio com texto próprio.
 - [ ] O aluno envia um PDF, escreve por cima com a caneta e com texto, fecha, abre de novo e as anotações continuam lá; o PDF original não muda.

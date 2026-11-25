@@ -13,7 +13,7 @@ function conferir(descricao, real, esperado) {
 }
 const donos = (r) => [...new Set(r.data.map((x) => x.user_id))]
 const como = async (email) => { await d.sair(); await d.entrar(email, 'exemplo123') }
-const TABELAS_DO_ALUNO = ['listarTarefas', 'listarBlocos', 'listarRespostasQuestoes', 'listarCaderno', 'listarSessoesFoco', 'listarResumosLidos', 'listarRespostasFlashcards']
+const TABELAS_DO_ALUNO = ['listarResumos', 'listarTarefas', 'listarBlocos', 'listarRespostasQuestoes', 'listarCaderno', 'listarSessoesFoco', 'listarResumosLidos', 'listarRespostasFlashcards']
 
 await d.recomecarMock()
 

@@ -13,6 +13,7 @@
 // ============================================================
 import { USAR_MOCK, criarMock } from './mockData.js'
 import { licencaAtiva, normalizarEmail } from './licenca.js'
+import { RESUMO_DIGITADO, RESUMO_PDF, camposEditaveis, validarPdf, validarResumo } from './resumos.js'
 
 // v2: resumos só do aluno, com PDF e anotações (25/11/2026). Trocar a chave
 // descarta os dados de exemplo antigos guardados no navegador.
@@ -22,13 +23,16 @@ const CHAVE_SESSAO = 'pauta-mock-sessao'
 // PDFs do mock: no IndexedDB do navegador, que aguenta arquivos grandes
 // (o localStorage não). No banco, isto é o bucket "resumos" do Storage.
 const arquivosLocais = {
+  conexao: null,
   abrir() {
-    return new Promise((ok_, erro) => {
+    if (this.conexao) return this.conexao
+    this.conexao = new Promise((ok_, erro) => {
       const req = indexedDB.open('pauta-mock-arquivos', 1)
       req.onupgradeneeded = () => req.result.createObjectStore('arquivos')
       req.onsuccess = () => ok_(req.result)
-      req.onerror = () => erro(req.error)
+      req.onerror = () => { arquivosLocais.conexao = null; erro(req.error) }
     })
+    return this.conexao
   },
   async operar(modo, fn) {
     const base = await this.abrir()
@@ -56,9 +60,13 @@ function carregar() {
   } catch (_) { /* navegador sem armazenamento: começa do zero */ }
   return criarMock()
 }
+// Devolve false se o navegador recusou (armazenamento cheio ou bloqueado):
+// quem salva avisa a pessoa, em vez de mostrar "Salvo" sem ter salvo.
 function gravar() {
-  try { localStorage.setItem(CHAVE, JSON.stringify(db)) } catch (_) { /* sem armazenamento: fica só na memória */ }
+  if (typeof localStorage === 'undefined') return true // sem navegador (testes): só memória
+  try { localStorage.setItem(CHAVE, JSON.stringify(db)); return true } catch (_) { return false }
 }
+const NAO_COUBE = 'O armazenamento deste navegador está cheio. A mudança vale só até fechar a página.'
 function lerSessao() {
   try { return JSON.parse(localStorage.getItem(CHAVE_SESSAO)) || null } catch (_) { return null }
 }
@@ -109,13 +117,11 @@ function salvarDoAluno(tabela, registro) {
     const i = lista.findIndex((r) => r.id === registro.id && r.user_id === e.usuario.id)
     if (i < 0) return falha('Registro não encontrado.')
     lista[i] = { ...lista[i], ...registro, user_id: e.usuario.id }
-    gravar()
-    return ok(lista[i])
+    return gravar() ? ok(lista[i]) : falha(NAO_COUBE)
   }
   const novo = { ...registro, id: novoId(), user_id: e.usuario.id, created_at: agoraISO() }
   lista.push(novo)
-  gravar()
-  return ok(novo)
+  return gravar() ? ok(novo) : falha(NAO_COUBE)
 }
 function apagarDoAluno(tabela, id) {
   const e = eu()
@@ -248,28 +254,46 @@ export function trocarSemana(blocos) {
 const meuResumo = (id) => doAluno('resumos').find((r) => r.id === id) || null
 
 export const listarResumos = () => ok(doAluno('resumos'))
-// Resumo digitado. O PDF entra por enviarResumoPdf.
+const primeiroErro = (erros) => Object.values(erros)[0] || null
+const materiaExiste = (id) => db.materias.some((m) => m.id === id)
+
+// Criar resumo digitado, ou editar qualquer resumo. O PDF entra por enviarResumoPdf.
 export function salvarResumo(r) {
-  if (!r.id && r.tipo !== 'Digitado') return falha('Use "Enviar PDF" para resumo em PDF.')
-  const { arquivo_path: _a, tipo: _t, ...resto } = r // caminho e tipo não mudam depois de criado
-  return r.id ? salvarDoAluno('resumos', resto) : salvarDoAluno('resumos', { ...resto, tipo: 'Digitado', arquivo_path: null, arquivo_nome: null, paginas: null })
+  if (!r.id) {
+    if (r.tipo && r.tipo !== RESUMO_DIGITADO) return falha('Use "Enviar PDF" para resumo em PDF.')
+    const novo = { titulo: r.titulo?.trim(), materia_id: r.materia_id, texto: r.texto, tipo: RESUMO_DIGITADO, arquivo_path: null, arquivo_nome: null, paginas: null }
+    const erro = primeiroErro(validarResumo(novo)) || (materiaExiste(novo.materia_id) ? null : 'Matéria inválida.')
+    return erro ? falha(erro) : salvarDoAluno('resumos', novo)
+  }
+  const atual = meuResumo(r.id)
+  if (!atual) return falha('Resumo não encontrado.')
+  // Só título, matéria e (no digitado) o texto mudam; tipo, arquivo e páginas, nunca.
+  const mudancas = Object.fromEntries(camposEditaveis(atual.tipo).filter((k) => k in r).map((k) => [k, k === 'titulo' ? r.titulo?.trim() : r[k]]))
+  const erro = primeiroErro(validarResumo({ ...atual, ...mudancas })) || (materiaExiste(mudancas.materia_id ?? atual.materia_id) ? null : 'Matéria inválida.')
+  return erro ? falha(erro) : salvarDoAluno('resumos', { id: r.id, ...mudancas })
 }
-// O arquivo já foi conferido pela tela (lib/anotacoes.js validarPdf + pdf.js abriu).
+// O mesmo que o bucket do Storage vai exigir: só PDF, até 20 MB, do próprio aluno.
 export async function enviarResumoPdf({ arquivo, titulo, materia_id, paginas }) {
   const e = eu()
   if (!e?.licenciado) return falha('Sem permissão.')
+  if (!arquivo) return falha('Escolha um arquivo.')
+  const inicio = new Uint8Array(await arquivo.slice(0, 4).arrayBuffer())
+  const problemaArquivo = validarPdf({ nome: arquivo.name, tamanho: arquivo.size, tipo: arquivo.type }, inicio)
+  if (problemaArquivo) return falha(problemaArquivo)
   const id = novoId()
   const caminho = `${e.usuario.id}/${id}.pdf` // o mesmo caminho do bucket no Storage
+  const novo = { id, user_id: e.usuario.id, tipo: RESUMO_PDF, materia_id, titulo: titulo?.trim(), texto: null, arquivo_path: caminho, arquivo_nome: arquivo.name || null, paginas, created_at: agoraISO() }
+  const erro = primeiroErro(validarResumo(novo)) || (materiaExiste(materia_id) ? null : 'Matéria inválida.')
+  if (erro) return falha(erro)
   try { await arquivosLocais.guardar(caminho, arquivo) } catch (_) { return falha('Não conseguimos guardar o PDF neste navegador.') }
-  const novo = { id, user_id: e.usuario.id, tipo: 'PDF', materia_id, titulo, texto: null, arquivo_path: caminho, arquivo_nome: arquivo.name || null, paginas, created_at: agoraISO() }
   db.resumos.push(novo)
-  gravar()
+  if (!gravar()) { db.resumos.pop(); arquivosLocais.apagar(caminho).catch(() => {}); return falha(NAO_COUBE) }
   return ok(novo)
 }
 // Devolve os bytes do PDF do próprio aluno.
 export async function lerPdfDoResumo(resumoId) {
   const r = meuResumo(resumoId)
-  if (!r || r.tipo !== 'PDF') return falha('Resumo não encontrado.')
+  if (!r || r.tipo !== RESUMO_PDF) return falha('Resumo não encontrado.')
   try {
     if (r.arquivo_path.startsWith('exemplo:')) {
       const resp = await fetch(r.arquivo_path.slice('exemplo:'.length))
@@ -303,7 +327,7 @@ export function listarAnotacoes(resumoId) {
 // Uma linha por página (único por resumo_id + pagina): atualiza se já existe.
 export function salvarAnotacao(resumoId, pagina, { tracos, textos }) {
   const r = meuResumo(resumoId)
-  if (!r || r.tipo !== 'PDF') return falha('Resumo não encontrado.')
+  if (!r || r.tipo !== RESUMO_PDF) return falha('Resumo não encontrado.')
   if (!(pagina >= 1 && pagina <= (r.paginas || Infinity))) return falha('Página inválida.')
   const ja = doAluno('resumo_anotacoes').find((a) => a.resumo_id === resumoId && a.pagina === pagina)
   return salvarDoAluno('resumo_anotacoes', { ...(ja ? { id: ja.id } : {}), resumo_id: resumoId, pagina, tracos, textos, atualizado_em: agoraISO() })

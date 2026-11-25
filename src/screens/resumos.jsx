@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as dados from '../lib/dados.js'
 import { useEstudo } from '../lib/EstudoContext.jsx'
-import { LIMITE_PDF_MB, tituloDoArquivo, validarPdf } from '../lib/anotacoes.js'
+import { LIMITE_PDF_MB, RESUMO_DIGITADO, RESUMO_PDF, filtrarResumos, textoPaginas, textoTamanho, tituloDoArquivo, validarPdf } from '../lib/resumos.js'
 import { abrirPdf, fecharPdf } from '../components/pdf.js'
 import { Campo, Confirmar, ERRO_GENERICO, Estado, Icon, Janela, MateriaChip, PageHeader, avisar } from '../components/index.jsx'
 
@@ -33,11 +33,8 @@ export default function Resumos({ goto }) {
     })
   }, [])
 
-  const termo = busca.trim().toLowerCase()
-  const base = resumos.filter((r) =>
-    (tipo === 'Todos' || (tipo === 'PDF' ? r.tipo === 'PDF' : r.tipo === 'Digitado')) &&
-    (!termo || (r.titulo + ' ' + (r.texto || '') + ' ' + (r.arquivo_nome || '')).toLowerCase().includes(termo)))
-  const lista = base.filter((r) => !materia || r.materia_id === materia).sort((a, b) => b.created_at.localeCompare(a.created_at))
+  const base = filtrarResumos(resumos, { tipo, busca })
+  const lista = filtrarResumos(base, { materia_id: materia })
   const contagem = (id) => base.filter((r) => r.materia_id === id).length
 
   async function alternarLido(r, lido) {
@@ -66,7 +63,7 @@ export default function Resumos({ goto }) {
     setLendoArquivo(false)
   }
 
-  const abrir = (r) => (r.tipo === 'PDF' ? goto('resumo-pdf', { id: r.id }) : setAberto(r))
+  const abrir = (r) => (r.tipo === RESUMO_PDF ? goto('resumo-pdf', { id: r.id }) : setAberto(r))
 
   return (
     <div>
@@ -88,7 +85,7 @@ export default function Resumos({ goto }) {
           <div className="filtros">
             <input className="ipt" type="search" placeholder="Buscar no título e no texto" aria-label="Buscar" value={busca} onChange={(e) => setBusca(e.target.value)} />
             <select className="ipt" aria-label="Tipo" value={tipo} onChange={(e) => setTipo(e.target.value)}>
-              <option>Todos</option><option value="PDF">PDF</option><option value="Digitado">Digitados</option>
+              <option>Todos</option><option value={RESUMO_PDF}>PDF</option><option value={RESUMO_DIGITADO}>Digitados</option>
             </select>
           </div>
           <Estado carregando={carregando} erro={erro} vazio={lista.length === 0}
@@ -98,13 +95,13 @@ export default function Resumos({ goto }) {
                 <div key={r.id} className="item">
                   <div className="linha">
                     <MateriaChip materia={materiaPorId[r.materia_id]} />
-                    <span className={'pill ' + (r.tipo === 'PDF' ? 'info' : 'plain')}>{r.tipo === 'PDF' ? `PDF · ${r.paginas} ${r.paginas === 1 ? 'página' : 'páginas'}` : 'Digitado'}</span>
+                    <span className={'pill ' + (r.tipo === RESUMO_PDF ? 'info' : 'plain')}>{r.tipo === RESUMO_PDF ? `PDF · ${textoPaginas(r.paginas)}` : RESUMO_DIGITADO}</span>
                     {lidos.has(r.id) && <span className="pill ok">lido</span>}
                   </div>
                   <button className="link-btn" style={{ padding: '4px 0', textAlign: 'left', color: 'var(--ink)', fontSize: 16 }} onClick={() => abrir(r)}>{r.titulo}</button>
-                  {r.tipo === 'PDF' ? <p className="trecho">{r.arquivo_nome}</p> : <p className="trecho">{r.texto}</p>}
+                  <p className="trecho">{r.tipo === RESUMO_PDF ? r.arquivo_nome : r.texto}</p>
                   <div className="row">
-                    {r.tipo === 'PDF' && <button className="btn primary" onClick={() => abrir(r)}><Icon nome="lapis" tamanho={18} /> Abrir e anotar</button>}
+                    {r.tipo === RESUMO_PDF && <button className="btn primary" onClick={() => abrir(r)}><Icon nome="lapis" tamanho={18} /> Abrir e anotar</button>}
                     <label className="check"><input type="checkbox" checked={lidos.has(r.id)} onChange={(e) => alternarLido(r, e.target.checked)} /> Lido</label>
                   </div>
                 </div>
@@ -117,7 +114,7 @@ export default function Resumos({ goto }) {
       {aberto && (
         <Janela titulo={aberto.titulo} aoFechar={() => setAberto(null)}>
           <div className="stack">
-            <div className="row"><MateriaChip materia={materiaPorId[aberto.materia_id]} /><span className="pill plain">Digitado</span></div>
+            <div className="row"><MateriaChip materia={materiaPorId[aberto.materia_id]} /><span className="pill plain">{RESUMO_DIGITADO}</span></div>
             <p className="texto-longo">{aberto.texto}</p>
             <div className="janela-acoes">
               <button className="btn danger" onClick={() => { setApagando(aberto); setAberto(null) }}><Icon nome="lixo" /> Apagar</button>
@@ -148,7 +145,7 @@ export default function Resumos({ goto }) {
           goto('resumo-pdf', { id: x.data.id })
         }} />}
 
-      {apagando && <Confirmar texto={`Apagar '${apagando.titulo}'?${apagando.tipo === 'PDF' ? ' O PDF e todas as anotações vão junto.' : ''} Isso não pode ser desfeito.`}
+      {apagando && <Confirmar texto={`Apagar '${apagando.titulo}'?${apagando.tipo === RESUMO_PDF ? ' O PDF e todas as anotações vão junto.' : ''} Isso não pode ser desfeito.`}
         aoCancelar={() => setApagando(null)}
         aoConfirmar={async () => {
           const x = await dados.apagarResumo(apagando.id)
@@ -175,7 +172,7 @@ export function FormPdf({ arquivo, paginas, materias, materiaInicial = '', inici
         if (Object.keys(v).length) return
         setSalvando(true); await aoSalvar({ titulo: titulo.trim(), materia_id: materiaId }); setSalvando(false)
       }}>
-        {arquivo && <p className="small muted">{arquivo.name} · {paginas} {paginas === 1 ? 'página' : 'páginas'} · {arquivo.size < 1024 * 1024 ? Math.max(1, Math.round(arquivo.size / 1024)) + ' KB' : (arquivo.size / 1024 / 1024).toFixed(1).replace('.', ',') + ' MB'} (máximo {LIMITE_PDF_MB} MB)</p>}
+        {arquivo && <p className="small muted">{arquivo.name} · {textoPaginas(paginas)} · {textoTamanho(arquivo.size)} (máximo {LIMITE_PDF_MB} MB)</p>}
         <Campo rotulo="Título" erro={erros.titulo}><input className="ipt" value={titulo} maxLength={120} onChange={(e) => setTitulo(e.target.value)} /></Campo>
         <Campo rotulo="Matéria" erro={erros.materia_id}>
           <select className="ipt" value={materiaId} onChange={(e) => setMateriaId(e.target.value)}><option value="">Escolha…</option>{materias.map((m) => <option key={m.id} value={m.id}>{m.nome}</option>)}</select>
@@ -192,7 +189,7 @@ export function FormPdf({ arquivo, paginas, materias, materiaInicial = '', inici
 
 function FormResumo({ inicial, materias, aoFechar, aoSalvar, aoApagar }) {
   const nomeDe = (id) => materias.find((m) => m.id === id)?.nome || 'esta matéria'
-  const [r, setR] = useState({ titulo: '', texto: inicial.id ? '' : modelo(nomeDe(inicial.materia_id)), tipo: 'Digitado', ...inicial })
+  const [r, setR] = useState({ titulo: '', texto: inicial.id ? '' : modelo(nomeDe(inicial.materia_id)), tipo: RESUMO_DIGITADO, ...inicial })
   const [erros, setErros] = useState({})
   const [salvando, setSalvando] = useState(false)
   const trocarMateria = (id) => {

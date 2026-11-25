@@ -1,10 +1,6 @@
-// Regras dos resumos em PDF e das anotações por cima.
+// Regras das anotações por cima dos resumos em PDF (o arquivo em si: lib/resumos.js).
 // Coordenadas sempre de 0 a 1, relativas à página: a mesma anotação cai no
 // mesmo lugar no celular, no tablet e no computador.
-
-// Idênticos ao CHECK de resumos.tipo.
-export const TIPOS_RESUMO = ['Digitado', 'PDF']
-export const LIMITE_PDF_MB = 20
 
 export const CORES = [
   { nome: 'Azul-escuro', valor: '#1b3a8a' },
@@ -19,21 +15,6 @@ export const ESPESSURAS = [
 ]
 // Tamanho da letra das caixas de texto, como fração da largura da página.
 export const TAMANHO_TEXTO = 0.026
-
-export function validarPdf({ nome, tamanho, tipo }, primeirosBytes) {
-  if (tamanho > LIMITE_PDF_MB * 1024 * 1024) return `O arquivo passa de ${LIMITE_PDF_MB} MB. Escolha um PDF menor.`
-  const pareceTipo = tipo === 'application/pdf' || /\.pdf$/i.test(nome || '')
-  // Todo PDF começa com "%PDF". O nome do arquivo sozinho não prova nada.
-  const assinatura = primeirosBytes ? String.fromCharCode(...primeirosBytes.slice(0, 4)) === '%PDF' : pareceTipo
-  if (!pareceTipo || !assinatura) return 'Este arquivo não é um PDF.'
-  if (tamanho === 0) return 'O arquivo está vazio.'
-  return null
-}
-
-// "Aula 3 - Química.pdf" -> "Aula 3 - Química"
-export function tituloDoArquivo(nome) {
-  return String(nome || '').replace(/\.pdf$/i, '').replace(/[_]+/g, ' ').trim().slice(0, 120) || 'Resumo em PDF'
-}
 
 // Pressão da caneta (0 a 1) engrossa ou afina o traço; mouse e dedo mandam 0,5.
 export function larguraTraco(espessura, pressao, larguraPagina) {
@@ -77,4 +58,24 @@ export function desfazer(historico, anotacoes) {
   if (!historico.length) return { historico, anotacoes, pagina: null }
   const { pagina, antes } = historico[historico.length - 1]
   return { historico: historico.slice(0, -1), anotacoes: { ...anotacoes, [pagina]: antes }, pagina }
+}
+
+// Onde nasce uma caixa de texto: no ponto tocado, sem sair da página.
+export const posicaoNovoTexto = ([x, y]) => ({ x: Math.min(x, 0.85), y: Math.min(y, 0.95) })
+
+// Rejeição da palma: o que fazer com um novo toque na página?
+// Devolve 'escrever' | 'rolar' | 'ignorar' | 'assumir' (a caneta toma o lugar
+// de um traço de dedo em andamento — quase sempre era a palma encostando antes).
+//   tipo: 'pen' | 'touch' | 'mouse'   ativo: tipo do gesto em andamento (ou null)
+export function papelDoToque({ tipo, ativo, canetaVista, soCaneta }) {
+  if (tipo === 'pen') {
+    if (!ativo) return 'escrever'
+    return ativo === 'touch' ? 'assumir' : 'ignorar'
+  }
+  if (tipo === 'touch') {
+    // Com caneta por perto (ou "Só caneta"), o dedo só rola; durante um traço, a palma é ignorada.
+    if (canetaVista || soCaneta) return ativo ? 'ignorar' : 'rolar'
+    return ativo ? 'ignorar' : 'escrever' // segundo dedo ou palma não entram no traço
+  }
+  return ativo ? 'ignorar' : 'escrever'
 }
