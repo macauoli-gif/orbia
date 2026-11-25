@@ -1,0 +1,5 @@
+# Arquivos binários: o git nunca deve mexer nas quebras de linha deles.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.wasm binary
