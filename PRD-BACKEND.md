@@ -221,7 +221,7 @@ Toda tentativa, para o Desempenho da v1.1 já nascer com histórico.
 | dia_semana | integer | sim | CHECK 1 (segunda) a 7 (domingo) |
 | inicio | time | sim | |
 | fim | time | sim | CHECK: fim > inicio |
-| materia_id | uuid | sim | → materias |
+| materia_id | uuid | só no Estudo | → materias; vazia só em bloco que não é `'Estudo'` (ex.: "Prova anterior" do fim de semana, que vem assim da versão atual). Decidido na construção, 25/11/2026. |
 | titulo | text | sim | "o que fazer" |
 | tipo | text | sim | CHECK: `'Estudo'`, `'Prova anterior'`, `'Redação'`, `'Revisão de erros'` |
 | tarefa_id | uuid | não | → tarefas; ao apagar a tarefa, fica vazio |
@@ -250,7 +250,7 @@ A semana sugerida de cada série não é tabela: fica no código, copiada da ver
 Escrito em português. Vira RLS na hora de construir. "Aluno com licença" = logado, email confirmado, e com licença `'Ativa'` para o email dele.
 
 ### `profiles`
-- **Ver:** o próprio perfil. A administradora vê nome e email de todos (para a tela Licenças).
+- **Ver:** só o próprio perfil. A administradora **não** lê o perfil dos alunos (série e metas já são estudo); para a coluna "conta criada" da tela Licenças ela recebe só a lista de emails que já criaram conta (função `emails_com_conta()`). Decidido na construção, 25/11/2026.
 - **Criar:** só o gatilho de cadastro.
 - **Editar:** o próprio nome, série, metas e `so_sugerido`. Ninguém edita `role` nem `email` pelo app.
 - **Apagar:** ninguém pelo app.

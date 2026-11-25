@@ -1,0 +1,17 @@
+{
+  "caderno_erros": ["id", "user_id", "questao_id", "motivo", "anotacao", "revisar", "created_at"],
+  "cronograma_blocos": ["id", "user_id", "dia_semana", "inicio", "fim", "materia_id", "titulo", "tipo", "tarefa_id", "feito_em", "created_at"],
+  "flashcard_respostas": ["id", "user_id", "flashcard_id", "acertou", "created_at"],
+  "flashcards": ["id", "user_id", "materia_id", "frente", "verso", "serie_minima", "created_at"],
+  "hotmart_eventos": ["id", "evento", "transacao", "email", "payload", "processado", "erro", "created_at"],
+  "licencas": ["id", "email", "nome", "status", "origem", "hotmart_transacao", "comprado_em", "bloqueada_em", "motivo", "created_at"],
+  "materias": ["id", "nome", "cor", "ordem", "created_at"],
+  "profiles": ["id", "nome", "email", "role", "serie", "meta_questoes_semana", "meta_foco_min_semana", "meta_provas_mes", "so_sugerido", "created_at"],
+  "questoes": ["id", "user_id", "materia_id", "assunto", "nivel", "instituicao", "ano", "enunciado", "alternativas", "correta", "resposta_comentada", "serie_minima", "created_at"],
+  "respostas_questoes": ["id", "user_id", "questao_id", "escolhida", "acertou", "tempo_seg", "created_at"],
+  "resumo_anotacoes": ["id", "user_id", "resumo_id", "pagina", "tracos", "textos", "atualizado_em", "created_at"],
+  "resumos": ["id", "user_id", "tipo", "materia_id", "titulo", "texto", "arquivo_path", "arquivo_nome", "paginas", "created_at"],
+  "resumos_lidos": ["id", "user_id", "resumo_id", "created_at"],
+  "sessoes_foco": ["id", "user_id", "materia_id", "tarefa_id", "inicio", "minutos", "saidas_aba", "completou", "created_at"],
+  "tarefas": ["id", "user_id", "titulo", "materia_id", "prazo", "prioridade", "status", "observacao", "concluida_em", "created_at"]
+}

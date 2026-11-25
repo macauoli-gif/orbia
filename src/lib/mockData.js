@@ -10,8 +10,9 @@
 import { MATERIAS, FLASHCARDS_APP, QUESTOES_APP } from './fabrica.js'
 import { semanaSugerida, metasSugeridas } from './series.js'
 
-// Vire para false na Etapa 7 (ler do Supabase).
-export const USAR_MOCK = true
+// false = o app usa o banco de verdade (Supabase). true = volta para os dados
+// de mentira, sem internet (útil para mexer em tela sem mexer no banco).
+export const USAR_MOCK = false
 
 const m = (nome) => MATERIAS.find((x) => x.nome === nome).id
 

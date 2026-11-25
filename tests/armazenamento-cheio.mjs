@@ -7,7 +7,7 @@ globalThis.localStorage = {
   setItem: () => { if (cheio) throw new Error('QuotaExceededError') },
   removeItem: () => {},
 }
-const d = await import('../src/lib/dados.js')
+const d = await import('../src/lib/dados-mock.js')
 
 let ok = 0
 let tot = 0

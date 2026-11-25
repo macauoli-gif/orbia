@@ -2,7 +2,7 @@
 // Critério do PRD-BACKEND: "testado, não presumido".
 // Bug corrigido na etapa 6: apagar a tarefa de outro aluno era recusado,
 // mas mesmo assim limpava a ligação nos blocos e sessões dele.
-import * as d from '../src/lib/dados.js'
+import * as d from '../src/lib/dados-mock.js'
 
 let ok = 0
 let tot = 0

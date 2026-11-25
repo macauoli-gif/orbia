@@ -14,8 +14,11 @@ Uma pergunta decide: **"isto continuaria verdade se a tela fosse outra?"**
 - **Não → `src/screens/*.jsx`.** Estado de interface, layout, o que se toca.
   A tela **pede a decisão à lib**; não decide.
 - `src/lib/dados.js` — **única porta do banco.** Nenhuma tela chama o Supabase
-  (nem o mock) direto. Toda função devolve `{ data, erro }`.
-- `src/lib/supabase.js` — a conexão. Só `dados.js` importa.
+  (nem o mock) direto. Toda função devolve `{ data, erro }`. Ela só escolhe o
+  miolo: `dados-supabase.js` (o banco, `USAR_MOCK = false` em `mockData.js`) ou
+  `dados-mock.js` (dados de mentira que imitam a RLS; os testes rodam com ele).
+  **Função nova vai nos DOIS miolos e na porta** — `tests/miolos.mjs` confere.
+- `src/lib/supabase.js` — a conexão. Só `dados-supabase.js` importa.
 
 Três consequências práticas:
 
@@ -55,9 +58,20 @@ abra a tela e olhe.
 **Todo bug corrigido em `src/lib/` nasce com teste junto** (`tests/*.mjs`),
 no mesmo lote. Build e lint não pegam regra errada.
 
+**Depois de QUALQUER migration, regenere `tests/_schema-snapshot.json`** (tabela →
+colunas, tirado do banco real com `information_schema.columns`). O
+`check-schema` e o `colunas-gravadas` comparam o código com esse retrato:
+retrato velho não falha, passa verde mentindo.
+
+**Banco:** projeto Supabase `pauta-de-estudos` (São Paulo), na organização da
+dona do app. Mudança no banco = arquivo novo em `supabase/migrations/` (data no
+nome) + aplicar com a ferramenta do Supabase. O SQL nunca existe só no painel.
+O conteúdo de fábrica é gerado (`node scripts/gerar-seed.mjs fabrica`); não
+edite a migration dele à mão.
+
 ## Antes de subir pro GitHub
 
-Diff que toca em `src/lib/supabase.js`, `src/lib/dados.js`, `src/lib/licenca.js`,
+Diff que toca em `src/lib/supabase.js`, `src/lib/dados*.js`, `src/lib/licenca.js`,
 políticas RLS ou do Storage, migrations, ou no receptor da Hotmart (liberação e bloqueio de
 licença) → rodar a revisão de código (`/code-review` no Claude Code, `/review`
 no Codex) antes de subir. É por caminho, não por julgamento: nesses arquivos o
@@ -76,15 +90,29 @@ pasta dela.
 - **Tabela nova nasce fechada para o app.** Toda tabela precisa de `grant` escrito
   na migration, só para `authenticated` (e `service_role`). Erro "permission denied
   for table (42501)" é GRANT faltando, não RLS. Nunca `grant all`, nunca `to anon`.
-- **O app ainda roda com dados de mentira** (`USAR_MOCK = true` em
-  `src/lib/mockData.js`). O mock imita a RLS dentro de `dados.js`; quando o
-  Supabase entrar, a regra de verdade passa a ser a RLS, e o miolo de
-  `dados.js` é que muda — nenhuma tela.
+- **Quem protege os dados é a RLS do banco, não o app.** As conferências em
+  `dados-supabase.js` só dão mensagem clara antes de o banco recusar. Teste de
+  separação de verdade = no banco, simulando a pessoa (`set local role
+  authenticated` + `request.jwt.claims`), não na tela.
+- **"Aluno com licença" = `tem_licenca()` no banco**: logado, email
+  confirmado, licença `'Ativa'` para o email. Toda regra de estudo usa ela.
+  A administradora não lê `profiles` de aluno; a coluna "conta criada" vem de
+  `emails_com_conta()`. Os 4 avisos do Supabase sobre essas funções serem
+  chamáveis são de propósito (ver a migration de índices).
+- **Contas de teste** (`admin@`, `maria@`, `pedro@`, `ana@`, `lucas@exemplo.com`)
+  existem no banco real, com a senha em `.env.local` (`SENHA_CONTAS_TESTE`, fora
+  do git). `admin@exemplo.com` é administradora: **apagar essas contas antes
+  de vender** (etapa 8), e definir a conta real da dona como `admin` à mão.
+- **O PDF de exemplo da Maria no mock** (`exemplo:/exemplos/...`) não existe no
+  banco: lá, PDF só entra pelo app (Storage), porque o CHECK exige o arquivo
+  no caminho `<user_id>/<resumo_id>.pdf`.
 - **`tarefas.concluida_em` é obrigatório em `'Concluído'` e vazio nos outros.**
   Mudar status sempre por `comStatus()` (`lib/tarefas.js`); senão o banco recusa.
 - **Blocos de "Prova anterior" da semana sugerida não têm matéria**
-  (`materia_id` vazio). A coluna no banco precisa aceitar vazio para os tipos
-  diferentes de `'Estudo'`.
+  (`materia_id` vazio). O banco aceita vazio só em bloco que não é `'Estudo'`
+  (CHECK `cronograma_materia_no_estudo`).
+- **O banco devolve hora como `"14:00:00"`**; `dados-supabase.js` corta para
+  `"14:00"` (`hhmm`). Coluna `time` nova precisa do mesmo corte.
 - **Resumos em PDF: o arquivo original nunca muda.** Anotação (caneta e texto)
   mora em `resumo_anotacoes`, uma linha por página, com coordenadas de 0 a 1
   relativas à página. Não "queime" anotação dentro do PDF.
@@ -93,7 +121,7 @@ pasta dela.
 - **`public/pdfjs/` é gerado** por `scripts/copiar-pdfjs.mjs` (roda sozinho
   antes do dev e do build) a partir da versão instalada. Não edite nem suba
   para o git; se o PDF abrir sem fontes, é essa pasta faltando.
-- **No mock, os PDFs moram no IndexedDB do navegador** (`dados.js`); os de
+- **No mock, os PDFs moram no IndexedDB do navegador** (`dados-mock.js`); os de
   exemplo, em `public/exemplos/`. No banco, é o bucket privado `resumos`,
   caminho `<user_id>/<resumo_id>.pdf`.
 - **A caneta não foi testada num tablet de verdade** (só mouse). Antes de
