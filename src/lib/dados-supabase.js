@@ -64,11 +64,17 @@ export function ouvirSessao(fn) {
 export const entrar = (email, senha) => q(supabase.auth.signInWithPassword({ email: normalizarEmail(email), password: senha }))
 export const sair = () => q(supabase.auth.signOut())
 export async function criarConta({ nome, email, senha }) {
-  return q(supabase.auth.signUp({
+  const r = await q(supabase.auth.signUp({
     email: normalizarEmail(email),
     password: senha,
     options: { data: { nome: nome.trim() }, emailRedirectTo: window.location.origin },
   }))
+  // Com confirmação de email ligada, o Supabase NÃO dá erro para email que já
+  // tem conta: devolve um usuário "de fachada" sem identidades e não manda email.
+  if (!r.erro && r.data?.user && r.data.user.identities?.length === 0) {
+    return falha('Já existe uma conta com este email. Use "Entrar" ou "Esqueci a senha".')
+  }
+  return r
 }
 export const esqueciSenha = (email) => q(supabase.auth.resetPasswordForEmail(normalizarEmail(email), { redirectTo: window.location.origin }))
 export const trocarSenha = (nova) => q(supabase.auth.updateUser({ password: nova }))
@@ -94,7 +100,22 @@ export const salvarPerfil = (mudancas) =>
   q(supabase.from('profiles').update(so(mudancas, PERFIL_EDITAVEL)).eq('id', eu()).select().single())
 
 // ---------- genéricos ----------
-const listar = (tabela, ordem = 'created_at') => q(supabase.from(tabela).select('*').order(ordem, { ascending: true }))
+// O Supabase entrega no máximo 1000 linhas por pedido. Sem paginar, a lista
+// parava calada na linha 1000 (ex.: a 1001ª resposta de questão nunca aparecia
+// nas metas). Aqui pede de 1000 em 1000 até acabar, na ordem pedida.
+const PAGINA = 1000
+// `consulta`: o nome da tabela, ou uma função que monta a consulta com filtro
+// (escrita com supabase.from('tabela') visível, para o check-schema conferir).
+async function listar(consulta, ordem = 'created_at') {
+  const montar = typeof consulta === 'string' ? () => supabase.from(consulta).select('*') : consulta
+  const todas = []
+  for (let de = 0; ; de += PAGINA) {
+    const r = await q(montar().order(ordem, { ascending: true }).order('id').range(de, de + PAGINA - 1))
+    if (r.erro) return r
+    todas.push(...r.data)
+    if (r.data.length < PAGINA) return ok(todas)
+  }
+}
 function salvar(tabela, colunas, registro) {
   const dados = so(registro, colunas)
   if (registro.id) return q(supabase.from(tabela).update(dados).eq('id', registro.id).select().single())
@@ -199,7 +220,8 @@ export async function apagarResumo(id) {
   if (r.data.arquivo_path) await supabase.storage.from(PASTA_PDFS).remove([r.data.arquivo_path])
   return apagou
 }
-export const listarAnotacoes = (resumoId) => q(supabase.from('resumo_anotacoes').select('*').eq('resumo_id', resumoId))
+export const listarAnotacoes = (resumoId) =>
+  listar(() => supabase.from('resumo_anotacoes').select('*').eq('resumo_id', resumoId), 'pagina')
 // Uma linha por página (único por resumo_id + pagina): grava por cima se já existe.
 export const salvarAnotacao = (resumoId, pagina, { tracos, textos }) =>
   q(supabase.from('resumo_anotacoes')
