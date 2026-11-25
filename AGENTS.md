@@ -102,7 +102,8 @@ pasta dela.
 - **Contas de teste** (`admin@`, `maria@`, `pedro@`, `ana@`, `lucas@exemplo.com`)
   existem no banco real, com a senha em `.env.local` (`SENHA_CONTAS_TESTE`, fora
   do git). `admin@exemplo.com` é administradora: **apagar essas contas antes
-  de vender** (etapa 8), e definir a conta real da dona como `admin` à mão.
+  de vender** com `supabase/limpar-dados-de-exemplo.sql` (instruções dentro;
+  a trava recusa enquanto não houver administradora de verdade).
 - **O PDF de exemplo da Maria no mock** (`exemplo:/exemplos/...`) não existe no
   banco: lá, PDF só entra pelo app (Storage), porque o CHECK exige o arquivo
   no caminho `<user_id>/<resumo_id>.pdf`.

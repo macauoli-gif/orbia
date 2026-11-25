@@ -260,6 +260,7 @@ Coisas que você sabe que precisa, mas não tinha o dado na hora.
 - `[PENDENTE: termos de uso e política de privacidade]` — custo: o app guarda dados de alunos, muitos menores de idade (LGPD). Precisa existir antes de vender; vale uma conversa com um advogado.
 - `[PENDENTE: produto criado na Hotmart, com o código secreto (hottok) e o endereço do aviso configurados]` — custo: sem isso a liberação automática não funciona; até lá, só a liberação manual.
 - `[PENDENTE: conta de envio de email (ex.: Resend) e domínio próprio]` — custo: sem ela, a confirmação de conta e o "esqueci a senha" travam com poucos alunos.
+- `[PENDENTE: apagar os dados de exemplo antes de vender]` — decidido em 25/11/2026 manter por enquanto (Maria, Pedro, Ana, Lucas e a administradora de teste, todos @exemplo.com). Antes de vender: você cria a sua conta no app, ela vira administradora, e roda-se `supabase/limpar-dados-de-exemplo.sql` (a trava recusa se você ainda não for administradora). Custo de esquecer: uma conta de administradora de teste com acesso às licenças reais.
 - `[PENDENTE: preço da licença]` — custo: não muda o app, mas muda a conta do negócio.
 - `[PENDENTE: benchmark de concorrentes]` — custo: decidir preço sem referência.
 
