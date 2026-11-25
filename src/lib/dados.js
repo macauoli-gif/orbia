@@ -51,7 +51,7 @@ function eu() {
   const usuario = db.usuarios.find((u) => u.id === sessao.id)
   const perfil = db.profiles.find((p) => p.id === sessao.id)
   if (!usuario || !perfil) return null
-  const licenca = db.licencas.find((l) => l.email === perfil.email) || null
+  const licenca = db.licencas.find((l) => normalizarEmail(l.email) === normalizarEmail(perfil.email)) || null
   return { usuario, perfil, licenca, licenciado: perfil.role === 'aluno' && licencaAtiva(licenca, usuario.confirmado) }
 }
 const ehAdmin = () => eu()?.perfil.role === 'admin'
@@ -70,6 +70,8 @@ function fabricaEMeus(tabela) {
   if (!e.licenciado) return []
   return db[tabela].filter((r) => r.user_id == null || r.user_id === e.usuario.id)
 }
+// O aluno só responde, lê ou anota o que ele pode ver.
+const podeVer = (tabela, id) => fabricaEMeus(tabela).some((r) => r.id === id)
 
 function salvarDoAluno(tabela, registro) {
   const e = eu()
@@ -139,6 +141,15 @@ export function trocarSenha(nova) {
   if (!nova || nova.length < 8) return falha('A senha precisa ter pelo menos 8 caracteres.')
   return ok(null)
 }
+// Só para o mock: as pessoas de exemplo da tela de entrada (vazio quando o banco estiver ligado).
+export function pessoasDeExemplo() {
+  if (!USAR_MOCK) return []
+  return db.profiles.map((p) => {
+    const l = db.licencas.find((x) => normalizarEmail(x.email) === normalizarEmail(p.email))
+    const situacao = p.role === 'admin' ? '' : !l ? ' (sem licença)' : l.status !== 'Ativa' ? ' (bloqueada)' : p.serie ? ` (${p.serie})` : ''
+    return { email: p.email, rotulo: p.nome + situacao }
+  })
+}
 // Só para o mock: apaga as mudanças e volta aos dados de exemplo.
 export function recomecarMock() {
   db = criarMock()
@@ -173,11 +184,19 @@ export function listarMaterias() {
 
 // ================= Tarefas =================
 export const listarTarefas = () => ok(doAluno('tarefas'))
-export const salvarTarefa = (t) => salvarDoAluno('tarefas', t)
-export function apagarTarefa(id) {
-  // No banco: on delete set null em cronograma_blocos.tarefa_id e sessoes_foco.tarefa_id.
-  const r = apagarDoAluno('tarefas', id)
-  for (const tab of ['cronograma_blocos', 'sessoes_foco']) db[tab].forEach((x) => { if (x.tarefa_id === id) x.tarefa_id = null })
+export function salvarTarefa(t) {
+  // O mesmo CHECK que o banco vai ter: Concluído exige a data, os outros a recusam.
+  if ((t.status === 'Concluído') !== !!t.concluida_em) return falha('Situação e data de conclusão não combinam.')
+  return salvarDoAluno('tarefas', t)
+}
+export async function apagarTarefa(id) {
+  const r = await apagarDoAluno('tarefas', id)
+  if (r.erro) return r
+  // No banco: on delete set null. Só nas linhas do próprio aluno.
+  const dono = eu().usuario.id
+  for (const tab of ['cronograma_blocos', 'sessoes_foco']) {
+    db[tab].forEach((x) => { if (x.user_id === dono && x.tarefa_id === id) x.tarefa_id = null })
+  }
   gravar()
   return r
 }
@@ -203,6 +222,7 @@ export const listarResumosLidos = () => ok(doAluno('resumos_lidos'))
 export function marcarResumoLido(resumoId, lido) {
   const e = eu()
   if (!e?.licenciado) return falha('Sem permissão.')
+  if (!podeVer('resumos', resumoId)) return falha('Resumo não encontrado.')
   const ja = db.resumos_lidos.find((r) => r.user_id === e.usuario.id && r.resumo_id === resumoId)
   if (lido && !ja) return salvarDoAluno('resumos_lidos', { resumo_id: resumoId })
   if (!lido && ja) return apagarDoAluno('resumos_lidos', ja.id)
@@ -214,20 +234,22 @@ export const listarFlashcards = () => ok(fabricaEMeus('flashcards'))
 export const salvarFlashcard = (f) => salvarDoAluno('flashcards', f)
 export const apagarFlashcard = (id) => apagarDoAluno('flashcards', id)
 export const listarRespostasFlashcards = () => ok(doAluno('flashcard_respostas'))
-export const registrarRespostaFlashcard = (flashcard_id, acertou) => salvarDoAluno('flashcard_respostas', { flashcard_id, acertou })
+export const registrarRespostaFlashcard = (flashcard_id, acertou) =>
+  podeVer('flashcards', flashcard_id) ? salvarDoAluno('flashcard_respostas', { flashcard_id, acertou }) : falha('Flashcard não encontrado.')
 
 // ================= Questões =================
 export const listarQuestoes = () => ok(fabricaEMeus('questoes'))
 export const salvarQuestao = (q) => salvarDoAluno('questoes', q)
 export const listarRespostasQuestoes = () => ok(doAluno('respostas_questoes'))
 export const registrarRespostaQuestao = ({ questao_id, escolhida, acertou, tempo_seg }) =>
-  salvarDoAluno('respostas_questoes', { questao_id, escolhida, acertou, tempo_seg })
+  podeVer('questoes', questao_id) ? salvarDoAluno('respostas_questoes', { questao_id, escolhida, acertou, tempo_seg }) : falha('Questão não encontrada.')
 
 export const listarCaderno = () => ok(doAluno('caderno_erros'))
 // Uma linha por questão (único por user_id + questao_id): atualiza se já existe.
 export function anotarNoCaderno({ questao_id, motivo, anotacao, revisar = true }) {
   const e = eu()
   if (!e?.licenciado) return falha('Sem permissão.')
+  if (!podeVer('questoes', questao_id)) return falha('Questão não encontrada.')
   const ja = db.caderno_erros.find((c) => c.user_id === e.usuario.id && c.questao_id === questao_id)
   return salvarDoAluno('caderno_erros', { ...(ja || {}), questao_id, motivo: motivo ?? ja?.motivo ?? null, anotacao: anotacao ?? ja?.anotacao ?? '', revisar })
 }
@@ -240,14 +262,14 @@ export const registrarSessaoFoco = (s) => salvarDoAluno('sessoes_foco', s)
 // ================= Administradora =================
 export function listarLicencas() {
   if (!ehAdmin()) return ok([])
-  const comConta = new Set(db.usuarios.map((u) => u.email))
-  return ok(db.licencas.map((l) => ({ ...l, conta_criada: comConta.has(l.email) })))
+  const comConta = new Set(db.usuarios.map((u) => normalizarEmail(u.email)))
+  return ok(db.licencas.map((l) => ({ ...l, conta_criada: comConta.has(normalizarEmail(l.email)) })))
 }
 export function liberarEmail({ email, nome, motivo }) {
   if (!ehAdmin()) return falha('Sem permissão.')
   const e = normalizarEmail(email)
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return falha('Email inválido.')
-  const ja = db.licencas.find((l) => l.email === e)
+  const ja = db.licencas.find((l) => normalizarEmail(l.email) === e)
   if (ja) {
     if (ja.status === 'Ativa') return falha('Este email já tem licença ativa.')
     Object.assign(ja, { status: 'Ativa', bloqueada_em: null, motivo: motivo || ja.motivo })

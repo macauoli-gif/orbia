@@ -1,7 +1,6 @@
 // Entrar · Criar conta · Esqueci a senha
 import { useState } from 'react'
 import * as dados from '../lib/dados.js'
-import { USAR_MOCK, MOCK_USUARIOS } from '../lib/mockData.js'
 import { Campo } from '../components/index.jsx'
 
 export default function Login() {
@@ -86,7 +85,7 @@ export default function Login() {
           {modo === 'criar' && <p className="small muted">Ao criar a conta você aceita os termos de uso e a política de privacidade (textos em preparação).</p>}
         </form>
 
-        {USAR_MOCK && <EntrarComoExemplo />}
+        <EntrarComoExemplo />
       </div>
     </div>
   )
@@ -94,13 +93,14 @@ export default function Login() {
 
 // Só enquanto o app usa dados de mentira: entra direto como cada pessoa de exemplo.
 function EntrarComoExemplo() {
-  const nomes = { 'admin@exemplo.com': 'Administradora', 'maria@exemplo.com': 'Maria Claudia (2º EM)', 'pedro@exemplo.com': 'Pedro (9º EF)', 'ana@exemplo.com': 'Ana (sem licença)', 'lucas@exemplo.com': 'Lucas (bloqueada)' }
+  const pessoas = dados.pessoasDeExemplo()
+  if (!pessoas.length) return null
   return (
     <div className="demo stack">
       <p className="small muted"><b>Modo de teste.</b> Ainda não há banco: entre como uma das pessoas de exemplo.</p>
       <div className="row">
-        {MOCK_USUARIOS.map((u) => (
-          <button key={u.id} type="button" className="btn" onClick={() => dados.entrar(u.email, 'exemplo123')}>{nomes[u.email] || u.email}</button>
+        {pessoas.map((u) => (
+          <button key={u.email} type="button" className="btn" onClick={() => dados.entrar(u.email, 'exemplo123')}>{u.rotulo}</button>
         ))}
       </div>
       <button type="button" className="link-btn" onClick={() => dados.recomecarMock()}>Voltar os dados de exemplo ao início</button>

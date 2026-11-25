@@ -5,6 +5,10 @@
 export const WHATSAPP_SUPORTE = '(71) 90078-6252'
 export const LINK_WHATSAPP = 'https://wa.me/5571900786252'
 
+// Idênticos ao CHECK de licencas.status e licencas.origem.
+export const STATUS_LICENCA = ['Ativa', 'Bloqueada']
+export const ORIGENS_LICENCA = ['Hotmart', 'Manual']
+
 export function licencaAtiva(licenca, emailConfirmado) {
   return !!(emailConfirmado && licenca && licenca.status === 'Ativa')
 }
@@ -15,7 +19,7 @@ export function telaDeEntrada({ perfil, licenca, emailConfirmado }) {
   if (perfil.role === 'admin') return 'admin'
   if (!emailConfirmado) return 'nao-confirmado'
   if (!licenca) return 'sem-licenca'
-  if (licenca.status !== 'Ativa') return 'licenca-bloqueada'
+  if (!licencaAtiva(licenca, emailConfirmado)) return 'licenca-bloqueada'
   if (!perfil.serie) return 'serie'
   return 'aluno'
 }

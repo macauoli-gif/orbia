@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import * as dados from '../lib/dados.js'
 import { resumoLicencas, filtrarLicencas } from '../lib/admin.js'
 import { dataCurta } from '../lib/datas.js'
+import { STATUS_LICENCA, ORIGENS_LICENCA } from '../lib/licenca.js'
 import { Campo, Confirmar, ERRO_GENERICO, Estado, Icon, Janela, PageHeader, avisar } from '../components/index.jsx'
 
 export default function Licencas() {
@@ -45,10 +46,10 @@ export default function Licencas() {
       <div className="filtros">
         <input className="ipt" type="search" placeholder="Buscar por nome ou email" aria-label="Buscar" value={f.busca} onChange={(e) => setF({ ...f, busca: e.target.value })} />
         <select className="ipt" aria-label="Situação" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })}>
-          <option value="">Todas as situações</option><option>Ativa</option><option>Bloqueada</option>
+          <option value="">Todas as situações</option>{STATUS_LICENCA.map((x) => <option key={x}>{x}</option>)}
         </select>
         <select className="ipt" aria-label="Origem" value={f.origem} onChange={(e) => setF({ ...f, origem: e.target.value })}>
-          <option value="">Todas as origens</option><option>Hotmart</option><option>Manual</option>
+          <option value="">Todas as origens</option>{ORIGENS_LICENCA.map((x) => <option key={x}>{x}</option>)}
         </select>
       </div>
 

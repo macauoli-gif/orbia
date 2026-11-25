@@ -6,7 +6,8 @@ import { NIVEIS, LETRAS, SITUACOES, filtrarQuestoes, ultimaResposta, validarQues
 import { Campo, ERRO_GENERICO, Estado, Icon, Janela, MateriaChip, PageHeader, avisar } from '../components/index.jsx'
 
 // Guardado fora da tela para os filtros continuarem ao voltar de uma questão.
-let filtroGuardado = null
+// Preso ao aluno: quem entra depois na mesma aba começa com os filtros limpos.
+let filtroGuardado = { dono: null, f: null }
 
 export default function Questoes({ goto }) {
   const { perfil, materias, materiaPorId, respostas } = useEstudo()
@@ -14,7 +15,7 @@ export default function Questoes({ goto }) {
   const [caderno, setCaderno] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
-  const [f, setF] = useState(filtroGuardado || { materia_id: '', assunto: '', nivel: '', instituicao: '', ano: '', situacao: 'Todas', soSugerido: perfil.so_sugerido !== false })
+  const [f, setF] = useState((filtroGuardado.dono === perfil.id && filtroGuardado.f) || { materia_id: '', assunto: '', nivel: '', instituicao: '', ano: '', situacao: 'Todas', soSugerido: perfil.so_sugerido !== false })
   const [cadastrando, setCadastrando] = useState(false)
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function Questoes({ goto }) {
       setCarregando(false)
     })
   }, [])
-  useEffect(() => { filtroGuardado = f }, [f])
+  useEffect(() => { filtroGuardado = { dono: perfil.id, f } }, [f])
 
   const set = (k) => (e) => setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value, ...(k === 'materia_id' ? { assunto: '' } : {}) })
   const doFiltroMateria = questoes.filter((q) => !f.materia_id || q.materia_id === f.materia_id)
