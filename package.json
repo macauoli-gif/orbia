@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "predev": "node scripts/copiar-pdfjs.mjs",
     "build": "vite build",
+    "prebuild": "node scripts/copiar-pdfjs.mjs",
     "lint": "eslint src",
     "preview": "vite preview",
     "check": "npm run build && npm run lint && node tests/run.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "latest",
+    "pdfjs-dist": "^6.5.438",
     "react": "latest",
     "react-dom": "latest"
   },

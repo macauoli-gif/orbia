@@ -7,7 +7,7 @@
 // que um não vê nada do outro. A camada de dados (dados.js) aplica
 // no mock as mesmas regras que a RLS vai aplicar no banco.
 // ============================================================
-import { MATERIAS, RESUMOS_APP, FLASHCARDS_APP, QUESTOES_APP } from './fabrica.js'
+import { MATERIAS, FLASHCARDS_APP, QUESTOES_APP } from './fabrica.js'
 import { semanaSugerida, metasSugeridas } from './series.js'
 
 // Vire para false na Etapa 7 (ler do Supabase).
@@ -70,13 +70,20 @@ export function criarMock() {
       { id: 'e-1', evento: 'PURCHASE_APPROVED', transacao: 'HP0000004', email: 'joao@exemplo', payload: {}, processado: false, erro: 'Email do comprador inválido', created_at: '2026-11-23T14:00:00-03:00' },
     ],
     materias: MATERIAS,
+    // Resumos são só do aluno (sem resumos do app desde 25/11/2026).
     resumos: [
-      ...RESUMOS_APP,
-      { id: 'r-m1', user_id: 'u-maria', materia_id: m('Química'), titulo: 'Ligações químicas (meu resumo)', texto: 'Ligação iônica: transferência de elétrons entre metal e ametal.\nLigação covalente: compartilhamento de pares de elétrons entre ametais.\nLigação metálica: cátions em um mar de elétrons livres.', serie_minima: null, created_at: '2026-11-22T10:00:00-03:00' },
-      { id: 'r-p1', user_id: 'u-pedro', materia_id: m('Geografia'), titulo: 'Biomas (anotações do Pedro)', texto: 'Amazônia, Cerrado, Mata Atlântica, Caatinga, Pampa e Pantanal.', serie_minima: null, created_at: '2026-11-21T10:00:00-03:00' },
+      { id: 'r-m1', user_id: 'u-maria', tipo: 'Digitado', materia_id: m('Química'), titulo: 'Ligações químicas (digitado)', texto: 'Ligação iônica: transferência de elétrons entre metal e ametal.\nLigação covalente: compartilhamento de pares de elétrons entre ametais.\nLigação metálica: cátions em um mar de elétrons livres.', arquivo_path: null, arquivo_nome: null, paginas: null, created_at: '2026-11-22T10:00:00-03:00' },
+      // O PDF deste exemplo mora em public/exemplos/ (no banco, seria o Storage).
+      { id: 'r-m2', user_id: 'u-maria', tipo: 'PDF', materia_id: m('Química'), titulo: 'Ligações químicas e tabela periódica', texto: null, arquivo_path: 'exemplo:/exemplos/resumo-ligacoes-quimicas.pdf', arquivo_nome: 'resumo-ligacoes-quimicas.pdf', paginas: 2, created_at: '2026-11-23T10:00:00-03:00' },
+      { id: 'r-p1', user_id: 'u-pedro', tipo: 'Digitado', materia_id: m('Geografia'), titulo: 'Biomas (anotações do Pedro)', texto: 'Amazônia, Cerrado, Mata Atlântica, Caatinga, Pampa e Pantanal.', arquivo_path: null, arquivo_nome: null, paginas: null, created_at: '2026-11-21T10:00:00-03:00' },
+    ],
+    resumo_anotacoes: [
+      { id: 'ra-1', user_id: 'u-maria', resumo_id: 'r-m2', pagina: 1, atualizado_em: '2026-11-23T10:05:00-03:00', created_at: '2026-11-23T10:05:00-03:00',
+        tracos: [{ cor: '#c4321f', espessura: 0.005, pontos: [[0.09, 0.335, 0.5], [0.3, 0.338, 0.5], [0.52, 0.336, 0.5]] }],
+        textos: [{ id: 'tx-1', x: 0.6, y: 0.27, texto: 'cai na prova!', cor: '#c4321f' }] },
     ],
     resumos_lidos: [
-      { id: 'rl-1', user_id: 'u-maria', resumo_id: 'b-bio-1', created_at: '2026-11-17T10:00:00-03:00' },
+      { id: 'rl-1', user_id: 'u-maria', resumo_id: 'r-m1', created_at: '2026-11-22T11:00:00-03:00' },
     ],
     flashcards: [
       ...FLASHCARDS_APP,

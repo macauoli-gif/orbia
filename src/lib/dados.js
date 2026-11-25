@@ -14,8 +14,36 @@
 import { USAR_MOCK, criarMock } from './mockData.js'
 import { licencaAtiva, normalizarEmail } from './licenca.js'
 
-const CHAVE = 'pauta-mock-v1'
+// v2: resumos só do aluno, com PDF e anotações (25/11/2026). Trocar a chave
+// descarta os dados de exemplo antigos guardados no navegador.
+const CHAVE = 'pauta-mock-v2'
 const CHAVE_SESSAO = 'pauta-mock-sessao'
+
+// PDFs do mock: no IndexedDB do navegador, que aguenta arquivos grandes
+// (o localStorage não). No banco, isto é o bucket "resumos" do Storage.
+const arquivosLocais = {
+  abrir() {
+    return new Promise((ok_, erro) => {
+      const req = indexedDB.open('pauta-mock-arquivos', 1)
+      req.onupgradeneeded = () => req.result.createObjectStore('arquivos')
+      req.onsuccess = () => ok_(req.result)
+      req.onerror = () => erro(req.error)
+    })
+  },
+  async operar(modo, fn) {
+    const base = await this.abrir()
+    return new Promise((ok_, erro) => {
+      const tx = base.transaction('arquivos', modo)
+      const req = fn(tx.objectStore('arquivos'))
+      tx.oncomplete = () => ok_(req.result)
+      tx.onerror = () => erro(tx.error)
+    })
+  },
+  guardar: (caminho, blob) => arquivosLocais.operar('readwrite', (s) => s.put(blob, caminho)),
+  ler: (caminho) => arquivosLocais.operar('readonly', (s) => s.get(caminho)),
+  apagar: (caminho) => arquivosLocais.operar('readwrite', (s) => s.delete(caminho)),
+  limpar: () => arquivosLocais.operar('readwrite', (s) => s.clear()),
+}
 
 let db = carregar()
 let sessao = lerSessao()
@@ -152,6 +180,7 @@ export function pessoasDeExemplo() {
 }
 // Só para o mock: apaga as mudanças e volta aos dados de exemplo.
 export function recomecarMock() {
+  if (typeof indexedDB !== 'undefined') arquivosLocais.limpar().catch(() => {})
   db = criarMock()
   gravar()
   gravarSessao(null)
@@ -215,14 +244,76 @@ export function trocarSemana(blocos) {
 }
 
 // ================= Resumos =================
-export const listarResumos = () => ok(fabricaEMeus('resumos'))
-export const salvarResumo = (r) => salvarDoAluno('resumos', r)
-export const apagarResumo = (id) => apagarDoAluno('resumos', id)
+// Só do aluno: não há resumos do app (decidido em 25/11/2026).
+const meuResumo = (id) => doAluno('resumos').find((r) => r.id === id) || null
+
+export const listarResumos = () => ok(doAluno('resumos'))
+// Resumo digitado. O PDF entra por enviarResumoPdf.
+export function salvarResumo(r) {
+  if (!r.id && r.tipo !== 'Digitado') return falha('Use "Enviar PDF" para resumo em PDF.')
+  const { arquivo_path: _a, tipo: _t, ...resto } = r // caminho e tipo não mudam depois de criado
+  return r.id ? salvarDoAluno('resumos', resto) : salvarDoAluno('resumos', { ...resto, tipo: 'Digitado', arquivo_path: null, arquivo_nome: null, paginas: null })
+}
+// O arquivo já foi conferido pela tela (lib/anotacoes.js validarPdf + pdf.js abriu).
+export async function enviarResumoPdf({ arquivo, titulo, materia_id, paginas }) {
+  const e = eu()
+  if (!e?.licenciado) return falha('Sem permissão.')
+  const id = novoId()
+  const caminho = `${e.usuario.id}/${id}.pdf` // o mesmo caminho do bucket no Storage
+  try { await arquivosLocais.guardar(caminho, arquivo) } catch (_) { return falha('Não conseguimos guardar o PDF neste navegador.') }
+  const novo = { id, user_id: e.usuario.id, tipo: 'PDF', materia_id, titulo, texto: null, arquivo_path: caminho, arquivo_nome: arquivo.name || null, paginas, created_at: agoraISO() }
+  db.resumos.push(novo)
+  gravar()
+  return ok(novo)
+}
+// Devolve os bytes do PDF do próprio aluno.
+export async function lerPdfDoResumo(resumoId) {
+  const r = meuResumo(resumoId)
+  if (!r || r.tipo !== 'PDF') return falha('Resumo não encontrado.')
+  try {
+    if (r.arquivo_path.startsWith('exemplo:')) {
+      const resp = await fetch(r.arquivo_path.slice('exemplo:'.length))
+      if (!resp.ok) throw new Error(String(resp.status))
+      return { data: new Uint8Array(await resp.arrayBuffer()), erro: null }
+    }
+    const blob = await arquivosLocais.ler(r.arquivo_path)
+    if (!blob) return falha('O arquivo deste resumo não está neste navegador.')
+    return { data: new Uint8Array(await blob.arrayBuffer()), erro: null }
+  } catch (_) {
+    return falha('Não conseguimos abrir o arquivo.')
+  }
+}
+// Apagar o resumo apaga as anotações, a marca de lido e o arquivo.
+export async function apagarResumo(id) {
+  const r = meuResumo(id)
+  const res = await apagarDoAluno('resumos', id)
+  if (res.erro) return res
+  const dono = eu().usuario.id
+  db.resumo_anotacoes = db.resumo_anotacoes.filter((a) => !(a.user_id === dono && a.resumo_id === id))
+  db.resumos_lidos = db.resumos_lidos.filter((a) => !(a.user_id === dono && a.resumo_id === id))
+  gravar()
+  if (r?.arquivo_path && !r.arquivo_path.startsWith('exemplo:')) arquivosLocais.apagar(r.arquivo_path).catch(() => {})
+  return res
+}
+
+export function listarAnotacoes(resumoId) {
+  if (!meuResumo(resumoId)) return ok([])
+  return ok(doAluno('resumo_anotacoes').filter((a) => a.resumo_id === resumoId))
+}
+// Uma linha por página (único por resumo_id + pagina): atualiza se já existe.
+export function salvarAnotacao(resumoId, pagina, { tracos, textos }) {
+  const r = meuResumo(resumoId)
+  if (!r || r.tipo !== 'PDF') return falha('Resumo não encontrado.')
+  if (!(pagina >= 1 && pagina <= (r.paginas || Infinity))) return falha('Página inválida.')
+  const ja = doAluno('resumo_anotacoes').find((a) => a.resumo_id === resumoId && a.pagina === pagina)
+  return salvarDoAluno('resumo_anotacoes', { ...(ja ? { id: ja.id } : {}), resumo_id: resumoId, pagina, tracos, textos, atualizado_em: agoraISO() })
+}
+
 export const listarResumosLidos = () => ok(doAluno('resumos_lidos'))
 export function marcarResumoLido(resumoId, lido) {
   const e = eu()
   if (!e?.licenciado) return falha('Sem permissão.')
-  if (!podeVer('resumos', resumoId)) return falha('Resumo não encontrado.')
+  if (!meuResumo(resumoId)) return falha('Resumo não encontrado.')
   const ja = db.resumos_lidos.find((r) => r.user_id === e.usuario.id && r.resumo_id === resumoId)
   if (lido && !ja) return salvarDoAluno('resumos_lidos', { resumo_id: resumoId })
   if (!lido && ja) return apagarDoAluno('resumos_lidos', ja.id)

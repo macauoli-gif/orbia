@@ -12,6 +12,7 @@ import Caderno from '../screens/caderno.jsx'
 import Foco from '../screens/foco.jsx'
 import Mais from '../screens/mais.jsx'
 import Resumos from '../screens/resumos.jsx'
+import EditorPdf from '../screens/editor-pdf.jsx'
 import Flashcards from '../screens/flashcards.jsx'
 import Conta from '../screens/conta.jsx'
 
@@ -29,7 +30,7 @@ const LATERAL = [
   ['conta', 'Minha conta', 'conta'],
 ]
 // Qual item do menu fica aceso em cada tela.
-const SECAO = { resolver: 'questoes', caderno: 'questoes', resumos: 'resumos', flashcards: 'flashcards', conta: 'conta' }
+const SECAO = { resolver: 'questoes', caderno: 'questoes', resumos: 'resumos', 'resumo-pdf': 'resumos', flashcards: 'flashcards', conta: 'conta' }
 
 export default function AppAluno({ perfil }) {
   return (
@@ -58,6 +59,7 @@ function Shell() {
     case 'foco': corpo = <Foco {...props} />; break
     case 'mais': corpo = <Mais {...props} />; break
     case 'resumos': corpo = <Resumos {...props} />; break
+    case 'resumo-pdf': corpo = <EditorPdf key={rota.params.id} {...props} />; break
     case 'flashcards': corpo = <Flashcards {...props} />; break
     case 'conta': corpo = <Conta {...props} />; break
     default: corpo = <Quadro {...props} />
@@ -76,7 +78,8 @@ function Shell() {
       <main className="app-body">
         {carregando && <div className="loading">Carregando…</div>}
         {erro && <div className="msg-erro" role="alert" style={{ marginTop: 16 }}>{erro}</div>}
-        {!carregando && !erro && <><FaixaMetas goto={goto} />{corpo}</>}
+        {/* O editor de PDF ocupa a tela toda: sem a faixa de metas por cima. */}
+        {!carregando && !erro && <>{rota.tela !== 'resumo-pdf' && <FaixaMetas goto={goto} />}{corpo}</>}
       </main>
       <nav className="bottom-nav" aria-label="Menu">
         {INFERIOR.map(([id, rotulo, icone]) => (

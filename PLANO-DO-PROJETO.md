@@ -24,7 +24,7 @@ Um app de organização de estudos, vendido por licença de uso, que deixa cada 
 
 ## A solução
 
-O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para ser vendido: conta com email e senha, dados guardados com segurança fora do navegador (não se perdem ao trocar de aparelho), licença vitalícia liberada e bloqueada sozinha pela Hotmart, e uma tela para você administrar as licenças sem ver os estudos de ninguém. O conteúdo de fábrica (resumos, questões, flashcards) passa a ser um só, igual para todos; o que cada aluno cria ou responde é só dele.
+O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para ser vendido: conta com email e senha, dados guardados com segurança fora do navegador (não se perdem ao trocar de aparelho), licença vitalícia liberada e bloqueada sozinha pela Hotmart, e uma tela para você administrar as licenças sem ver os estudos de ninguém. O conteúdo de fábrica (questões e flashcards) passa a ser um só, igual para todos; o que cada aluno cria ou responde é só dele.
 
 **O que ele NÃO faz (v1), proposta:**
 - Grupos de estudo ou chat entre alunos (a versão atual também não tem)
@@ -58,8 +58,12 @@ O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para se
 - **Ações:** editar blocos; carregar a semana sugerida da série
 - **No 2º e no 3º ano:** blocos de fim de semana para provas anteriores, redação e revisão de erros
 
-### Banco de resumos
-- Resumos do app por matéria, mais os resumos do aluno; marcar como lido
+### Banco de resumos (decidido em 25/11/2026: só do aluno)
+- **Não há mais resumos do app.** A aba é o banco de resumos próprio de cada aluno.
+- **Resumo em PDF:** o aluno envia um PDF (até 20 MB) e escreve por cima, com caneta digital, dedo ou mouse (três cores, três espessuras, pressão da caneta, borracha, desfazer, limpar a página) e com caixas de texto digitado. O PDF original fica guardado intacto; as anotações ficam numa camada por cima e são salvas sozinhas.
+- **Resumo digitado:** continua existindo, com o modelo de resumo da versão atual.
+- Filtro por matéria, busca e "marcar como lido".
+- **Antes de vender:** testar a caneta num tablet de verdade (a versão atual só foi testada com mouse).
 
 ### Flashcards
 - Jogo em tela cheia: pergunta na frente, resposta grande ao virar; setas para "errei" e "acertei"
@@ -88,7 +92,7 @@ O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para se
 
 Aluno (cada licença é um aluno) — vai existir mais de um? **sim, um por licença vendida**. Alguém trabalha em mais de um ao mesmo tempo? **não; só a administradora enxerga a lista de alunos, e mesmo ela não vê os estudos de ninguém**.
 
-Tudo o que o aluno cria ou responde (tarefas, cronograma, resumos próprios, questões próprias, respostas, caderno de erros, simulados, sessões de foco, metas, série) pertence a ele e só ele vê. O conteúdo do app (resumos, questões e flashcards de fábrica, links de vestibulares) é um só, igual para todos, e só a administradora edita.
+Tudo o que o aluno cria ou responde (tarefas, cronograma, resumos próprios, questões próprias, respostas, caderno de erros, simulados, sessões de foco, metas, série) pertence a ele e só ele vê, inclusive os PDFs de resumo e as anotações. O conteúdo do app (questões e flashcards de fábrica, links de vestibulares) é um só, igual para todos, e só a administradora edita.
 
 ## Perfis de usuário
 
@@ -126,7 +130,7 @@ Quem fica sem licença ativa não vê nada além da tela de entrada.
 |---|---|---|
 | Claude | construir o sistema | a assinatura que você já tem |
 | React + Vite | a interface | grátis |
-| Supabase | banco, login e o receptor do aviso da Hotmart | grátis para construir e testar; **plano Pro (cerca de US$ 25/mês) antes de vender** — no grátis o projeto "dorme" depois de uma semana sem uso e não tem cópia de segurança automática |
+| Supabase | banco, login, os PDFs de resumo dos alunos e o receptor do aviso da Hotmart | grátis para construir e testar; **plano Pro (cerca de US$ 25/mês) antes de vender** — no grátis o projeto "dorme" depois de uma semana sem uso e não tem cópia de segurança automática |
 | Vercel | colocar no ar | grátis para construir; **plano Pro (cerca de US$ 20/mês) antes de vender** — o plano grátis da Vercel é só para uso não comercial |
 | Envio de email (ex.: Resend) | email de confirmação de conta e de "esqueci a senha" | grátis até alguns milhares de emails por mês; o email embutido do Supabase só aguenta poucos envios por hora e não serve para vendas |
 | Hotmart | vender e cobrar | a taxa da Hotmart sobre cada venda |
@@ -147,8 +151,8 @@ Com até cinco semanas, o lançamento leva o que o aluno usa toda semana e o que
 **No lançamento (v1):**
 - Login, licença pela Hotmart (liberação e bloqueio automáticos) e a tela Licenças
 - Entrada por série, metas e avisos no topo
-- Quadro (a tela do dia a dia), Cronograma, Banco de resumos, Flashcards, Questões (com caderno de erros) e Foco
-- Conteúdo de fábrica (resumos, questões, flashcards, matérias, semana sugerida) trazido da versão atual
+- Quadro (a tela do dia a dia), Cronograma, Banco de resumos (só do aluno, com PDF anotado à mão e por texto), Flashcards, Questões (com caderno de erros) e Foco
+- Conteúdo de fábrica (questões, flashcards, matérias, semana sugerida) trazido da versão atual
 
 **Logo depois (v1.1):**
 - Simulados (provas anteriores com cartão-resposta e treino com o banco do app)
@@ -223,8 +227,8 @@ Tela de entrada (Entrar / Criar conta / Esqueci a senha)
 O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 - **Contas e venda:** perfis, licenças, avisos da Hotmart.
-- **Conteúdo de fábrica (igual para todos, só a administradora muda):** matérias, resumos, flashcards e questões do app, vestibulares.
-- **Do aluno (só ele vê):** tarefas, cronograma, resumos e questões próprias, resumos lidos, respostas de flashcards e de questões, caderno de erros, sessões de foco.
+- **Conteúdo de fábrica (igual para todos, só a administradora muda):** matérias, flashcards e questões do app, vestibulares.
+- **Do aluno (só ele vê):** tarefas, cronograma, resumos (digitados e em PDF, com as anotações), questões próprias, resumos lidos, respostas de flashcards e de questões, caderno de erros, sessões de foco.
 
 ## A pergunta de um ano
 
@@ -241,7 +245,7 @@ O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 # Limitações conhecidas da versão atual (para não perder de vista)
 
-- O conteúdo dos resumos e das questões do app é autoral e precisa ser conferido por um professor.
+- O conteúdo das questões e dos flashcards do app é autoral e precisa ser conferido por um professor.
 - As provas feitas ainda não entram no Desempenho por assunto.
 - O espaço de cálculo foi testado com mouse e caneta simulada, não num tablet de verdade.
 - Os links oficiais do Inep, da Fuvest e da Comvest não foram conferidos.

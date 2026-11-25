@@ -12,7 +12,7 @@
 - Chave estrangeira termina em `_id`.
 - Campo de lista fechada vira CHECK, e o texto é **idêntico** ao usado na interface (com acento e maiúscula: `'A fazer'`, `'Média'`).
 - Datas como `date` ou `timestamptz`.
-- Sem arquivos no Storage na v1.
+- Arquivos: só os PDFs de resumo dos alunos, no Storage (ver "Arquivos").
 
 ---
 
@@ -99,14 +99,33 @@ As 19 matérias da versão atual, com cor e ordem. Só fábrica.
 | created_at | timestamptz | sim | automático |
 
 ### Tabela `resumos`
+Só do aluno (decidido em 25/11/2026: não há resumos do app).
+
 | Campo | Tipo | Obrigatório | Observação |
 |---|---|---|---|
 | id | uuid | sim | chave |
-| user_id | uuid | não | vazio = resumo do app; preenchido = do aluno |
+| user_id | uuid | sim | dono |
+| tipo | text | sim | CHECK: `'Digitado'`, `'PDF'` |
+| arquivo_path | text | só no PDF | caminho no Storage: `<user_id>/<resumo_id>.pdf`; obrigatório quando `tipo = 'PDF'`, vazio no Digitado |
+| arquivo_nome | text | não | nome original do arquivo |
+| paginas | integer | não | número de páginas do PDF |
 | materia_id | uuid | sim | → materias |
 | titulo | text | sim | |
-| texto | text | sim | |
-| serie_minima | text | não | mesmo CHECK de `profiles.serie`; orientação, não currículo |
+| texto | text | só no Digitado | obrigatório quando `tipo = 'Digitado'` |
+| created_at | timestamptz | sim | automático |
+
+### Tabela `resumo_anotacoes`
+As anotações de um resumo em PDF, uma linha por página. Coordenadas de 0 a 1, relativas à página (funcionam em qualquer tamanho de tela).
+
+| Campo | Tipo | Obrigatório | Observação |
+|---|---|---|---|
+| id | uuid | sim | chave |
+| user_id | uuid | sim | dono |
+| resumo_id | uuid | sim | → resumos; ao apagar o resumo, apaga junto; único por (resumo_id, pagina) |
+| pagina | integer | sim | ≥ 1 |
+| tracos | jsonb | sim | lista de `{cor, espessura, pontos: [[x, y, pressão]]}`; padrão `[]` |
+| textos | jsonb | sim | lista de `{id, x, y, texto, cor}`; padrão `[]` |
+| atualizado_em | timestamptz | sim | |
 | created_at | timestamptz | sim | automático |
 
 ### Tabela `resumos_lidos`
@@ -248,12 +267,12 @@ Escrito em português. Vira RLS na hora de construir. "Aluno com licença" = log
 - **Criar:** só o receptor da Hotmart.
 - **Editar / Apagar:** ninguém pelo app.
 
-### Conteúdo de fábrica (`materias` e as linhas com `user_id` vazio de `resumos`, `flashcards`, `questoes`)
+### Conteúdo de fábrica (`materias` e as linhas com `user_id` vazio de `flashcards`, `questoes`)
 - **Ver:** aluno com licença e a administradora.
 - **Criar / Editar / Apagar:** só a administradora (na v1, pela construção; o editor na tela vem na v1.1).
 - **Sem login ou sem licença:** nada.
 
-### Dados do aluno (`tarefas`, `cronograma_blocos`, `sessoes_foco`, `resumos_lidos`, `flashcard_respostas`, `respostas_questoes`, `caderno_erros` e as linhas com `user_id` preenchido de `resumos`, `flashcards`, `questoes`)
+### Dados do aluno (`tarefas`, `cronograma_blocos`, `sessoes_foco`, `resumos`, `resumo_anotacoes`, `resumos_lidos`, `flashcard_respostas`, `respostas_questoes`, `caderno_erros` e as linhas com `user_id` preenchido de `flashcards`, `questoes`)
 - **Ver / Criar / Editar / Apagar:** só o dono (`user_id` = quem está logado), e só com licença ativa.
 - **Administradora:** **nada.** Não vê, não cria, não edita, não apaga.
 - **Sem login ou sem licença:** nada.
@@ -288,7 +307,11 @@ O cadastro público fica aberto (a pessoa cria a própria conta), mas sem licen�
 
 ## Arquivos
 
-Nenhum na v1.
+Um bucket privado no Storage, `resumos`, só com os PDFs de resumo dos alunos.
+- Caminho: `<user_id>/<resumo_id>.pdf`. Só PDF (`application/pdf`), até 20 MB.
+- **Ver, enviar, apagar:** só o dono (a primeira pasta do caminho é o id de quem está logado) e só com licença ativa. A administradora não vê nada.
+- O arquivo não é alterado depois de enviado; as anotações moram em `resumo_anotacoes`.
+- Apagar o resumo apaga o arquivo.
 
 ## Para a v1.1 (fora do lançamento)
 
@@ -305,6 +328,7 @@ Nenhum na v1.
 - [ ] Um aviso da Hotmart sem o hottok correto é recusado e não cria licença.
 - [ ] Um aviso de compra aprovada cria a licença; um de reembolso para o mesmo email a bloqueia; o mesmo aviso repetido não duplica nada.
 - [ ] Um aluno com licença bloqueada perde o acesso a tudo na próxima consulta.
+- [ ] Logado como Pedro, nem a tabela `resumos` nem o bucket `resumos` devolvem arquivo ou anotação da Maria Claudia.
 - [ ] Os valores de status, prioridade, nível, tipo e motivo do banco são idênticos aos da interface.
 - [ ] Todo campo obrigatório recusa cadastro vazio; `concluida_em` é recusado vazio quando o status é `'Concluído'`.
 

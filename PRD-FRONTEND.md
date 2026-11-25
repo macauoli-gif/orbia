@@ -239,15 +239,37 @@ Matéria e tarefa (opcionais), tempo de foco (padrão 25 min) e de pausa (padrã
 **Chega aqui por:** Mais → Banco de resumos.
 
 **O que aparece**
-À esquerda (no celular, faixa rolável no topo), as 19 matérias com a contagem. Busca por texto, filtro de origem (Todos, Do app, Meus) e "só o que o app sugere para a minha série". Cartões com título, matéria, origem e o começo do texto; caixa "lido".
+**Decidido em 25/11/2026: a aba é só do aluno; não há resumos do app.**
+À esquerda (no celular, faixa rolável no topo), as 19 matérias com a contagem. Busca por título e texto, filtro de tipo (Todos, PDF, Digitados). Cartões com título, matéria, tipo (PDF com o número de páginas, ou Digitado) e o começo do texto; caixa "lido".
 
 **Ações**
-- **Abrir:** mostra o texto inteiro.
+- **Abrir:** resumo digitado mostra o texto inteiro; resumo em PDF abre o editor de PDF (abaixo).
 - **Marcar como lido.**
-- **+ Meu resumo:** título, matéria e texto (com o modelo de resumo da versão atual já preenchido). Os resumos do aluno podem ser editados e apagados; os do app, não.
+- **+ Enviar PDF:** escolhe um arquivo PDF (até 20 MB), título (padrão: nome do arquivo) e matéria. Abre direto no editor.
+- **+ Resumo digitado:** título, matéria e texto (com o modelo de resumo da versão atual já preenchido).
+- Todo resumo pode ser editado e apagado pelo aluno (apagar um PDF apaga também as anotações).
 
 **Estado vazio**
-"Nenhum resumo nesta matéria ainda. Que tal escrever o seu?"
+"Nenhum resumo nesta matéria ainda. Envie o PDF do seu resumo ou escreva um."
+
+---
+
+## Tela: Editor de PDF (resumo em PDF)
+
+**Quem acessa:** aluno, ao abrir um resumo em PDF.
+
+**O que aparece**
+Título e matéria no topo, botão Voltar e a situação do salvamento ("Salvando…" / "Salvo"). Barra de ferramentas: Mover (rolar sem escrever), Caneta, Borracha, Texto; três cores (azul-escuro, vermelho, verde) e três espessuras; Desfazer; Limpar página; "Só caneta". As páginas do PDF uma abaixo da outra, na largura da tela, cada uma com o número.
+
+**Ações**
+- **Caneta:** escreve por cima da página. Com caneta digital, a espessura acompanha a pressão. Quando o app percebe uma caneta, o toque do dedo passa a rolar a página em vez de escrever (ou sempre, com "Só caneta").
+- **Borracha:** apaga o traço inteiro em que tocar.
+- **Texto:** toca no lugar e digita; a caixa pode ser editada e apagada depois.
+- **Desfazer:** volta a última ação da página. **Limpar página:** pede confirmação.
+- As anotações são salvas sozinhas, página por página, logo depois de cada mudança. O PDF original nunca é alterado.
+
+**Estados**
+Carregando o PDF: "Abrindo o PDF…". Arquivo que não abre: "Não conseguimos abrir este PDF. Envie de novo ou escolha outro arquivo."
 
 ---
 
@@ -357,6 +379,8 @@ que já existem em referencia/pauta-de-estudos-v1.html.
 - [ ] Trocar a série muda a semana sugerida, as metas e o que aparece primeiro em resumos e questões.
 - [ ] Todas as telas funcionam no celular (375 px) sem rolagem horizontal, e no tema escuro.
 - [ ] Cada lista tem estado vazio com texto próprio.
+- [ ] O aluno envia um PDF, escreve por cima com a caneta e com texto, fecha, abre de novo e as anotações continuam lá; o PDF original não muda.
+- [ ] Logado como Pedro, nenhum PDF nem anotação da Maria Claudia aparece.
 
 ## Para a v1.1 (fora do lançamento)
 

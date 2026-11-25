@@ -1,7 +1,7 @@
 # Pauta de Estudos
 
 App de organização de estudos (9º ano EF ao 3º ano EM), vendido por licença vitalícia na Hotmart. Cada aluno só vê os próprios estudos; a administradora só vê dados da compra.
-React + Vite + Supabase + Vercel, sem outra biblioteca no app. Perfis: aluno (`src/pages/AppAluno.jsx`) e administradora (`src/pages/AppAdmin.jsx`). Quem entra onde: `src/lib/licenca.js`.
+React + Vite + Supabase + Vercel. Bibliotecas no app: só `@supabase/supabase-js` e `pdfjs-dist` (aprovada em 25/11/2026 para mostrar os resumos em PDF; carregada só quando um PDF é aberto, em `src/components/pdf.js`). Nenhuma outra sem a dona do projeto aprovar. Perfis: aluno (`src/pages/AppAluno.jsx`) e administradora (`src/pages/AppAdmin.jsx`). Quem entra onde: `src/lib/licenca.js`.
 Fonte das decisões: `PLANO-DO-PROJETO.md`, `PRD-FRONTEND.md`, `PRD-BACKEND.md`. Quando mudar uma decisão, mude lá primeiro.
 
 ## Onde o código novo vai
@@ -35,7 +35,8 @@ O mock e o seed têm **dois alunos** (Maria Claudia e Pedro) de propósito: é o
 que prova a separação. Não reduza para um.
 
 `src/lib/fabrica.js` foi gerado a partir de `referencia/pauta-de-estudos-v1.html`
-(a versão antiga). Na Etapa 7 vira o seed das tabelas de conteúdo.
+(a versão antiga). Na Etapa 7 vira o seed das tabelas de conteúdo. **Não há
+resumos do app** (decidido em 25/11/2026): a aba Resumos é só do aluno.
 
 ## Régua de verificação
 
@@ -57,7 +58,7 @@ no mesmo lote. Build e lint não pegam regra errada.
 ## Antes de subir pro GitHub
 
 Diff que toca em `src/lib/supabase.js`, `src/lib/dados.js`, `src/lib/licenca.js`,
-políticas RLS, migrations, ou no receptor da Hotmart (liberação e bloqueio de
+políticas RLS ou do Storage, migrations, ou no receptor da Hotmart (liberação e bloqueio de
 licença) → rodar a revisão de código (`/code-review` no Claude Code, `/review`
 no Codex) antes de subir. É por caminho, não por julgamento: nesses arquivos o
 erro não aparece na tela. RLS frouxa vaza o estudo de um aluno para outro sem
@@ -84,6 +85,19 @@ pasta dela.
 - **Blocos de "Prova anterior" da semana sugerida não têm matéria**
   (`materia_id` vazio). A coluna no banco precisa aceitar vazio para os tipos
   diferentes de `'Estudo'`.
+- **Resumos em PDF: o arquivo original nunca muda.** Anotação (caneta e texto)
+  mora em `resumo_anotacoes`, uma linha por página, com coordenadas de 0 a 1
+  relativas à página. Não "queime" anotação dentro do PDF.
+- **pdf.js 6 fecha o documento por `doc.loadingTask.destroy()`**, não por
+  `doc.destroy()` (que não existe e derruba a tela). Use `fecharPdf()`.
+- **`public/pdfjs/` é gerado** por `scripts/copiar-pdfjs.mjs` (roda sozinho
+  antes do dev e do build) a partir da versão instalada. Não edite nem suba
+  para o git; se o PDF abrir sem fontes, é essa pasta faltando.
+- **No mock, os PDFs moram no IndexedDB do navegador** (`dados.js`); os de
+  exemplo, em `public/exemplos/`. No banco, é o bucket privado `resumos`,
+  caminho `<user_id>/<resumo_id>.pdf`.
+- **A caneta não foi testada num tablet de verdade** (só mouse). Antes de
+  vender, testar: pressão, dedo rolando com caneta por perto, "Só caneta".
 - **Datas:** "hoje" sempre por `hojeISO()` (`lib/datas.js`). `toISOString()`
   vira UTC e pula um dia depois das 21h no Brasil.
 - **Licença é por email, não por id**: ela nasce na Hotmart antes de a conta
