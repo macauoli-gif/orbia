@@ -66,7 +66,8 @@ function gravar() {
   if (typeof localStorage === 'undefined') return true // sem navegador (testes): só memória
   try { localStorage.setItem(CHAVE, JSON.stringify(db)); return true } catch (_) { return false }
 }
-const NAO_COUBE = 'O armazenamento deste navegador está cheio. A mudança vale só até fechar a página.'
+// Quem falha ao gravar desfaz a mudança na memória: o que a pessoa vê é o que ficou guardado.
+const NAO_COUBE = 'O armazenamento deste navegador está cheio e a mudança não foi salva. Libere espaço e tente de novo.'
 function lerSessao() {
   try { return JSON.parse(localStorage.getItem(CHAVE_SESSAO)) || null } catch (_) { return null }
 }
@@ -116,12 +117,17 @@ function salvarDoAluno(tabela, registro) {
   if (registro.id) {
     const i = lista.findIndex((r) => r.id === registro.id && r.user_id === e.usuario.id)
     if (i < 0) return falha('Registro não encontrado.')
-    lista[i] = { ...lista[i], ...registro, user_id: e.usuario.id }
-    return gravar() ? ok(lista[i]) : falha(NAO_COUBE)
+    const antes = lista[i]
+    lista[i] = { ...antes, ...registro, user_id: e.usuario.id }
+    if (gravar()) return ok(lista[i])
+    lista[i] = antes // não coube: desfaz, para a memória não divergir do que foi guardado
+    return falha(NAO_COUBE)
   }
   const novo = { ...registro, id: novoId(), user_id: e.usuario.id, created_at: agoraISO() }
   lista.push(novo)
-  return gravar() ? ok(novo) : falha(NAO_COUBE)
+  if (gravar()) return ok(novo)
+  lista.pop() // não coube: tirar de novo evita registro duplicado ao tentar outra vez
+  return falha(NAO_COUBE)
 }
 function apagarDoAluno(tabela, id) {
   const e = eu()

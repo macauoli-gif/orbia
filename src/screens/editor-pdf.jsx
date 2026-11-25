@@ -286,7 +286,13 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
     if (papel === 'ignorar') return
     e.preventDefault()
     if (papel === 'rolar') { gesto.current = { id: e.pointerId, ponteiro: e.pointerType, tipo: 'rolar', y: e.clientY }; return }
-    if (papel === 'assumir') desenharTracos(tinta.current, anot.tracos, largura, altura) // descarta o traço da palma
+    if (papel === 'assumir') {
+      // A caneta chegou: o que a palma fez antes dela é desfeito.
+      const palma = gesto.current
+      gesto.current = null
+      if (palma?.tipo === 'borracha' && palma.tracos !== palma.original) aoMudar({ ...anot, tracos: palma.original }, { historico: false })
+      else desenharTracos(tinta.current, anot.tracos, largura, altura) // descarta o traço da palma
+    }
     try { tinta.current.setPointerCapture(e.pointerId) } catch (_) { /* ponteiro já saiu: segue sem captura */ }
     const p = ponto(e)
     const base = { id: e.pointerId, ponteiro: e.pointerType }
@@ -295,7 +301,7 @@ function Pagina({ doc, numero, total, largura, altura, anot, ferramenta, cor, es
       desenharTracos(tinta.current, anot.tracos, largura, altura, gesto.current.traco)
     } else if (ferramenta === 'borracha') {
       // Cópia de trabalho: vários traços apagados no mesmo gesto, sem um "voltar" o outro.
-      gesto.current = { ...base, tipo: 'borracha', primeiro: true, tracos: anot.tracos }
+      gesto.current = { ...base, tipo: 'borracha', primeiro: true, tracos: anot.tracos, original: anot.tracos }
       apagar(p)
     } else if (ferramenta === 'texto') {
       gesto.current = null
