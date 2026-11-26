@@ -48,7 +48,7 @@ export default function Login() {
     <div className="entrada">
       <div className="caixa stack">
         <div>
-          <Marca como="h1" />
+          <Marca como="h1" slogan />
           <p className="muted">Seu plano de estudos, do 9º ano ao vestibular</p>
         </div>
         <form className="panel form-grid" onSubmit={enviar} noValidate>

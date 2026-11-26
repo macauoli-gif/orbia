@@ -12,7 +12,7 @@ import { IDIOMAS, TEMPO_MAXIMO_SEG } from './simulados.js'
 import { licencaAtiva, normalizarEmail } from './licenca.js'
 
 // Trocar a chave descarta os dados de exemplo antigos guardados no navegador.
-const CHAVE = 'pauta-mock-v2'
+const CHAVE = 'pauta-mock-v3' // v3: sem resumos (26/11/2026)
 const CHAVE_SESSAO = 'pauta-mock-sessao'
 
 let db = carregar()

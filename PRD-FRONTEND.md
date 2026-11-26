@@ -16,7 +16,7 @@ App de organização de estudos para alunos do 9º ano do fundamental ao 3º ano
 - React + Vite (versões atuais), sem biblioteca de componente pronta.
 - Visual a partir de um `index.css` próprio, com as variáveis de cor da versão atual.
 - Navegação por estado, sem endereço no navegador.
-- Identidade NOUS (manual de identidade, 26/11/2026): vinho #64180F (principal: menu lateral, botões), amarelo claro #F1E99A (títulos e destaques sobre o vinho), creme #F5EBDD (fundo), verde azulado #527C7A, azul profundo #183F50 (texto e tema escuro) e dourado #C99A36 (detalhes). Avisos: crítico #A8261B, atenção #7A4E00, em dia #2F5F5C. Todo par texto/fundo com contraste ≥ 4,5:1. Logotipo compacto: "NOUS" + slogan "Think. Learn. Evolve.".
+- Identidade NOUS (manual de identidade, 26/11/2026): vinho #64180F (principal: menu lateral, botões), amarelo claro #F1E99A (títulos e destaques sobre o vinho), creme #F5EBDD (fundo), verde azulado #527C7A, azul profundo #183F50 (texto e tema escuro) e dourado #C99A36 (detalhes). Avisos: crítico #A8261B, atenção #7A4E00, em dia #2F5F5C. Todo par texto/fundo com contraste ≥ 4,5:1. Logotipo compacto: "NOUS" (no menu e espaços pequenos, sem slogan); com o slogan "THINK. LEARN. EVOLVE." na entrada e na escolha da série. Títulos em maiúsculas (Montserrat).
 - Fontes: Montserrat ExtraBold (títulos), Source Sans 3 (texto) e Libre Baskerville (slogan e frases editoriais).
 - Tema claro e escuro, seguindo o aparelho.
 - Celular: barra inferior fixa com 5 itens (Quadro, Cronograma, Questões, Foco, Mais). Tablet deitado e computador: menu lateral à esquerda com todos os itens.

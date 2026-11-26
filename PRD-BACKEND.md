@@ -359,7 +359,7 @@ Os dados dos elementos e as fórmulas ficam no código (`src/lib/exactlab/`), ge
 - [ ] Um aviso da Hotmart sem o hottok correto é recusado e não cria licença.
 - [ ] Um aviso de compra aprovada cria a licença; um de reembolso para o mesmo email a bloqueia; o mesmo aviso repetido não duplica nada.
 - [ ] Um aluno com licença bloqueada perde o acesso a tudo na próxima consulta.
-- [ ] Logado como Pedro, nem a tabela `resumos` nem o bucket `resumos` devolvem arquivo ou anotação da Maria Claudia.
+- [ ] (Retirado em 26/11/2026 com o Banco de resumos.) Logado como Pedro, nenhum simulado nem favorito do ExactLab da Maria Claudia aparece.
 - [ ] Os valores de status, prioridade, nível, tipo e motivo do banco são idênticos aos da interface.
 - [ ] Todo campo obrigatório recusa cadastro vazio; `concluida_em` é recusado vazio quando o status é `'Concluído'`.
 

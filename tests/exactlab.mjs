@@ -4,7 +4,7 @@ import {
   buscar, passaNosFiltros, escala, alternarComparacao, MAX_COMPARAR, FAMILIAS, CLASSIFICACOES, ESTADOS, PROPRIEDADES, eVparaKJmol, kelvinParaCelsius,
   blocoDe, classificacaoPrevista, textoDescoberta, classeCss, camadaDeValencia, textoValencia, textoGrupo,
 } from '../src/lib/exactlab/tabela.js'
-import { AREAS, filtrarFormulas, contarFormulas } from '../src/lib/exactlab/formulas.js'
+import { AREAS, filtrarFormulas, contarFormulas, formulasPorSerie } from '../src/lib/exactlab/formulas.js'
 import { ATIVIDADES, GLOSSARIO, corrigirAtividade } from '../src/lib/exactlab/glossario.js'
 import { SERIES } from '../src/lib/series.js'
 
@@ -88,6 +88,11 @@ const malFormadas = AREAS.flatMap((a) => a.grupos.flatMap((g) => (SERIES.include
 conferir('toda fórmula tem nome, expressão, legenda e série válida', malFormadas, [])
 for (const s of SERIES) conferir(`fórmulas para o ${s} nas três áreas`, AREAS.every((a) => a.grupos.some((g) => g.serie === s)), true)
 conferir('busca em fórmulas', filtrarFormulas(AREAS[1].grupos, { busca: 'snell' }).flatMap((g) => g.formulas.map((f) => f[0])), ['Lei de Snell'])
+
+// Bug da revisão: a cor da coluna seguia a posição na lista filtrada; agora segue a série.
+const colunas = formulasPorSerie(filtrarFormulas(AREAS[0].grupos, { busca: 'cônicas' }))
+conferir('Kanban: só a coluna do 3º ano, com o índice da série (3)', colunas.map((c) => [c.serie, c.indice]), [['3º ano EM', 3]])
+conferir('Kanban: as quatro séries em ordem, sem busca', formulasPorSerie(AREAS[0].grupos).map((c) => c.indice), [0, 1, 2, 3])
 
 console.log(`${ok}/${tot} — exactlab`)
 process.exit(ok === tot ? 0 : 1)

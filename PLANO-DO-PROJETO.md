@@ -3,7 +3,7 @@
 > **26/11/2026:** o app passou a se chamar **Nous**, e o Banco de resumos saiu do app (a dona pediu). O visual segue o manual de identidade da marca.
 
 > Fonte da verdade deste projeto. Quando mudar de ideia, mude aqui primeiro.
-> Última atualização: 25/11/2026
+> Última atualização: 26/11/2026
 > Ponto de partida: a versão atual (um arquivo HTML, dados só no navegador), descrita em `C:\Projeto\pauta-de-estudos.md` e publicada em https://claude.ai/artifact/4u1sHnc2kheuuXFk5t1t7T
 
 ## Em uma frase
@@ -37,7 +37,7 @@ O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para se
 
 ### Entrada e série
 - **Abre em:** tela de entrada com nome e série (9º EF, 1º, 2º ou 3º EM)
-- **Efeito da série:** muda o cronograma sugerido, as metas semanais, os avisos, o foco em vestibular e a ordem de resumos e questões. O filtro "mostrar só o que o app sugere" pode ser desligado.
+- **Efeito da série:** muda o cronograma sugerido, as metas semanais, os avisos, o foco em vestibular e as questões sugeridas. O filtro "mostrar só o que o app sugere" pode ser desligado.
 - **Foco em vestibular:** nenhum no 9º; só conhecer o formato no 1º; uma prova anterior por mês no 2º; uma por semana no 3º.
 - **Ações:** "Alterar nome ou série" no topo.
 
@@ -60,7 +60,7 @@ O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para se
 - **Ações:** editar blocos; carregar a semana sugerida da série
 - **No 2º e no 3º ano:** blocos de fim de semana para provas anteriores, redação e revisão de erros
 
-### Banco de resumos (decidido em 25/11/2026: só do aluno)
+### Banco de resumos — RETIRADO em 26/11/2026 (histórico abaixo)
 - **Não há mais resumos do app.** A aba é o banco de resumos próprio de cada aluno.
 - **Resumo em PDF:** o aluno envia um PDF (até 20 MB) e escreve por cima, com caneta digital, dedo ou mouse (três cores, três espessuras, pressão da caneta, borracha, desfazer, limpar a página) e com caixas de texto digitado. O PDF original fica guardado intacto; as anotações ficam numa camada por cima e são salvas sozinhas.
 - **Resumo digitado:** continua existindo, com o modelo de resumo da versão atual.
@@ -154,7 +154,7 @@ Com até cinco semanas, o lançamento leva o que o aluno usa toda semana e o que
 **No lançamento (v1):**
 - Login, licença pela Hotmart (liberação e bloqueio automáticos) e a tela Licenças
 - Entrada por série, metas e avisos no topo
-- Quadro (a tela do dia a dia), Cronograma, Banco de resumos (só do aluno, com PDF anotado à mão e por texto), Flashcards, Questões (com caderno de erros) e Foco
+- Quadro (a tela do dia a dia), Cronograma, Simulados, ExactLab, Flashcards, Questões (com caderno de erros) e Foco
 - Conteúdo de fábrica (questões, flashcards, matérias, semana sugerida) trazido da versão atual
 
 **Simulados de vestibulares — trazido para o lançamento em 25/11/2026:** provas anteriores oficiais de ENEM (2 dias), Fuvest 1ª fase, Unicamp 1ª fase e UERJ (exames de qualificação), dos últimos 5 anos com gabarito publicado, com o gabarito oficial já cadastrado (lido dos PDFs oficiais). O aluno escolhe a instituição e o ano, abre a prova no site oficial, marca no cartão-resposta com cronômetro, e vê a correção (acertos, erros, em branco, anuladas fora da conta), por área/disciplina quando o gabarito oficial separa (ENEM e UERJ), o mapa da prova e a evolução a cada tentativa. O app não guarda cópia das provas.
@@ -183,11 +183,11 @@ O app já existe, foi feito para uma aluna real e cobre do 9º ano ao 3º ano co
 
 - **Gosta de:** o visual da versão atual, que serve de base (arquivo em `referencia/pauta-de-estudos-v1.html`).
 - **Usa mais em:** computador, tablet (com caneta) e celular. Mobile primeiro.
-- **Cor principal:** #0b6e8a (azul-petróleo da versão atual; no tema escuro, #4cc0de)
-- **Cores de aviso:** atrasado #c4321f, atenção #8a5300 (escurecido de #b9700a em 25/11/2026 para o texto ficar legível: contraste 4,5:1), em dia #1f7a4d
-- **Fontes:** Bricolage Grotesque (títulos) e DM Sans (texto), as mesmas da versão atual
+- **Cores (manual de identidade NOUS, 26/11/2026):** vinho #64180F (principal), amarelo claro #F1E99A (títulos e destaques sobre o vinho), creme #F5EBDD (fundo), verde azulado #527C7A, azul profundo #183F50 e dourado #C99A36 (apoio). No tema escuro, fundo azul profundo com destaques em amarelo claro.
+- **Cores de aviso:** atrasado #A8261B, atenção #7A4E00, em dia #2F5F5C (ajustadas à paleta; contraste ≥ 4,5:1)
+- **Fontes:** Montserrat ExtraBold (títulos, em maiúsculas), Source Sans 3 (texto) e Libre Baskerville (slogan "THINK. LEARN. EVOLVE.")
 - **Tema:** claro e escuro, seguindo o aparelho
-- **Logo:** o nome "Nous" no topo (logo e cores conforme o manual de identidade)
+- **Logo:** versão compacta do manual — o nome NOUS; com o slogan só onde há espaço (entrada e escolha da série)
 
 ---
 
@@ -207,7 +207,7 @@ Tela de entrada (Entrar / Criar conta / Esqueci a senha)
 │   │   └── Caderno de erros
 │   ├── Foco
 │   └── Mais
-│       ├── Banco de resumos
+│       ├── ExactLab (fórmulas e tabela periódica)
 │       ├── Flashcards (e o jogo em tela cheia)
 │       └── Minha conta (nome, série, metas, sair)
 └── Administradora
@@ -235,7 +235,7 @@ O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 - **Contas e venda:** perfis, licenças, avisos da Hotmart.
 - **Conteúdo de fábrica (igual para todos, só a administradora muda):** matérias, flashcards e questões do app, vestibulares.
-- **Do aluno (só ele vê):** tarefas, cronograma, resumos (digitados e em PDF, com as anotações), questões próprias, resumos lidos, respostas de flashcards e de questões, caderno de erros, sessões de foco.
+- **Do aluno (só ele vê):** tarefas, cronograma, questões próprias, simulados feitos, favoritos do ExactLab, respostas de flashcards e de questões, caderno de erros, sessões de foco.
 
 ## A pergunta de um ano
 

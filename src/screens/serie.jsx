@@ -48,7 +48,7 @@ export default function Serie({ perfil, primeiraVez = false, aoTerminar, salvar 
   return (
     <div className={primeiraVez ? 'entrada' : ''}>
       <div className="caixa stack" style={primeiraVez ? null : { maxWidth: 560, paddingTop: 18 }}>
-        {primeiraVez && <Marca como="h1" />}
+        {primeiraVez && <Marca como="h1" slogan />}
         <h2>Em que série você está?</h2>
         <p className="muted small">O app se adapta: metas, cronograma sugerido e as questões mudam conforme a série.</p>
         <fieldset className="series" style={{ border: 0, padding: 0, margin: 0 }}>

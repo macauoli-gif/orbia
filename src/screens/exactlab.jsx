@@ -2,8 +2,8 @@
 // na Química, a Tabela Periódica Interativa. Conteúdo e buscas em lib/exactlab/.
 import { useState } from 'react'
 import { Janela } from '../components/index.jsx'
-import { AREAS, filtrarFormulas, contarFormulas } from '../lib/exactlab/formulas.js'
-import { SERIES, configSerie } from '../lib/series.js'
+import { AREAS, filtrarFormulas, contarFormulas, formulasPorSerie } from '../lib/exactlab/formulas.js'
+import { configSerie } from '../lib/series.js'
 import { useEstudo } from '../lib/EstudoContext.jsx'
 import TabelaPeriodica from './tabela-periodica.jsx'
 
@@ -59,10 +59,9 @@ function Formulas({ area }) {
       </div>
       {grupos.length === 0 && <p className="empty">Nenhuma fórmula com essa busca. Tente outra palavra.</p>}
       <div className="kanban-formulas">
-        {SERIES.filter((s) => grupos.some((g) => g.serie === s)).map((s, ci) => {
-          const daSerie = grupos.filter((g) => g.serie === s)
+        {formulasPorSerie(grupos).map(({ serie: s, indice, grupos: daSerie }) => {
           return (
-            <section key={s} className={'kf-coluna kf-serie-' + ci + (s === perfil.serie ? ' sua' : '')} aria-label={configSerie(s).nome}>
+            <section key={s} className={'kf-coluna kf-serie-' + indice + (s === perfil.serie ? ' sua' : '')} aria-label={configSerie(s).nome}>
               <header className="kf-cabeca">
                 <h2>{configSerie(s).nome}</h2>
                 <span className="kf-conta">{contarFormulas(daSerie)}</span>

@@ -28,12 +28,14 @@ const CAMINHOS = {
   estrela: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
 }
 
-// Logotipo compacto da NOUS (manual de identidade: nome sem a ilustração, para app).
-export function Marca({ como: Tag = 'div' }) {
+// Logotipo da NOUS (manual de identidade). Versão compacta = só o nome, para
+// espaços pequenos (menu); o slogan entra onde há espaço (entrada, série).
+export function Marca({ como: Tag = 'div', slogan = false }) {
   return (
-    <Tag className="marca" aria-label="Nous — Think. Learn. Evolve.">
+    <Tag className="marca">
+      <span className="sr-only">{slogan ? 'Nous — Think. Learn. Evolve.' : 'Nous'}</span>
       <span className="marca-nome" aria-hidden="true">Nous</span>
-      <span className="marca-slogan" aria-hidden="true">Think. Learn. Evolve.</span>
+      {slogan && <span className="marca-slogan" aria-hidden="true">THINK. LEARN. EVOLVE.</span>}
     </Tag>
   )
 }

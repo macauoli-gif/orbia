@@ -104,13 +104,10 @@ export const salvarPerfil = (mudancas) =>
 // parava calada na linha 1000 (ex.: a 1001ª resposta de questão nunca aparecia
 // nas metas). Aqui pede de 1000 em 1000 até acabar, na ordem pedida.
 const PAGINA = 1000
-// `consulta`: o nome da tabela, ou uma função que monta a consulta com filtro
-// (escrita com supabase.from('tabela') visível, para o check-schema conferir).
-async function listar(consulta, ordem = 'created_at') {
-  const montar = typeof consulta === 'string' ? () => supabase.from(consulta).select('*') : consulta
+async function listar(tabela, ordem = 'created_at') {
   const todas = []
   for (let de = 0; ; de += PAGINA) {
-    const r = await q(montar().order(ordem, { ascending: true }).order('id').range(de, de + PAGINA - 1))
+    const r = await q(supabase.from(tabela).select('*').order(ordem, { ascending: true }).order('id').range(de, de + PAGINA - 1))
     if (r.erro) return r
     todas.push(...r.data)
     if (r.data.length < PAGINA) return ok(todas)
