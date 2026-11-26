@@ -331,6 +331,19 @@ As provas e os gabaritos oficiais NÃO ficam no banco: são conteúdo de fábric
 
 **Ver / Criar / Apagar:** só o dono, com licença ativa (mesma regra das outras tabelas de estudo). Ninguém edita uma tentativa terminada. A administradora não vê nada. A correção é calculada pelo app a partir do gabarito no código (gabarito retificado depois corrige as tentativas antigas também).
 
+### Tabela `exactlab_favoritos` (26/11/2026)
+
+Os dados dos elementos e as fórmulas ficam no código (`src/lib/exactlab/`), gerados a partir do PubChem (NIH) por `scripts/gerar-elementos.mjs`; no banco fica só o que é do aluno.
+
+| Campo | Tipo | Obrigatório | Regra |
+|---|---|---|---|
+| id | uuid | sim | automático |
+| user_id | uuid | sim | dono |
+| numero_atomico | integer | sim | 1 a 118; um por aluno (único com user_id) |
+| created_at | timestamptz | sim | automático |
+
+**Ver / Criar / Apagar:** só o dono, com licença ativa. Sem update. A administradora não vê nada.
+
 ## Para a v1.1 (fora do lançamento)
 
 - `simulados_treino` — treino com o banco do app dentro de Simulados (as provas anteriores já entraram, com `simulados_tentativas`).

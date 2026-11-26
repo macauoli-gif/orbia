@@ -213,6 +213,111 @@ textarea.ipt { min-height: 110px; resize: vertical; line-height: 1.45; }
 .mapa-q.anulada { text-decoration: line-through; color: var(--muted); }
 .mapa-certa { font-size: 11px; color: var(--ink); font-weight: 500; }
 
+/* ── ExactLab ── */
+:root { --cel-s: 78%; --cel-l: 88%; --cel-borda-l: 46%; --prop-l0: 93%; --prop-l1: 52%; }
+@media (prefers-color-scheme: dark) { :root { --cel-s: 38%; --cel-l: 24%; --cel-borda-l: 62%; --prop-l0: 15%; --prop-l1: 40%; } }
+.exact-topo { padding: 16px 0 6px; }
+.exact-topo h1 { margin: 0; }
+.exact-marca { font-family: var(--display); letter-spacing: -.02em; }
+.exact-marca b { background: linear-gradient(90deg, hsl(330 80% 55%), hsl(265 75% 60%), hsl(195 85% 45%)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.exact-abas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
+.exact-aba { min-height: 52px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; font-size: 15px; color: var(--ink);
+  display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .15s, box-shadow .15s, background .15s; }
+.exact-aba:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.exact-aba-icone { font-size: 20px; }
+.exact-aba.matematica[aria-selected="true"] { background: hsl(265 var(--cel-s) var(--cel-l)); border-color: hsl(265 70% var(--cel-borda-l)); }
+.exact-aba.fisica[aria-selected="true"] { background: hsl(195 var(--cel-s) var(--cel-l)); border-color: hsl(195 70% var(--cel-borda-l)); }
+.exact-aba.quimica[aria-selected="true"] { background: hsl(330 var(--cel-s) var(--cel-l)); border-color: hsl(330 70% var(--cel-borda-l)); }
+.segmentado { display: flex; flex-wrap: wrap; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-bottom: 12px; }
+.segmentado button { flex: 1 1 auto; min-height: 40px; border: 0; border-radius: 9px; background: transparent; font-weight: 700; color: var(--muted); padding: 0 12px; }
+.segmentado button[aria-selected="true"], .segmentado button[aria-checked="true"] { background: var(--accent-bg); color: var(--accent); }
+.formula-grupo { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+.formula-grupo summary { cursor: pointer; padding: 12px 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-height: var(--tap); }
+.formulas { display: grid; gap: 10px; padding: 0 14px 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.formula { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); }
+.formula h3 { font-size: 14px; margin: 0 0 6px; }
+.formula-expr { font-family: "Cambria Math", "STIX Two Math", Georgia, serif; font-size: 18px; margin: 4px 0 8px; overflow-wrap: anywhere; color: var(--ink); }
+.formula-vars { margin: 0; display: grid; gap: 2px; font-size: 13px; }
+.formula-vars div { display: flex; gap: 6px; }
+.formula-vars dt { font-weight: 700; font-family: Georgia, serif; min-width: 1.5em; }
+.formula-vars dd { margin: 0; color: var(--muted); }
+
+.tp-controles { display: grid; gap: 8px; margin-bottom: 8px; }
+.tp-modos, .tp-filtros { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tp-filtros .ipt { width: auto; }
+.chip-btn { min-height: 38px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; font-size: 13px; transition: background .15s; }
+.chip-btn.ativo { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.tp-prop { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+.tp-prop p { margin: 4px 0; }
+.tp-legenda { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 12px; margin: 6px 0; }
+.legenda-item { display: inline-flex; gap: 5px; align-items: center; }
+.amostra { width: 14px; height: 14px; border-radius: 4px; display: inline-block; background: hsl(var(--h, 0) var(--cel-s) var(--cel-l)); border: 2px solid hsl(var(--h, 0) 70% var(--cel-borda-l)); }
+.escala-barra { width: 120px; height: 12px; border-radius: 99px; background: linear-gradient(90deg, hsl(195 70% var(--prop-l0)), hsl(195 70% var(--prop-l1))); border: 1px solid var(--line); }
+.tp-dica { margin: 4px 0; }
+.so-celular { display: none; }
+@media (max-width: 900px) { .so-celular { display: inline; } }
+.tp-rolagem { overflow-x: auto; padding: 6px 2px 10px; -webkit-overflow-scrolling: touch; }
+.tp-grade { display: grid; grid-template-columns: repeat(18, minmax(44px, 1fr)); grid-template-rows: repeat(7, auto) 14px repeat(2, auto); gap: 3px; min-width: 820px; }
+.elemento { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1 / 1.12; padding: 2px; border-radius: 7px;
+  background: hsl(var(--h, 210) var(--cel-s) var(--cel-l)); border: 2px solid hsl(var(--h, 210) 70% var(--cel-borda-l)); color: var(--ink); line-height: 1.05;
+  transition: transform .15s, box-shadow .15s, opacity .2s; cursor: pointer; min-width: 0; }
+.elemento:hover, .elemento:focus-visible { transform: scale(1.12); z-index: 2; box-shadow: var(--shadow-pop); }
+.elemento .z { font-size: 9px; align-self: flex-start; font-variant-numeric: tabular-nums; }
+.elemento .sim { font-size: 17px; font-weight: 800; font-family: var(--display); }
+.elemento .nome { font-size: 8px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.elemento .estrela { color: hsl(45 95% 45%); }
+.elemento.marcador { cursor: default; background: transparent; border-style: dashed; border-color: var(--line); }
+.elemento.marcador:hover { transform: none; box-shadow: none; }
+.elemento.apagado { opacity: .2; }
+.elemento.selecionado, .elemento.marcado { outline: 3px solid var(--accent); outline-offset: 1px; z-index: 1; }
+.elemento.resposta { outline: 3px solid var(--ok); outline-offset: 1px; }
+/* famílias */
+.fam-metais-alcalinos { --h: 0; } .fam-metais-alcalino-terrosos { --h: 30; } .fam-hidrogenio { --h: 55; } .fam-familia-do-carbono { --h: 95; }
+.fam-familia-do-nitrogenio { --h: 130; } .fam-familia-do-boro { --h: 165; } .fam-calcogenios { --h: 190; } .fam-metais-de-transicao { --h: 210; }
+.fam-halogenios { --h: 235; } .fam-gases-nobres { --h: 265; } .fam-lantanideos { --h: 300; } .fam-actinideos { --h: 330; }
+/* classificação, estados, blocos */
+.cls-metal { --h: 210; } .cls-ametal { --h: 130; } .cls-semimetal { --h: 30; } .cls-gas-nobre { --h: 265; } .cls-hidrogenio { --h: 55; }
+.est-solido { --h: 30; } .est-liquido { --h: 205; } .est-gasoso { --h: 140; }
+.est-nao-determinado, .prop-sem { --cel-s: 0%; background-image: repeating-linear-gradient(135deg, transparent 0 4px, color-mix(in srgb, var(--muted) 25%, transparent) 4px 5px); }
+.elemento.prop-sem, .elemento.est-nao-determinado, .amostra.prop-sem, .amostra.est-nao-determinado { border-color: var(--muted); }
+.blo-s { --h: 0; } .blo-p { --h: 130; } .blo-d { --h: 210; } .blo-f { --h: 300; }
+.elemento.prop { background: hsl(195 70% calc(var(--prop-l0) - var(--forca) * (var(--prop-l0) - var(--prop-l1)))); border-color: hsl(195 60% var(--cel-borda-l)); }
+.tp-atividade { background: var(--accent-bg); border: 1px solid var(--accent); border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
+.tp-atividade.certo { background: var(--ok-bg); border-color: var(--ok); }
+.tp-atividade.errado { background: var(--crit-bg); border-color: var(--crit); }
+.tp-atividade p { margin: 4px 0; }
+.tp-comparador { margin: 10px 0; }
+.tabela.comparar th button { min-height: 0; padding: 0 4px; }
+.tp-paineis { margin-top: 14px; }
+.tp-lista { display: grid; gap: 8px; margin: 0; }
+.tp-lista div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.tp-lista dt { font-weight: 700; }
+.tp-lista dd { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.tp-atividades { display: grid; gap: 6px; padding-left: 20px; }
+.tp-atividades .item.ativo { border-color: var(--accent); }
+.ficha { display: grid; gap: 10px; }
+.ficha h3 { font-size: 15px; margin: 8px 0 0; }
+.ficha p { margin: 2px 0; }
+.ficha-topo { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.ficha-quadro { display: grid; justify-items: center; width: 110px; padding: 10px; border-radius: 14px; background: hsl(var(--h) var(--cel-s) var(--cel-l)); border: 3px solid hsl(var(--h) 70% var(--cel-borda-l)); }
+.ficha-quadro .z { justify-self: start; font-size: 13px; }
+.ficha-quadro .sim { font-size: 40px; font-weight: 800; font-family: var(--display); line-height: 1; }
+.ficha-quadro .nome { font-size: 13px; }
+.ficha-quadro .massa { font-size: 12px; color: var(--muted); }
+.bohr { width: 150px; height: 150px; }
+.bohr .nucleo { fill: hsl(330 70% 55%); }
+.bohr .orbita { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.bohr .eletron { fill: var(--accent); }
+.bohr .rotulo-camada { font-size: 7px; fill: var(--muted); }
+.ficha-dados { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; margin: 0; }
+.ficha-dados div { background: var(--bg); border-radius: 8px; padding: 6px 10px; }
+.ficha-dados dt { font-size: 12px; color: var(--muted); }
+.ficha-dados dd { margin: 0; font-weight: 600; }
+.particulas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.particulas div { display: grid; justify-items: center; text-align: center; background: var(--bg); border-radius: 10px; padding: 8px; }
+.particulas b { font-size: 22px; font-family: var(--display); }
+.particulas span { font-size: 12px; color: var(--muted); }
+
 /* ── Quadro ── */
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
 .toolbar .ipt { width: auto; min-width: 170px; }

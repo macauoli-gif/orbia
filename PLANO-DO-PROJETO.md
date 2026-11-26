@@ -157,6 +157,8 @@ Com até cinco semanas, o lançamento leva o que o aluno usa toda semana e o que
 
 **Simulados de vestibulares — trazido para o lançamento em 25/11/2026:** provas anteriores oficiais de ENEM (2 dias), Fuvest 1ª fase, Unicamp 1ª fase e UERJ (exames de qualificação), dos últimos 5 anos com gabarito publicado, com o gabarito oficial já cadastrado (lido dos PDFs oficiais). O aluno escolhe a instituição e o ano, abre a prova no site oficial, marca no cartão-resposta com cronômetro, e vê a correção (acertos, erros, em branco, anuladas fora da conta), por área/disciplina quando o gabarito oficial separa (ENEM e UERJ), o mapa da prova e a evolução a cada tentativa. O app não guarda cópia das provas.
 
+**ExactLab — trazido para o lançamento em 26/11/2026:** uma página com três áreas (Matemática, Física e Química) com as fórmulas do 9º ano ao 3º ano do ensino médio, organizadas por assunto e série, com o significado de cada letra e a unidade. Na Química, uma Tabela Periódica Interativa e Didática com os 118 elementos (dados oficiais do PubChem/NIH): ficha completa de cada elemento, modos de visualização (famílias, classificação, estados físicos, distribuição eletrônica e propriedades periódicas), busca, filtros, comparador, favoritos (guardados na conta do aluno), glossário, como ler a tabela e atividades guiadas.
+
 **Logo depois (v1.1):**
 - Treino com o banco do app dentro de Simulados (por matéria, assunto ou completo)
 - Desempenho (gráficos e os três assuntos que mais precisam de atenção)

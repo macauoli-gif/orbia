@@ -397,6 +397,22 @@ export function salvarTentativa(t) {
 }
 export const apagarTentativa = (id) => apagarDoAluno('simulados_tentativas', id)
 
+// ================= ExactLab: favoritos =================
+// Imita o banco: número atômico de 1 a 118 e um favorito por elemento.
+export const listarFavoritos = () => ok(doAluno('exactlab_favoritos').map((f) => f.numero_atomico))
+export function favoritar(z) {
+  if (!(Number.isInteger(z) && z >= 1 && z <= 118)) return falha('Elemento inválido.')
+  if (doAluno('exactlab_favoritos').some((f) => f.numero_atomico === z)) return ok(z)
+  const r = salvarDoAluno('exactlab_favoritos', { numero_atomico: z })
+  return r.erro ? r : ok(z)
+}
+export function desfavoritar(z) {
+  const f = doAluno('exactlab_favoritos').find((x) => x.numero_atomico === z)
+  if (!f) return eu()?.licenciado ? ok(z) : falha('Sem permissão.')
+  const r = apagarDoAluno('exactlab_favoritos', f.id)
+  return r.erro ? r : ok(z)
+}
+
 // ================= Administradora =================
 export function listarLicencas() {
   if (!ehAdmin()) return ok([])

@@ -15,6 +15,7 @@ import Resumos from '../screens/resumos.jsx'
 import EditorPdf from '../screens/editor-pdf.jsx'
 import Flashcards from '../screens/flashcards.jsx'
 import Simulados from '../screens/simulados.jsx'
+import ExactLab from '../screens/exactlab.jsx'
 import Conta from '../screens/conta.jsx'
 import Licencas from '../screens/licencas.jsx'
 import { podeAdministrar } from '../lib/licenca.js'
@@ -29,6 +30,7 @@ const INFERIOR = [
 const LATERAL = [
   ...INFERIOR.slice(0, 4),
   ['simulados', 'Simulados', 'simulados'],
+  ['exactlab', 'ExactLab', 'exactlab'],
   ['resumos', 'Banco de resumos', 'resumos'],
   ['flashcards', 'Flashcards', 'flashcards'],
   ['conta', 'Minha conta', 'conta'],
@@ -55,7 +57,7 @@ function Shell() {
   const goto = (tela, params = {}) => { setRota({ tela, params }); window.scrollTo(0, 0) }
 
   const secao = SECAO[rota.tela] || rota.tela
-  const secaoInferior = desktop ? secao : (['simulados', 'resumos', 'flashcards', 'conta', 'licencas'].includes(secao) ? 'mais' : secao)
+  const secaoInferior = desktop ? secao : (['simulados', 'exactlab', 'resumos', 'flashcards', 'conta', 'licencas'].includes(secao) ? 'mais' : secao)
   const props = { goto, params: rota.params }
 
   let corpo
@@ -70,6 +72,7 @@ function Shell() {
     case 'resumo-pdf': corpo = <EditorPdf key={rota.params.id} {...props} />; break
     case 'flashcards': corpo = <Flashcards {...props} />; break
     case 'simulados': corpo = <Simulados {...props} />; break
+    case 'exactlab': corpo = <ExactLab {...props} />; break
     case 'conta': corpo = <Conta {...props} />; break
     case 'licencas': corpo = admin ? <Licencas /> : <Quadro {...props} />; break
     default: corpo = <Quadro {...props} />
@@ -88,8 +91,8 @@ function Shell() {
       <main className="app-body">
         {carregando && <div className="loading">Carregando…</div>}
         {erro && <div className="msg-erro" role="alert" style={{ marginTop: 16 }}>{erro}</div>}
-        {/* O Quadro tem o painel completo; o editor de PDF ocupa a tela toda; Licenças não é estudo: sem a faixa nos três. */}
-        {!carregando && !erro && <>{!['quadro', 'resumo-pdf', 'licencas'].includes(rota.tela) && <FaixaMetas goto={goto} />}{corpo}</>}
+        {/* O Quadro tem o painel completo; o editor de PDF e o ExactLab precisam da tela toda; Licenças não é estudo: sem a faixa. */}
+        {!carregando && !erro && <>{!['quadro', 'resumo-pdf', 'licencas', 'exactlab'].includes(rota.tela) && <FaixaMetas goto={goto} />}{corpo}</>}
       </main>
       <nav className="bottom-nav" aria-label="Menu">
         {INFERIOR.map(([id, rotulo, icone]) => (

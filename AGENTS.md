@@ -156,6 +156,11 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   (ENEM caderno azul; Fuvest V1/V; Unicamp Q): outra cor tem outra ordem. Ano novo
   ou gabarito retificado = ajustar a lista do script, rodar e conferir anuladas.
   No banco fica só a tentativa (`simulados_tentativas`, sem update).
+- **ExactLab: números dos elementos vêm do PubChem (NIH)**, gerados por
+  `node scripts/gerar-elementos.mjs` em `src/lib/exactlab/elementos-dados.js` (não edite à mão).
+  Os textos em português (`textos-elementos-*.js`) e as fórmulas são escritos à mão: mudou
+  um fato, mude ali e rode `tests/exactlab.mjs`. Nêutrons usam o isótopo mais abundante
+  (tabela no script), nunca a massa arredondada (bromo daria 80, que não existe).
 - **Licença é por email, não por id**: ela nasce na Hotmart antes de a conta
   existir. Compare sempre com `normalizarEmail()`, e só conte licença com email
   confirmado.

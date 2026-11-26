@@ -32,6 +32,9 @@ conferir('Pedro não anota no PDF da Maria', (await d.salvarAnotacao('r-m2', 1, 
 conferir('Pedro não apaga o PDF da Maria', (await d.apagarResumo('r-m2')).erro != null, true)
 conferir('Pedro não marca como lido o resumo da Maria', (await d.marcarResumoLido('r-m1', true)).erro != null, true)
 conferir('Pedro não responde questão própria da Maria', (await d.registrarRespostaQuestao({ questao_id: 'q-m1', escolhida: 'B', acertou: true, tempo_seg: 1 })).erro != null, true)
+conferir('Pedro só vê os próprios favoritos do ExactLab', (await d.listarFavoritos()).data, [8])
+await d.desfavoritar(26) // o favorito 26 é da Maria: para o Pedro não existe
+conferir('favorito com número atômico 119 é recusado (CHECK)', (await d.favoritar(119)).erro != null, true)
 conferir('Pedro não apaga o simulado da Maria', (await d.apagarTentativa('st-1')).erro != null, true)
 conferir('Pedro grava o próprio simulado', (await d.salvarTentativa({ prova_id: 'fuvest-2027', respostas: { 1: 'E' }, tempo_seg: 60 })).erro, null)
 conferir('simulado com letra inválida é recusado (CHECK)', (await d.salvarTentativa({ prova_id: 'fuvest-2027', respostas: { 1: 'Z' }, tempo_seg: 60 })).erro != null, true)
@@ -41,6 +44,7 @@ conferir('simulado terminado não se edita', (await d.salvarTentativa({ id: 'st-
 // O bug: apagar tarefa de outro aluno.
 conferir('Pedro não apaga tarefa da Maria', (await d.apagarTarefa('t-m1')).erro != null, true)
 await como('maria@exemplo.com')
+conferir('o favorito da Maria continua lá', (await d.listarFavoritos()).data, [26])
 conferir('o simulado da Maria continua lá e o do Pedro não aparece para ela', (await d.listarTentativas()).data.map((t) => t.id).sort(), ['st-1', 'st-2'])
 conferir('a tarefa da Maria continua lá', (await d.listarTarefas()).data.some((t) => t.id === 't-m1'), true)
 conferir('a ligação bloco → tarefa da Maria continua', (await d.listarBlocos()).data.some((b) => b.tarefa_id === 't-m1'), true)
@@ -62,6 +66,7 @@ conferir('A fazer com data de conclusão é recusado', (await d.salvarTarefa({ t
 
 await como('admin@exemplo.com')
 for (const f of TABELAS_DO_ALUNO) conferir(`administradora recebe zero em ${f}`, (await d[f]()).data.length, 0)
+conferir('administradora sem licença não vê favoritos de ninguém', (await d.listarFavoritos()).data.length, 0)
 conferir('administradora vê as licenças', (await d.listarLicencas()).data.length > 0, true)
 
 // Administradora com licença de cortesia: estuda, mas só o que é dela.

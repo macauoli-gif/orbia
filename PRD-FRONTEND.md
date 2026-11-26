@@ -414,6 +414,19 @@ Acertos, erros, em branco, anuladas (fora da conta), percentual e tempo. Tabela 
 
 **Estado vazio:** "Você ainda não fez nenhum simulado. Escolha uma prova acima."
 
+## Tela: ExactLab (decidido em 26/11/2026)
+
+**Quem acessa:** aluno. **Chega aqui por:** menu lateral e, no celular, Mais → ExactLab.
+
+**O que aparece:** três abas — Matemática, Física, Química. Em Matemática e Física, as fórmulas agrupadas por assunto, cada uma com nome, a fórmula, o que significa cada letra (com unidade quando houver) e a série em que aparece; busca por nome e filtro por série. Em Química, as mesmas fórmulas e a Tabela Periódica Interativa.
+
+**Tabela Periódica Interativa**
+- Os 118 elementos na posição oficial (18 grupos, 7 períodos, lantanídeos e actinídeos em linhas separadas). Cada quadrado mostra número atômico, símbolo e nome, com a cor do modo escolhido e legenda.
+- Modos: Famílias; Classificação (metal, ametal, semimetal, gás nobre, hidrogênio); Estados físicos a 25 °C; Distribuição eletrônica (camadas K a Q); Propriedades periódicas (eletronegatividade, raio atômico, energia de ionização), com explicação da tendência.
+- Busca por nome, símbolo ou número atômico; filtros por família, período e classificação (o que não passa no filtro fica apagado).
+- Ficha do elemento ao tocar: nome e símbolo, número atômico, massa atômica, grupo e período, família, classificação, estado a 25 °C, distribuição eletrônica (subníveis e camadas), prótons, elétrons e nêutrons do isótopo mais comum (com a explicação de que depende do isótopo), origem do nome, características, aplicações e onde é encontrado, curiosidade. Dados que não foram medidos (elementos superpesados) aparecem como "não determinado" ou "previsto".
+- Favoritos (estrela na ficha; guardados na conta do aluno), comparador (2 a 4 elementos lado a lado), glossário, "Como ler a tabela" e atividades guiadas (o aluno responde tocando no elemento certo e recebe a correção).
+
 ## Para a v1.1 (fora do lançamento)
 
 Descritas em detalhe na versão atual (`referencia/`), entram depois:

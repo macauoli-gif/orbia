@@ -278,6 +278,21 @@ export const salvarTentativa = async (t) =>
   t.id ? falha('Uma tentativa terminada não pode ser mudada.') : salvar('simulados_tentativas', COL_TENTATIVA, { ...t, idioma: t.idioma || null })
 export const apagarTentativa = (id) => apagar('simulados_tentativas', id)
 
+// ---------- ExactLab: elementos favoritos ----------
+// Devolve só os números atômicos. Marcar de novo o mesmo elemento não é erro.
+export async function listarFavoritos() {
+  const r = await listar('exactlab_favoritos')
+  return r.erro ? r : ok(r.data.map((f) => f.numero_atomico))
+}
+export async function favoritar(z) {
+  const r = await q(supabase.from('exactlab_favoritos').upsert({ user_id: eu(), numero_atomico: z }, { onConflict: 'user_id,numero_atomico', ignoreDuplicates: true }).select())
+  return r.erro ? r : ok(z)
+}
+export async function desfavoritar(z) {
+  const r = await q(supabase.from('exactlab_favoritos').delete().eq('numero_atomico', z).select('id'))
+  return r.erro ? r : ok(z)
+}
+
 // ---------- administradora ----------
 export async function listarLicencas() {
   const [l, contas] = await Promise.all([

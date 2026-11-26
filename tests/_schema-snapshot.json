@@ -1,6 +1,7 @@
 {
   "caderno_erros": ["id", "user_id", "questao_id", "motivo", "anotacao", "revisar", "created_at"],
   "cronograma_blocos": ["id", "user_id", "dia_semana", "inicio", "fim", "materia_id", "titulo", "tipo", "tarefa_id", "feito_em", "created_at"],
+  "exactlab_favoritos": ["id", "user_id", "numero_atomico", "created_at"],
   "flashcard_respostas": ["id", "user_id", "flashcard_id", "acertou", "created_at"],
   "flashcards": ["id", "user_id", "materia_id", "frente", "verso", "serie_minima", "created_at"],
   "hotmart_eventos": ["id", "evento", "transacao", "email", "payload", "processado", "erro", "created_at"],

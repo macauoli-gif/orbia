@@ -134,6 +134,10 @@ export function criarMock() {
     ],
     // Maria fez o 2º dia do ENEM 2025 duas vezes (para a evolução ter o que mostrar);
     // Pedro fez a UERJ uma vez. Respostas de mentira: metade do gabarito, o resto em branco ou errado.
+    exactlab_favoritos: [
+      { id: 'xf-1', user_id: 'u-maria', numero_atomico: 26, created_at: '2026-11-25T10:00:00-03:00' },
+      { id: 'xf-2', user_id: 'u-pedro', numero_atomico: 8, created_at: '2026-11-25T10:00:00-03:00' },
+    ],
     simulados_tentativas: [
       { id: 'st-1', user_id: 'u-maria', prova_id: 'enem-2025-d2', idioma: null, respostas: respostasDeMentira('enem-2025-d2', 0.4), tempo_seg: 15600, created_at: '2026-11-08T18:00:00-03:00' },
       { id: 'st-2', user_id: 'u-maria', prova_id: 'enem-2025-d2', idioma: null, respostas: respostasDeMentira('enem-2025-d2', 0.6), tempo_seg: 14400, created_at: '2026-11-22T18:00:00-03:00' },
