@@ -322,6 +322,15 @@ export function desbloquearLicenca(id) {
   gravar()
   return ok(l)
 }
+// Como no banco: só a administradora apaga licença; a conta da pessoa continua.
+export function tirarDaLista(id) {
+  if (!ehAdmin()) return falha('Sem permissão.')
+  const antes = db.licencas.length
+  db.licencas = db.licencas.filter((l) => l.id !== id)
+  if (db.licencas.length === antes) return falha('Licença não encontrada.')
+  gravar()
+  return ok(null)
+}
 export function listarAvisosComErro() {
   if (!ehAdmin()) return ok([])
   return ok(db.hotmart_eventos.filter((e) => e.erro && !e.processado))

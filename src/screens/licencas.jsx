@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import * as dados from '../lib/dados.js'
 import { resumoLicencas, filtrarLicencas } from '../lib/admin.js'
 import { dataCurta } from '../lib/datas.js'
-import { STATUS_LICENCA, ORIGENS_LICENCA } from '../lib/licenca.js'
+import { STATUS_LICENCA, ORIGENS_LICENCA, normalizarEmail } from '../lib/licenca.js'
 import { Campo, Confirmar, ERRO_GENERICO, Estado, Icon, Janela, PageHeader, avisar } from '../components/index.jsx'
 
-export default function Licencas() {
+export default function Licencas({ meuEmail = '' }) {
   const [licencas, setLicencas] = useState([])
   const [avisosErro, setAvisosErro] = useState([])
   const [carregando, setCarregando] = useState(true)
@@ -15,6 +15,7 @@ export default function Licencas() {
   const [liberando, setLiberando] = useState(null)     // {} ou { email } vindo de um aviso
   const [bloqueando, setBloqueando] = useState(null)
   const [desbloqueando, setDesbloqueando] = useState(null)
+  const [tirando, setTirando] = useState(null)
   const [verAvisos, setVerAvisos] = useState(false)
 
   const carregar = async () => {
@@ -67,9 +68,10 @@ export default function Licencas() {
                   <td data-rotulo="Origem">{l.origem}{l.motivo ? <div className="small muted">{l.motivo}</div> : null}</td>
                   <td><span className={'pill ' + (l.status === 'Ativa' ? 'ok' : 'crit')}>{l.status}</span></td>
                   <td data-rotulo="Conta criada">{l.conta_criada ? 'Sim' : 'Ainda não'}</td>
-                  <td>{l.status === 'Ativa'
+                  <td><div className="row">{l.status === 'Ativa'
                     ? <button className="btn danger" onClick={() => setBloqueando(l)}>Bloquear</button>
-                    : <button className="btn" onClick={() => setDesbloqueando(l)}>Desbloquear</button>}</td>
+                    : <button className="btn" onClick={() => setDesbloqueando(l)}>Desbloquear</button>}
+                    <button className="btn" onClick={() => setTirando(l)} aria-label={`Tirar ${l.email} da lista`}><Icon nome="lixo" /> Tirar da lista</button></div></td>
                 </tr>
               ))}
             </tbody>
@@ -93,6 +95,13 @@ export default function Licencas() {
           const r = await dados.desbloquearLicenca(desbloqueando.id)
           setDesbloqueando(null)
           if (r.erro) avisar(ERRO_GENERICO, true); else { avisar('Licença desbloqueada.'); carregar() }
+        }} />}
+      {tirando && <Confirmar rotulo="Tirar da lista"
+        texto={`Tirar ${tirando.nome || tirando.email} da lista? A licença é apagada e a pessoa perde o acesso ao app. A conta e os estudos dela continuam guardados: se ela comprar de novo (ou você liberar o email de novo), volta tudo.${normalizarEmail(tirando.email) === normalizarEmail(meuEmail) ? ' Atenção: este é o seu próprio email; você perde o acesso às telas de estudo.' : ''}`}
+        aoCancelar={() => setTirando(null)} aoConfirmar={async () => {
+          const r = await dados.tirarDaLista(tirando.id)
+          setTirando(null)
+          if (r.erro) avisar(ERRO_GENERICO, true); else { avisar('Tirado da lista.'); carregar() }
         }} />}
       {verAvisos && (
         <Janela titulo="Avisos da Hotmart com erro" aoFechar={() => setVerAvisos(false)}>

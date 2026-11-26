@@ -122,11 +122,14 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   A administradora não lê `profiles` de aluno; a coluna "conta criada" vem de
   `emails_com_conta()`. Os 4 avisos do Supabase sobre essas funções serem
   chamáveis são de propósito (ver a migration de índices).
-- **Contas de teste** (`admin@`, `maria@`, `pedro@`, `ana@`, `lucas@exemplo.com`)
-  existem no banco real, com a senha em `.env.local` (`SENHA_CONTAS_TESTE`, fora
-  do git). `admin@exemplo.com` é administradora: **apagar essas contas antes
-  de vender** com `supabase/limpar-dados-de-exemplo.sql` (instruções dentro;
-  a trava recusa enquanto não houver administradora de verdade).
+- **Contas de teste no banco real:** só `admin@exemplo.com` (administradora) e
+  `ana@exemplo.com` (sem licença), senha em `.env.local` (`SENHA_CONTAS_TESTE`,
+  fora do git). Maria, Pedro e Lucas de teste foram apagados do banco a pedido da
+  dona em 26/11/2026; no **mock** os dois alunos continuam (provam a separação).
+  Antes de vender: `supabase/limpar-dados-de-exemplo.sql` apaga o que sobrou.
+- **"Tirar da lista" (tela Licenças) apaga só a licença**, nunca a conta nem os
+  estudos: a pessoa perde o acesso e volta a ter tudo se ganhar licença de novo.
+  Excluir a conta de verdade precisaria de função no servidor (service role).
 - **`tarefas.concluida_em` é obrigatório em `'Concluído'` e vazio nos outros.**
   Mudar status sempre por `comStatus()` (`lib/tarefas.js`); senão o banco recusa.
 - **Blocos de "Prova anterior" da semana sugerida não têm matéria**

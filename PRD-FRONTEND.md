@@ -332,6 +332,7 @@ Três números no topo: licenças ativas, bloqueadas, vendidas neste mês. Aviso
 **Ações**
 - **+ Liberar email:** cria uma licença ativa com origem Manual.
 - **Bloquear / Desbloquear:** pede motivo para bloquear e confirmação.
+- **Tirar da lista (26/11/2026):** com confirmação, apaga a licença: a pessoa some da lista e perde o acesso; a conta e os estudos continuam guardados (voltam se ela ganhar licença de novo). Avisa quando é o próprio email da administradora.
 - **Avisos com erro:** lista os avisos da Hotmart que falharam, com data, email e erro, e o botão "Liberar este email".
 
 **Regras por perfil**

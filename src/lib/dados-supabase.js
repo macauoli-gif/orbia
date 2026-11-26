@@ -245,5 +245,12 @@ export const bloquearLicenca = (id, motivo) =>
   q(supabase.from('licencas').update({ status: 'Bloqueada', bloqueada_em: new Date().toISOString(), motivo: motivo || null }).eq('id', id).select().single())
 export const desbloquearLicenca = (id) =>
   q(supabase.from('licencas').update({ status: 'Ativa', bloqueada_em: null }).eq('id', id).select().single())
+// "Tirar da lista": apaga a licença (a pessoa perde o acesso). A conta e os estudos
+// ficam no banco; se ela comprar de novo, a licença nova devolve tudo.
+export async function tirarDaLista(id) {
+  const r = await q(supabase.from('licencas').delete().eq('id', id).select('id'))
+  if (r.erro) return r
+  return r.data.length ? ok(null) : falha('Licença não encontrada.')
+}
 export const listarAvisosComErro = () =>
   q(supabase.from('hotmart_eventos').select('*').not('erro', 'is', null).eq('processado', false).order('created_at', { ascending: false }))

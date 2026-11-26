@@ -28,7 +28,7 @@ export default function AppAdmin({ perfil: inicial }) {
         ))}
       </nav>
       <main className="app-body">
-        {tela === 'conta' ? <Conta perfil={perfil} salvar={salvar} /> : <Licencas />}
+        {tela === 'conta' ? <Conta perfil={perfil} salvar={salvar} /> : <Licencas meuEmail={perfil.email} />}
       </main>
       <nav className="bottom-nav" aria-label="Menu">
         {MENU.map(([id, rotulo, icone]) => (

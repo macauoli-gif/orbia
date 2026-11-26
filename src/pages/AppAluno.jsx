@@ -69,7 +69,7 @@ function Shell() {
     case 'simulados': corpo = <Simulados {...props} />; break
     case 'exactlab': corpo = <ExactLab {...props} />; break
     case 'conta': corpo = <Conta {...props} />; break
-    case 'licencas': corpo = admin ? <Licencas /> : <Quadro {...props} />; break
+    case 'licencas': corpo = admin ? <Licencas meuEmail={perfil.email} /> : <Quadro {...props} />; break
     default: corpo = <Quadro {...props} />
   }
 

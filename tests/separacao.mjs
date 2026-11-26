@@ -50,6 +50,10 @@ conferir('A fazer com data de conclusão é recusado', (await d.salvarTarefa({ t
 await como('admin@exemplo.com')
 for (const f of TABELAS_DO_ALUNO) conferir(`administradora recebe zero em ${f}`, (await d[f]()).data.length, 0)
 conferir('administradora sem licença não vê favoritos de ninguém', (await d.listarFavoritos()).data.length, 0)
+const umaLicenca = (await d.listarLicencas()).data.find((l) => l.email === 'pedro@exemplo.com')
+conferir('administradora tira uma pessoa da lista', (await d.tirarDaLista(umaLicenca.id)).erro, null)
+conferir('a pessoa some da lista', (await d.listarLicencas()).data.some((l) => l.id === umaLicenca.id), false)
+conferir('tirar de novo a mesma avisa que não existe', (await d.tirarDaLista(umaLicenca.id)).erro != null, true)
 conferir('administradora vê as licenças', (await d.listarLicencas()).data.length > 0, true)
 
 // Administradora com licença de cortesia: estuda, mas só o que é dela.
@@ -74,6 +78,7 @@ for (const email of ['ana@exemplo.com', 'lucas@exemplo.com']) {
 }
 
 await como('maria@exemplo.com')
+conferir('aluno não tira ninguém da lista', (await d.tirarDaLista('qualquer')).erro, 'Sem permissão.')
 conferir('aluno não libera licença', (await d.liberarEmail({ email: 'x@exemplo.com' })).erro != null, true)
 conferir('aluno não muda o próprio papel', (await d.salvarPerfil({ role: 'admin' })).data.role, 'aluno')
 
