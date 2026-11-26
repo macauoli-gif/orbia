@@ -1,5 +1,4 @@
 // Filtros, correção e situação das questões.
-import { serieAlcanca } from './series.js'
 
 export const NIVEIS = ['Fácil', 'Médio', 'Difícil']
 export const LETRAS = ['A', 'B', 'C', 'D', 'E']
@@ -16,6 +15,12 @@ export function ultimaResposta(questaoId, respostas) {
   return ultima
 }
 
+// Questão de fábrica sugerida para a série: a da PRÓPRIA série (decidido em
+// 25/11/2026: cada série com o seu nível). Nas questões, serie_minima funciona
+// como "série da questão"; vazia = vale para todas. Flashcards e resumos
+// continuam com a regra de série mínima (serieAlcanca).
+export const questaoDaSerie = (q, serie) => !q.serie_minima || q.serie_minima === serie
+
 export function filtrarQuestoes(questoes, f, { serie, respostas = [], caderno = [] }) {
   const revisar = new Set(caderno.filter((c) => c.revisar).map((c) => c.questao_id))
   return questoes.filter((q) => {
@@ -24,7 +29,7 @@ export function filtrarQuestoes(questoes, f, { serie, respostas = [], caderno = 
     if (f.nivel && q.nivel !== f.nivel) return false
     if (f.instituicao && q.instituicao !== f.instituicao) return false
     if (f.ano && String(q.ano || '') !== String(f.ano)) return false
-    if (f.soSugerido && q.user_id == null && !serieAlcanca(q.serie_minima, serie)) return false
+    if (f.soSugerido && q.user_id == null && !questaoDaSerie(q, serie)) return false
     const r = ultimaResposta(q.id, respostas)
     if (f.situacao === 'Pendentes' && r) return false
     if (f.situacao === 'Resolvidas' && !r) return false

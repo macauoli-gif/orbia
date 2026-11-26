@@ -3,6 +3,9 @@
 //
 //   node scripts/gerar-seed.mjs fabrica  > supabase/migrations/..._conteudo_de_fabrica.sql
 //   node scripts/gerar-seed.mjs exemplo  (imprime o SQL das pessoas de exemplo)
+//   node scripts/gerar-seed.mjs questoes q2-  > supabase/migrations/..._questoes_q2.sql
+//     (só as questões de fábrica cujo id começa com o prefixo: conteúdo novo
+//     depois da primeira carga, sem reescrever a migration antiga)
 //
 // Os ids do mock ('m-matematica', 't-m1') viram uuids fixos (md5 do id): rodar
 // de novo dá os mesmos ids, e "on conflict do nothing" deixa repetir sem duplicar.
@@ -37,6 +40,20 @@ ${linhas('flashcards', ['id', 'user_id', 'materia_id', 'frente', 'verso', 'serie
     FLASHCARDS_APP.map((f) => [id(f.id), 'null', id(f.materia_id), q(f.frente), q(f.verso), q(f.serie_minima)]))}
 ${linhas('questoes', ['id', 'user_id', 'materia_id', 'assunto', 'nivel', 'instituicao', 'ano', 'enunciado', 'alternativas', 'correta', 'resposta_comentada', 'serie_minima'],
     QUESTOES_APP.map((x) => [id(x.id), 'null', id(x.materia_id), q(x.assunto), q(x.nivel), q(x.instituicao), q(x.ano), q(x.enunciado), j(x.alternativas), q(x.correta), q(x.resposta_comentada), q(x.serie_minima)]))}`
+}
+
+function questoesNovas(prefixo) {
+  if (!prefixo) throw new Error("Diga o prefixo dos ids, ex.: q2-")
+  const novas = QUESTOES_APP.filter((x) => x.id.startsWith(prefixo))
+  return `-- ============================================================
+-- Pauta de Estudos — questões de fábrica novas (ids ${prefixo}*).
+-- GERADO por scripts/gerar-seed.mjs questoes ${prefixo} a partir de src/lib/fabrica.js.
+-- Não edite à mão. Questões autorais, no estilo e no nível de provas de
+-- instituições reconhecidas pelo MEC (não copiam questões reais). A conferir por professor.
+-- ============================================================
+
+${linhas("questoes", ["id", "user_id", "materia_id", "assunto", "nivel", "instituicao", "ano", "enunciado", "alternativas", "correta", "resposta_comentada", "serie_minima"],
+    novas.map((x) => [id(x.id), "null", id(x.materia_id), q(x.assunto), q(x.nivel), q(x.instituicao), q(x.ano), q(x.enunciado), j(x.alternativas), q(x.correta), q(x.resposta_comentada), q(x.serie_minima)]))}`
 }
 
 function exemplo() {
@@ -96,4 +113,5 @@ ${linhas('sessoes_foco', ['id', 'user_id', 'materia_id', 'tarefa_id', 'inicio', 
 const qual = process.argv[2]
 if (qual === 'fabrica') process.stdout.write(fabrica())
 else if (qual === 'exemplo') process.stdout.write(exemplo())
-else { console.error('Use: node scripts/gerar-seed.mjs fabrica|exemplo'); process.exit(1) }
+else if (qual === 'questoes') process.stdout.write(questoesNovas(process.argv[3]))
+else { console.error('Use: node scripts/gerar-seed.mjs fabrica|exemplo|questoes <prefixo>'); process.exit(1) }

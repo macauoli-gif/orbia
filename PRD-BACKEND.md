@@ -170,8 +170,10 @@ As anotações de um resumo em PDF, uma linha por página. Coordenadas de 0 a 1,
 | alternativas | jsonb | sim | lista de `{letra, texto, explicacao}`, 4 ou 5 itens |
 | correta | text | sim | CHECK: `'A'` a `'E'`, e precisa existir nas alternativas |
 | resposta_comentada | text | não | |
-| serie_minima | text | não | |
+| serie_minima | text | não | nas questões, é a série da questão: a sugestão mostra só as da série do aluno (25/11/2026). Vazia = todas |
 | created_at | timestamptz | sim | automático |
+
+Conteúdo de fábrica de questões (25/11/2026): autorais, no estilo e no nível de provas de instituições reconhecidas pelo MEC (ENEM, Fuvest/USP, Unicamp, UFRGS, UERJ, UnB, IFs e Colégio Pedro II), com "Nível ENEM" etc. em `instituicao`. Não copiam questões reais (direitos autorais, app vendido). Do 9º ano ao 3º ano o nível sobe; o 3º ano é todo Difícil. Questão nova entra por migration nova (`node scripts/gerar-seed.mjs questoes <prefixo>`), sem reescrever a de fábrica.
 
 ### Tabela `respostas_questoes`
 Toda tentativa, para o Desempenho da v1.1 já nascer com histórico.

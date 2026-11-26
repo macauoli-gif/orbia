@@ -198,7 +198,7 @@ A semana sugerida, por série, é a da versão atual: blocos de 50 minutos das 1
 **Chega aqui por:** item Questões do menu.
 
 **O que aparece**
-Filtros: matéria, assunto, nível (Fácil, Médio, Difícil), instituição, ano, situação (Todas, Pendentes, Resolvidas, Para revisar) e a opção "mostrar só o que o app sugere para a minha série" (marcada por padrão). Botões "+ Cadastrar questão" e "Caderno de erros". Lista de cartões com matéria, assunto, nível, instituição e ano, o começo do enunciado e a marca "resolvida" (acertou / errou) quando houver.
+Filtros: matéria, assunto, nível (Fácil, Médio, Difícil), instituição, ano, situação (Todas, Pendentes, Resolvidas, Para revisar) e a opção "mostrar só o que o app sugere para a minha série" (marcada por padrão; mostra só as questões da série do aluno, não as das séries anteriores — 25/11/2026). Botões "+ Cadastrar questão" e "Caderno de erros". Lista de cartões com matéria, assunto, nível, instituição e ano, o começo do enunciado e a marca "resolvida" (acertou / errou) quando houver.
 
 **Ações**
 - **Tocar na questão:** abre Resolver questão.

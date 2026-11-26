@@ -48,10 +48,22 @@ let db = carregar()
 let sessao = lerSessao()
 const ouvintes = new Set()
 
+// O conteúdo de fábrica (user_id vazio) vem sempre do código, não do que ficou
+// salvo no navegador: senão questão nova de fábrica nunca aparece no mock.
+function comFabricaAtual(salvo) {
+  const novo = criarMock()
+  for (const t of ['materias', 'questoes', 'flashcards']) {
+    const fabrica = t === 'materias' ? novo[t] : novo[t].filter((r) => r.user_id == null)
+    const doAluno = t === 'materias' ? [] : (salvo[t] || []).filter((r) => r.user_id != null)
+    salvo[t] = [...fabrica, ...doAluno]
+  }
+  return salvo
+}
+
 function carregar() {
   try {
     const salvo = localStorage.getItem(CHAVE)
-    if (salvo) return JSON.parse(salvo)
+    if (salvo) return comFabricaAtual(JSON.parse(salvo))
   } catch (_) { /* navegador sem armazenamento: começa do zero */ }
   return criarMock()
 }
