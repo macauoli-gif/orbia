@@ -99,7 +99,7 @@ function doAluno(tabela) {
 function fabricaEMeus(tabela) {
   const e = eu()
   if (!e) return []
-  if (!e.licenciado) return e.perfil.role === 'admin' ? db[tabela].filter((r) => r.user_id == null) : []
+  if (!e.licenciado) return ehAdmin() ? db[tabela].filter((r) => r.user_id == null) : []
   return db[tabela].filter((r) => r.user_id == null || r.user_id === e.usuario.id)
 }
 // O aluno só responde, lê ou anota o que ele pode ver.

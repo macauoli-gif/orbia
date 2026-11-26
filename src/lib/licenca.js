@@ -18,7 +18,7 @@ export function telaDeEntrada({ perfil, licenca, emailConfirmado }) {
   if (!perfil) return 'sem-licenca'
   // A administradora com licença ativa (cortesia) também estuda: entra como
   // aluna e ganha Licenças no menu. Sem licença, só administra.
-  if (perfil.role === 'admin' && !licencaAtiva(licenca, emailConfirmado)) return 'admin'
+  if (podeAdministrar(perfil) && !licencaAtiva(licenca, emailConfirmado)) return 'admin'
   if (!emailConfirmado) return 'nao-confirmado'
   if (!licenca) return 'sem-licenca'
   if (!licencaAtiva(licenca, emailConfirmado)) return 'licenca-bloqueada'
@@ -26,7 +26,7 @@ export function telaDeEntrada({ perfil, licenca, emailConfirmado }) {
   return 'aluno'
 }
 
-// O menu de estudo mostra Licenças só para a administradora.
+// É a administradora? (Quem libera licença; a RLS confere de novo no banco.)
 export const podeAdministrar = (perfil) => perfil?.role === 'admin'
 
 export function normalizarEmail(email) {
