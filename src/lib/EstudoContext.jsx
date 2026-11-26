@@ -11,6 +11,7 @@ export function EstudoProvider({ perfilInicial, children }) {
   const [tarefas, setTarefas] = useState([])
   const [respostas, setRespostas] = useState([])
   const [sessoes, setSessoes] = useState([])
+  const [tentativas, setTentativas] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
 
@@ -20,12 +21,12 @@ export function EstudoProvider({ perfilInicial, children }) {
 
   useEffect(() => {
     let vivo = true
-    Promise.all([dados.listarMaterias(), dados.listarTarefas(), dados.listarRespostasQuestoes(), dados.listarSessoesFoco()])
-      .then(([m, t, r, s]) => {
+    Promise.all([dados.listarMaterias(), dados.listarTarefas(), dados.listarRespostasQuestoes(), dados.listarSessoesFoco(), dados.listarTentativas()])
+      .then(([m, t, r, s, st]) => {
         if (!vivo) return
-        const e = [m, t, r, s].find((x) => x.erro)
+        const e = [m, t, r, s, st].find((x) => x.erro)
         if (e) setErro(e.erro)
-        else { setMaterias(m.data); setTarefas(t.data); setRespostas(r.data); setSessoes(s.data) }
+        else { setMaterias(m.data); setTarefas(t.data); setRespostas(r.data); setSessoes(s.data); setTentativas(st.data) }
         setCarregando(false)
       })
     return () => { vivo = false }
@@ -45,7 +46,8 @@ export function EstudoProvider({ perfilInicial, children }) {
     tarefas, setTarefas, recarregarTarefas,
     respostas, recarregarRespostas,
     sessoes, recarregarSessoes,
-  }), [perfil, materias, tarefas, respostas, sessoes, carregando, erro])
+    tentativas, setTentativas,
+  }), [perfil, materias, tarefas, respostas, sessoes, tentativas, carregando, erro])
 
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>
 }

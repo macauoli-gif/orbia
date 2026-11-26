@@ -13,5 +13,6 @@
   "resumos": ["id", "user_id", "tipo", "materia_id", "titulo", "texto", "arquivo_path", "arquivo_nome", "paginas", "created_at"],
   "resumos_lidos": ["id", "user_id", "resumo_id", "created_at"],
   "sessoes_foco": ["id", "user_id", "materia_id", "tarefa_id", "inicio", "minutos", "saidas_aba", "completou", "created_at"],
+  "simulados_tentativas": ["id", "user_id", "prova_id", "idioma", "respostas", "tempo_seg", "created_at"],
   "tarefas": ["id", "user_id", "titulo", "materia_id", "prazo", "prioridade", "status", "observacao", "concluida_em", "created_at"]
 }

@@ -270,6 +270,14 @@ const COL_SESSAO = ['materia_id', 'tarefa_id', 'inicio', 'minutos', 'saidas_aba'
 export const listarSessoesFoco = () => listar('sessoes_foco', 'inicio')
 export const registrarSessaoFoco = (s) => salvar('sessoes_foco', COL_SESSAO, s)
 
+// ---------- simulados ----------
+// Tentativa terminada não se edita (o banco nem dá permissão de update).
+const COL_TENTATIVA = ['prova_id', 'idioma', 'respostas', 'tempo_seg']
+export const listarTentativas = () => listar('simulados_tentativas')
+export const salvarTentativa = async (t) =>
+  t.id ? falha('Uma tentativa terminada não pode ser mudada.') : salvar('simulados_tentativas', COL_TENTATIVA, { ...t, idioma: t.idioma || null })
+export const apagarTentativa = (id) => apagar('simulados_tentativas', id)
+
 // ---------- administradora ----------
 export async function listarLicencas() {
   const [l, contas] = await Promise.all([

@@ -9,7 +9,7 @@
 
 App de organização de estudos para alunos do 9º ano do fundamental ao 3º ano do ensino médio, vendido por licença vitalícia na Hotmart. Usado no celular, no tablet (às vezes com caneta) e no computador.
 
-**Escopo do lançamento (v1):** Entrada, Sem licença, Série, Quadro, Cronograma, Questões, Caderno de erros, Foco, Banco de resumos, Flashcards, Minha conta e Licenças. Simulados, Desempenho e Espaço para cálculo ficam para a v1.1 (ver o fim do arquivo).
+**Escopo do lançamento (v1):** Entrada, Sem licença, Série, Quadro, Cronograma, Questões, Caderno de erros, Foco, Simulados (provas anteriores; 25/11/2026), Banco de resumos, Flashcards, Minha conta e Licenças. O treino de Simulados com o banco do app, Desempenho e Espaço para cálculo ficam para a v1.1 (ver o fim do arquivo).
 
 ## Padrão técnico
 
@@ -44,7 +44,7 @@ Entrada (Entrar · Criar conta · Esqueci a senha)
 **Quem acessa:** aluno.
 
 **O que aparece**
-Linha com o nome do aluno e a série. Abaixo, três medidores da semana: questões respondidas / meta, minutos de foco / meta, provas anteriores no mês / meta (este só a partir do 2º ano; antes da v1.1 aparece "chega em breve"). Abaixo, a lista de avisos: tarefas atrasadas (vermelho), prazos em até 48 horas (amarelo), ritmo abaixo da meta (amarelo). Mostra até 3 avisos e o botão "ver todos".
+Linha com o nome do aluno e a série. Abaixo, três medidores da semana: questões respondidas / meta, minutos de foco / meta, provas anteriores no mês / meta (este só a partir do 2º ano; conta os simulados de provas anteriores terminados no mês). Abaixo, a lista de avisos: tarefas atrasadas (vermelho), prazos em até 48 horas (amarelo), ritmo abaixo da meta (amarelo). Mostra até 3 avisos e o botão "ver todos".
 
 **Ações**
 - **Tocar num aviso de tarefa:** abre o Quadro com o cartão daquela tarefa aberto.
@@ -397,10 +397,27 @@ que já existem em referencia/pauta-de-estudos-v1.html.
 - [ ] O aluno envia um PDF, escreve por cima com a caneta e com texto, fecha, abre de novo e as anotações continuam lá; o PDF original não muda.
 - [ ] Logado como Pedro, nenhum PDF nem anotação da Maria Claudia aparece.
 
+## Tela: Simulados (decidido em 25/11/2026)
+
+**Quem acessa:** aluno. **Chega aqui por:** menu lateral e, no celular, Mais → Simulados.
+
+**O que aparece**
+Filtros "Instituição" (ENEM, Fuvest, Unicamp, UERJ) e "Ano". Lista das provas (ex.: "ENEM 2025 · 1º dia · Caderno 1 Azul", "UERJ 2026 · 1º Exame de Qualificação"), com número de questões, tempo e quantas vezes o aluno já fez. Abaixo, o painel "Sua evolução": o percentual de acerto de cada tentativa, em ordem, e o resumo por área da última comparado com a anterior.
+
+**Fazer a prova**
+Botão "Abrir a prova oficial" (PDF no site da instituição, em outra aba) e aviso de qual caderno/versão usar. Se a prova tem língua estrangeira (ENEM: inglês ou espanhol; UERJ: espanhol, francês ou inglês), o aluno escolhe antes. Cartão-resposta com uma linha por questão e as alternativas (A a E, ou A a D), cronômetro e o tempo oficial da prova. As marcações ficam guardadas no aparelho até terminar. "Terminar e corrigir" pede confirmação se houver questões em branco.
+
+**Resultado**
+Acertos, erros, em branco, anuladas (fora da conta), percentual e tempo. Tabela por área ou disciplina (acertos, erros, em branco) quando o gabarito oficial separa; quando não separa (Fuvest e Unicamp), o app diz isso. Mapa da prova (cada questão em verde, vermelho, cinza ou riscada). Comparação com a tentativa anterior da mesma prova.
+
+**Ações:** abrir uma tentativa antiga, apagar uma tentativa (com confirmação), refazer a prova.
+
+**Estado vazio:** "Você ainda não fez nenhum simulado. Escolha uma prova acima."
+
 ## Para a v1.1 (fora do lançamento)
 
 Descritas em detalhe na versão atual (`referencia/`), entram depois:
-- **Simulados:** provas anteriores (links oficiais, cartão-resposta A a E ou A a D, cronômetro, gabarito colado com X ou * para anulada, resultado por área, mapa da prova, comparação e evolução) e treino com o banco do app (por matéria, assunto ou completo, modo prova real).
+- **Treino com o banco do app** dentro de Simulados (as provas anteriores entraram no lançamento; ver a tela Simulados) (por matéria, assunto ou completo, modo prova real).
 - **Desempenho:** acertos por matéria, evolução mensal, tempo por disciplina, assuntos mais errados e os três que mais precisam de atenção.
 - **Espaço para cálculo** com caneta, depois de testado num tablet de verdade.
 - **Editor do conteúdo de fábrica** para a administradora.

@@ -1,10 +1,10 @@
 // Faixa de metas da semana e o aviso de ritmo.
-import { diaDaSemana, inicioDaSemana } from './datas.js'
+import { diaDaSemana, inicioDaSemana, inicioDoMes } from './datas.js'
 import { configSerie } from './series.js'
 
 const naSemana = (iso, agora) => new Date(iso) >= inicioDaSemana(agora)
 
-export function progressoDaSemana({ perfil, respostas = [], sessoes = [], agora = new Date() }) {
+export function progressoDaSemana({ perfil, respostas = [], sessoes = [], tentativas = [], agora = new Date() }) {
   const questoes = respostas.filter((r) => naSemana(r.created_at, agora)).length
   const focoMin = sessoes.filter((s) => naSemana(s.inicio, agora)).reduce((n, s) => n + (s.minutos || 0), 0)
   const metaQ = perfil.meta_questoes_semana || 0
@@ -18,6 +18,8 @@ export function progressoDaSemana({ perfil, respostas = [], sessoes = [], agora 
     questoes, metaQ, focoMin, metaFoco,
     mostraProvas: (configSerie(perfil.serie)?.vestibular || 0) > 0,
     metaProvas: perfil.meta_provas_mes || 0,
+    // cada simulado de prova anterior terminado no mês conta uma prova
+    provasMes: tentativas.filter((t) => new Date(t.created_at) >= inicioDoMes(agora)).length,
     ritmoBaixo,
     textoRitmo: ritmoBaixo ? `Ritmo abaixo da meta: ${questoes} de ${metaQ} questões e a semana já passou de ${Math.round(andou * 100)}%.` : '',
   }

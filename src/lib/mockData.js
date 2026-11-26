@@ -8,6 +8,7 @@
 // no mock as mesmas regras que a RLS vai aplicar no banco.
 // ============================================================
 import { MATERIAS, FLASHCARDS_APP, QUESTOES_APP } from './fabrica.js'
+import { PROVAS } from './simulados-provas.js'
 import { semanaSugerida, metasSugeridas } from './series.js'
 
 // false = o app usa o banco de verdade (Supabase). true = volta para os dados
@@ -36,6 +37,20 @@ function tarefa(id, user_id, titulo, materia, prazo, prioridade, status, conclui
 function blocosDe(user_id, serie, tarefas) {
   return semanaSugerida(serie, MATERIAS, tarefas.filter((t) => t.user_id === user_id))
     .map((b, i) => ({ ...b, id: `${user_id}-b${i + 1}`, user_id, created_at: '2026-11-03T10:00:00-03:00' }))
+}
+
+// Marca a resposta certa em uma fração das questões (de forma fixa, sem sorteio)
+// e uma errada nas outras, deixando 1 em cada 10 em branco.
+function respostasDeMentira(provaId, fracao, idioma = null) {
+  const p = PROVAS.find((x) => x.id === provaId)
+  const letras = ['A', 'B', 'C', 'D', 'E'].slice(0, p.alternativas)
+  const r = {}
+  p.questoes.forEach((q, i) => {
+    const certa = q.r ?? p.variantes?.[idioma]?.[q.n]
+    if (i % 10 === 9 || !certa || certa === '*') return
+    r[q.n] = ((i * 37) % 100) / 100 < fracao ? certa : letras[(letras.indexOf(certa) + 1) % letras.length]
+  })
+  return r
 }
 
 export function criarMock() {
@@ -115,6 +130,13 @@ export function criarMock() {
       { id: 's-1', user_id: 'u-maria', materia_id: m('Matemática'), tarefa_id: 't-m1', inicio: '2026-11-24T14:00:00-03:00', minutos: 25, saidas_aba: 1, completou: true, created_at: '2026-11-24T14:25:00-03:00' },
       { id: 's-2', user_id: 'u-maria', materia_id: m('História'), tarefa_id: null, inicio: '2026-11-25T14:00:00-03:00', minutos: 25, saidas_aba: 0, completou: true, created_at: '2026-11-25T14:25:00-03:00' },
       { id: 's-3', user_id: 'u-pedro', materia_id: m('Geografia'), tarefa_id: 't-p2', inicio: '2026-11-24T15:00:00-03:00', minutos: 15, saidas_aba: 3, completou: false, created_at: '2026-11-24T15:15:00-03:00' },
+    ],
+    // Maria fez o 2º dia do ENEM 2025 duas vezes (para a evolução ter o que mostrar);
+    // Pedro fez a UERJ uma vez. Respostas de mentira: metade do gabarito, o resto em branco ou errado.
+    simulados_tentativas: [
+      { id: 'st-1', user_id: 'u-maria', prova_id: 'enem-2025-d2', idioma: null, respostas: respostasDeMentira('enem-2025-d2', 0.4), tempo_seg: 15600, created_at: '2026-11-08T18:00:00-03:00' },
+      { id: 'st-2', user_id: 'u-maria', prova_id: 'enem-2025-d2', idioma: null, respostas: respostasDeMentira('enem-2025-d2', 0.6), tempo_seg: 14400, created_at: '2026-11-22T18:00:00-03:00' },
+      { id: 'st-3', user_id: 'u-pedro', prova_id: 'uerj-2026-1', idioma: 'Inglês', respostas: respostasDeMentira('uerj-2026-1', 0.5, 'Inglês'), tempo_seg: 12000, created_at: '2026-11-20T15:00:00-03:00' },
     ],
   }
 }

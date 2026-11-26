@@ -155,8 +155,10 @@ Com até cinco semanas, o lançamento leva o que o aluno usa toda semana e o que
 - Quadro (a tela do dia a dia), Cronograma, Banco de resumos (só do aluno, com PDF anotado à mão e por texto), Flashcards, Questões (com caderno de erros) e Foco
 - Conteúdo de fábrica (questões, flashcards, matérias, semana sugerida) trazido da versão atual
 
+**Simulados de vestibulares — trazido para o lançamento em 25/11/2026:** provas anteriores oficiais de ENEM (2 dias), Fuvest 1ª fase, Unicamp 1ª fase e UERJ (exames de qualificação), dos últimos 5 anos com gabarito publicado, com o gabarito oficial já cadastrado (lido dos PDFs oficiais). O aluno escolhe a instituição e o ano, abre a prova no site oficial, marca no cartão-resposta com cronômetro, e vê a correção (acertos, erros, em branco, anuladas fora da conta), por área/disciplina quando o gabarito oficial separa (ENEM e UERJ), o mapa da prova e a evolução a cada tentativa. O app não guarda cópia das provas.
+
 **Logo depois (v1.1):**
-- Simulados (provas anteriores com cartão-resposta e treino com o banco do app)
+- Treino com o banco do app dentro de Simulados (por matéria, assunto ou completo)
 - Desempenho (gráficos e os três assuntos que mais precisam de atenção)
 - Espaço para cálculo com caneta (precisa ser testado num tablet de verdade antes)
 - Tela para você editar o conteúdo de fábrica dentro do app (até lá, o conteúdo é atualizado pela construção)
@@ -238,7 +240,7 @@ O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 ## Melhorias para a v2
 
-- Simulados, Desempenho, espaço para cálculo e editor de conteúdo — cortados do lançamento pelo prazo (ver lista acima).
+- Desempenho, espaço para cálculo e editor de conteúdo — cortados do lançamento pelo prazo (ver lista acima). Simulados de provas anteriores entraram no lançamento (25/11/2026).
 - Aplicativo de loja (Android e iOS) — o app abre no navegador do celular e pode ser fixado na tela inicial.
 - Grupos de estudo — fora do escopo desde a versão atual.
 

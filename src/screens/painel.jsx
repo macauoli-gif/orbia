@@ -27,7 +27,7 @@ function Meta({ rotulo, feito, meta, texto }) {
 }
 
 export default function Painel({ goto }) {
-  const { perfil, tarefas, respostas, sessoes, materiaPorId } = useEstudo()
+  const { perfil, tarefas, respostas, sessoes, tentativas, materiaPorId } = useEstudo()
   const [blocos, setBlocos] = useState([])
   const [todos, setTodos] = useState(false)
 
@@ -35,7 +35,7 @@ export default function Painel({ goto }) {
   useEffect(() => { dados.listarBlocos().then((r) => { if (!r.erro) setBlocos(r.data) }) }, [])
 
   const p = painelDoDia({ tarefas, blocos, nomeMateria: (id) => materiaPorId[id]?.nome })
-  const m = progressoDaSemana({ perfil, respostas, sessoes })
+  const m = progressoDaSemana({ perfil, respostas, sessoes, tentativas })
   const serie = configSerie(perfil.serie)
   const visiveis = todos ? p.avisos : p.avisos.slice(0, AVISOS_VISIVEIS)
 
@@ -80,13 +80,7 @@ export default function Painel({ goto }) {
         <h2>Metas da semana · {perfil.serie}</h2>
         <Meta rotulo="Questões resolvidas" feito={m.questoes} meta={m.metaQ} texto={`${m.questoes} de ${m.metaQ}`} />
         <Meta rotulo="Tempo de foco" feito={m.focoMin} meta={m.metaFoco} texto={`${textoMinutos(m.focoMin)} de ${textoMinutos(m.metaFoco)}`} />
-        {m.mostraProvas && (
-          <div className="meta-linha">
-            <span>Provas anteriores no mês</span>
-            <span className="small muted">Chega em breve, com os Simulados.</span>
-            <b>meta {m.metaProvas}</b>
-          </div>
-        )}
+        {m.mostraProvas && <Meta rotulo="Provas anteriores no mês" feito={m.provasMes} meta={m.metaProvas} texto={`${m.provasMes} de ${m.metaProvas}`} />}
         {m.ritmoBaixo && <div className="nota-meta warn">{m.textoRitmo}</div>}
         {serie?.foco && <div className="nota-meta">{serie.foco} Metas sugeridas pelo app. Para mudar, use “Alterar nome ou série”.</div>}
       </div>

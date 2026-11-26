@@ -57,6 +57,7 @@ function comFabricaAtual(salvo) {
     const doAluno = t === 'materias' ? [] : (salvo[t] || []).filter((r) => r.user_id != null)
     salvo[t] = [...fabrica, ...doAluno]
   }
+  for (const t of Object.keys(novo)) if (!salvo[t]) salvo[t] = novo[t] // tabela nova
   return salvo
 }
 
@@ -380,6 +381,18 @@ export const tirarDoCaderno = (id) => apagarDoAluno('caderno_erros', id)
 // ================= Foco =================
 export const listarSessoesFoco = () => ok(doAluno('sessoes_foco'))
 export const registrarSessaoFoco = (s) => salvarDoAluno('sessoes_foco', s)
+
+// ================= Simulados =================
+// Imita o banco: sem edição, e o CHECK que aceita só letras de A a E.
+export const listarTentativas = () => ok(doAluno('simulados_tentativas'))
+export function salvarTentativa(t) {
+  if (t.id) return falha('Uma tentativa terminada não pode ser mudada.')
+  if (!/^[a-z0-9-]{3,40}$/.test(t.prova_id || '')) return falha('Prova inválida.')
+  if (Object.values(t.respostas || {}).some((r) => !['A', 'B', 'C', 'D', 'E'].includes(r))) return falha('Resposta inválida.')
+  if (!(t.tempo_seg >= 0)) return falha('Tempo inválido.')
+  return salvarDoAluno('simulados_tentativas', { prova_id: t.prova_id, idioma: t.idioma || null, respostas: t.respostas || {}, tempo_seg: t.tempo_seg })
+}
+export const apagarTentativa = (id) => apagarDoAluno('simulados_tentativas', id)
 
 // ================= Administradora =================
 export function listarLicencas() {

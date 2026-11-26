@@ -315,10 +315,26 @@ Um bucket privado no Storage, `resumos`, só com os PDFs de resumo dos alunos.
 - O arquivo não é alterado depois de enviado; as anotações moram em `resumo_anotacoes`.
 - Apagar o resumo apaga o arquivo.
 
+### Tabela `simulados_tentativas` (25/11/2026)
+
+As provas e os gabaritos oficiais NÃO ficam no banco: são conteúdo de fábrica no código (`src/lib/simulados-provas.js`, gerado por `scripts/gerar-provas.mjs` a partir dos PDFs oficiais), iguais para todos e públicos. No banco fica só o que o aluno fez.
+
+| Campo | Tipo | Obrigatório | Regra |
+|---|---|---|---|
+| id | uuid | sim | automático |
+| user_id | uuid | sim | dono |
+| prova_id | text | sim | id da prova no código (ex.: `enem-2025-d1`) |
+| idioma | text | não | língua estrangeira escolhida, quando a prova tem |
+| respostas | jsonb | sim | objeto `{ "número": "letra" }` |
+| tempo_seg | integer | sim | ≥ 0 |
+| created_at | timestamptz | sim | automático (data da tentativa) |
+
+**Ver / Criar / Apagar:** só o dono, com licença ativa (mesma regra das outras tabelas de estudo). Ninguém edita uma tentativa terminada. A administradora não vê nada. A correção é calculada pelo app a partir do gabarito no código (gabarito retificado depois corrige as tentativas antigas também).
+
 ## Para a v1.1 (fora do lançamento)
 
-- `vestibulares` (fábrica e do aluno: nome, link https, número de questões, tempo, alternativas A–E ou A–D, áreas), `provas_feitas` (respostas, gabarito, anuladas, tempo, resultado) e `simulados_treino` — para a aba Simulados.
-- Desempenho usa `respostas_questoes`, `flashcard_respostas`, `sessoes_foco` e `provas_feitas`; não precisa de tabela nova.
+- `simulados_treino` — treino com o banco do app dentro de Simulados (as provas anteriores já entraram, com `simulados_tentativas`).
+- Desempenho usa `respostas_questoes`, `flashcard_respostas`, `sessoes_foco` e `simulados_tentativas`; não precisa de tabela nova.
 
 ## Critérios de aceite
 

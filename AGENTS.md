@@ -150,6 +150,12 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   vender, testar: pressão, dedo rolando com caneta por perto, "Só caneta".
 - **Datas:** "hoje" sempre por `hojeISO()` (`lib/datas.js`). `toISOString()`
   vira UTC e pula um dia depois das 21h no Brasil.
+- **Simulados: provas e gabaritos oficiais moram no código**, não no banco
+  (`src/lib/simulados-provas.js`, gerado por `node scripts/gerar-provas.mjs <pasta>`
+  a partir dos PDFs oficiais). Não edite à mão. Cada prova vale para UM caderno/versão
+  (ENEM caderno azul; Fuvest V1/V; Unicamp Q): outra cor tem outra ordem. Ano novo
+  ou gabarito retificado = ajustar a lista do script, rodar e conferir anuladas.
+  No banco fica só a tentativa (`simulados_tentativas`, sem update).
 - **Licença é por email, não por id**: ela nasce na Hotmart antes de a conta
   existir. Compare sempre com `normalizarEmail()`, e só conte licença com email
   confirmado.

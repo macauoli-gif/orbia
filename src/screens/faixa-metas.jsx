@@ -17,9 +17,9 @@ function Medidor({ rotulo, feito, meta, texto }) {
 }
 
 export default function FaixaMetas({ goto }) {
-  const { perfil, tarefas, respostas, sessoes } = useEstudo()
+  const { perfil, tarefas, respostas, sessoes, tentativas } = useEstudo()
   const [todos, setTodos] = useState(false)
-  const p = progressoDaSemana({ perfil, respostas, sessoes })
+  const p = progressoDaSemana({ perfil, respostas, sessoes, tentativas })
 
   const avisos = avisosDeTarefas(tarefas).map((a) => ({
     chave: a.tarefa.id, classe: a.tipo === 'atrasada' ? 'crit' : 'warn', tag: a.tipo === 'atrasada' ? 'Atrasada' : 'Prazo',
@@ -36,12 +36,7 @@ export default function FaixaMetas({ goto }) {
       <div className="medidores">
         <Medidor rotulo="Questões da semana" feito={p.questoes} meta={p.metaQ} texto={`${p.questoes} de ${p.metaQ}`} />
         <Medidor rotulo="Foco da semana" feito={p.focoMin} meta={p.metaFoco} texto={`${textoMinutos(p.focoMin)} de ${textoMinutos(p.metaFoco)}`} />
-        {p.mostraProvas && (
-          <div className="medidor">
-            <div className="topo"><span>Provas anteriores no mês</span><b>meta {p.metaProvas}</b></div>
-            <p className="small muted" style={{ marginTop: 4 }}>Chega em breve, com os Simulados.</p>
-          </div>
-        )}
+        {p.mostraProvas && <Medidor rotulo="Provas anteriores no mês" feito={p.provasMes} meta={p.metaProvas} texto={`${p.provasMes} de ${p.metaProvas}`} />}
       </div>
       {avisos.length === 0 ? <p className="tudo-em-dia">Tudo em dia. Bom estudo!</p> : (
         <>
