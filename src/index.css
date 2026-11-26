@@ -195,8 +195,14 @@ textarea.ipt { min-height: 110px; resize: vertical; line-height: 1.45; }
 .tcard.warn { border-left-color: var(--warn); }
 .tcard.done { border-left-color: var(--ok); opacity: .8; }
 .tcard.done .titulo { text-decoration: line-through; }
-.tcard[draggable="true"] { cursor: grab; }
-.tcard .titulo { font-weight: 700; margin: 0 0 6px; overflow-wrap: anywhere; }
+.tcard { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.tcard.arrastando { cursor: grabbing; transition: none; }
+.tcard .prazo { font-size: 13px; color: var(--muted); margin: 0; }
+.tcard .acoes { display: flex; gap: 6px; margin-top: 10px; }
+.tcard .acoes .btn { min-height: 36px; padding: 0 12px; }
+.tcard .acoes .seta { min-width: 44px; font-size: 16px; }
+.abas button.over { outline: 2px dashed var(--accent); }
+.tcard .titulo { font-weight: 700; margin: 8px 0 4px; overflow-wrap: anywhere; }
 .tcard .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
 .abas { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-bottom: 10px; }
 .abas button { flex: 1; min-height: var(--tap); white-space: nowrap; padding: 0 4px; letter-spacing: -.01em; border: 0; border-radius: 9px; background: transparent; font-weight: 700; color: var(--muted); font-size: 14px; }

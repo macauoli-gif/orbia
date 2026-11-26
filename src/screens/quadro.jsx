@@ -4,14 +4,15 @@ import * as dados from '../lib/dados.js'
 import { useEstudo } from '../lib/EstudoContext.jsx'
 import {
   STATUS_TAREFA, PRIORIDADES, textoPrazo, urgencia, ordenarTarefas, visivelNoQuadro,
-  comStatus, validarTarefa, prazoNestaSemana,
+  comStatus, validarTarefa, prazoNestaSemana, etiquetaPrazo, colunasVizinhas,
 } from '../lib/tarefas.js'
-import { dataCurta } from '../lib/datas.js'
+import { useArrastar } from '../components/arrastar.js'
+import { dataCurta, paraData } from '../lib/datas.js'
 import Painel from './painel.jsx'
 import { Campo, Confirmar, ERRO_GENERICO, Icon, Janela, MateriaChip, PageHeader, avisar, useDesktop } from '../components/index.jsx'
 
 const CLASSE = { atrasada: 'crit', perto: 'warn', concluida: 'done', normal: '' }
-const PILL_PRIO = { Alta: 'crit', Média: 'warn', Baixa: 'plain' }
+const prazoCurto = (iso) => paraData(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
 
 export default function Quadro({ goto, params }) {
   const { tarefas, setTarefas, materias, materiaPorId } = useEstudo()
@@ -22,7 +23,6 @@ export default function Quadro({ goto, params }) {
   const [aberta, setAberta] = useState(null)       // tarefa na gaveta
   const [editando, setEditando] = useState(null)   // tarefa no formulário ({} = nova)
   const [apagando, setApagando] = useState(null)
-  const [arrastoSobre, setArrastoSobre] = useState(null)
 
   useEffect(() => {
     if (params.abrir) {
@@ -45,6 +45,10 @@ export default function Quadro({ goto, params }) {
     return true
   }
   const mover = (t, status) => { setAberta(null); return salvar(comStatus(t, status)) }
+  const arrasto = useArrastar((id, status) => {
+    const t = tarefas.find((x) => x.id === id)
+    if (t && t.status !== status) mover(t, status)
+  })
 
   async function apagar(t) {
     const antes = tarefas
@@ -74,7 +78,8 @@ export default function Quadro({ goto, params }) {
       {!desktop && (
         <div className="abas" role="tablist">
           {STATUS_TAREFA.map((s) => (
-            <button key={s} role="tab" aria-selected={aba === s} onClick={() => setAba(s)}>
+            <button key={s} role="tab" aria-selected={aba === s} onClick={() => setAba(s)} data-alvo={s}
+              className={arrasto.sobre === s && arrasto.arrastandoId ? 'over' : undefined}>
               {s} <span className="n">{visiveis.filter((t) => t.status === s).length}</span>
             </button>
           ))}
@@ -94,28 +99,35 @@ export default function Quadro({ goto, params }) {
           {colunas.map((status) => {
             const lista = ordenarTarefas(visiveis.filter((t) => t.status === status))
             return (
-              <section key={status} className={'col' + (arrastoSobre === status ? ' over' : '')} aria-label={status}
-                onDragOver={(e) => { e.preventDefault(); setArrastoSobre(status) }}
-                onDragLeave={() => setArrastoSobre(null)}
-                onDrop={(e) => {
-                  e.preventDefault(); setArrastoSobre(null)
-                  const t = tarefas.find((x) => x.id === e.dataTransfer.getData('text/plain'))
-                  if (t && t.status !== status) mover(t, status)
-                }}>
+              <section key={status} className={'col' + (arrasto.sobre === status && arrasto.arrastandoId ? ' over' : '')} aria-label={status} data-alvo={status}>
                 {desktop && <div className="col-head"><h3>{status}</h3><span className="n">{lista.length}</span></div>}
                 <div className="cards">
                   {lista.length === 0 && <div className="empty">Nenhuma tarefa aqui.</div>}
-                  {lista.map((t) => (
-                    <button key={t.id} className={'tcard ' + CLASSE[urgencia(t)]} draggable={desktop}
-                      onDragStart={(e) => e.dataTransfer.setData('text/plain', t.id)} onClick={() => setAberta(t)}>
-                      <p className="titulo">{t.titulo}</p>
-                      <div className="meta">
-                        <MateriaChip materia={materiaPorId[t.materia_id]} />
-                        {t.status !== 'Concluído' && <span>{textoPrazo(t.prazo)}</span>}
-                        <span className={'pill ' + PILL_PRIO[t.prioridade]}>{t.prioridade}</span>
-                      </div>
-                    </button>
-                  ))}
+                  {lista.map((t) => {
+                    const etiqueta = etiquetaPrazo(t)
+                    const { anterior, proxima } = colunasVizinhas(t.status)
+                    return (
+                      <article key={t.id} className={'tcard ' + CLASSE[urgencia(t)] + (arrasto.arrastandoId === t.id ? ' arrastando' : '')}
+                        style={arrasto.estiloDoCartao(t.id)} {...arrasto.propsDoCartao(t.id)}
+                        onClick={() => setAberta(t)} tabIndex={0}
+                        onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setAberta(t) } }}>
+                        <div className="meta">
+                          <MateriaChip materia={materiaPorId[t.materia_id]} />
+                          {etiqueta && <span className={'pill ' + etiqueta.classe}>{etiqueta.texto}</span>}
+                          <span className="pill plain">{t.prioridade}</span>
+                        </div>
+                        <p className="titulo">{t.titulo}</p>
+                        <p className="prazo">{t.prazo ? `Prazo ${prazoCurto(t.prazo)}` : 'Sem prazo'}</p>
+                        <div className="acoes">
+                          {anterior && <button className="btn seta" aria-label={`Mover para ${anterior}`} title={`Mover para ${anterior}`}
+                            onClick={(e) => { e.stopPropagation(); mover(t, anterior) }}>←</button>}
+                          {proxima && <button className="btn seta" aria-label={`Mover para ${proxima}`} title={`Mover para ${proxima}`}
+                            onClick={(e) => { e.stopPropagation(); mover(t, proxima) }}>→</button>}
+                          <button className="btn" onClick={(e) => { e.stopPropagation(); setEditando(t) }}>Editar</button>
+                        </div>
+                      </article>
+                    )
+                  })}
                 </div>
               </section>
             )
@@ -128,7 +140,7 @@ export default function Quadro({ goto, params }) {
           <div className="stack">
             <div className="row">
               <MateriaChip materia={materiaPorId[aberta.materia_id]} />
-              <span className={'pill ' + PILL_PRIO[aberta.prioridade]}>{aberta.prioridade}</span>
+              <span className="pill plain">{aberta.prioridade}</span>
               <span className="pill plain">{aberta.status}</span>
             </div>
             <p><b>Prazo:</b> {aberta.prazo ? `${dataCurta(aberta.prazo)} (${textoPrazo(aberta.prazo)})` : 'sem prazo'}</p>

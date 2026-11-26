@@ -74,3 +74,19 @@ export function validarTarefa(t) {
   if (!STATUS_TAREFA.includes(t.status)) erros.status = 'Escolha a situação.'
   return erros
 }
+
+// Etiqueta de prazo do cartão: "Atrasada 1 d", "Vence hoje", "Vence em 2 d" (ou nada).
+export function etiquetaPrazo(t, hoje = hojeISO()) {
+  if (t.status === 'Concluído' || !t.prazo) return null
+  const n = diasEntre(hoje, t.prazo)
+  if (n < 0) return { texto: `Atrasada ${-n} d`, classe: 'crit' }
+  if (n === 0) return { texto: 'Vence hoje', classe: 'warn' }
+  if (n <= 2) return { texto: `Vence em ${n} d`, classe: 'warn' }
+  return null
+}
+
+// Setas do cartão: a coluna da esquerda e a da direita (null na ponta).
+export function colunasVizinhas(status) {
+  const i = STATUS_TAREFA.indexOf(status)
+  return { anterior: STATUS_TAREFA[i - 1] || null, proxima: i < 0 ? null : STATUS_TAREFA[i + 1] || null }
+}

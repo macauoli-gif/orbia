@@ -1,6 +1,6 @@
 // Regras do Quadro: prazos, avisos, ordem e conclusão.
 // Import com .js explícito: o Node exige, o Vite não.
-import { textoPrazo, urgencia, ordenarTarefas, visivelNoQuadro, comStatus, avisosDeTarefas, prazoNestaSemana, validarTarefa } from '../src/lib/tarefas.js'
+import { textoPrazo, urgencia, ordenarTarefas, visivelNoQuadro, comStatus, avisosDeTarefas, prazoNestaSemana, validarTarefa, etiquetaPrazo, colunasVizinhas } from '../src/lib/tarefas.js'
 
 let ok = 0
 let tot = 0
@@ -51,6 +51,14 @@ conferir('semana: próxima segunda não', prazoNestaSemana(t('a', '2026-11-30'),
 
 conferir('título vazio é recusado', Object.keys(validarTarefa({ ...t('a', null), titulo: '  ' })), ['titulo'])
 conferir('prioridade fora da lista é recusada', Object.keys(validarTarefa({ ...t('a', null), prioridade: 'media' })), ['prioridade'])
+
+conferir('etiqueta: atrasada 1 d', etiquetaPrazo(t('a', '2026-11-24'), HOJE), { texto: 'Atrasada 1 d', classe: 'crit' })
+conferir('etiqueta: vence hoje', etiquetaPrazo(t('a', '2026-11-25'), HOJE).texto, 'Vence hoje')
+conferir('etiqueta: vence em 2 d', etiquetaPrazo(t('a', '2026-11-27'), HOJE).texto, 'Vence em 2 d')
+conferir('etiqueta: longe, sem prazo ou concluída não tem', [etiquetaPrazo(t('a', '2026-12-20'), HOJE), etiquetaPrazo(t('a', null), HOJE), etiquetaPrazo(t('a', '2026-11-01', 'Média', 'Concluído'), HOJE)], [null, null, null])
+conferir('setas de A fazer', colunasVizinhas('A fazer'), { anterior: null, proxima: 'Em andamento' })
+conferir('setas de Em andamento', colunasVizinhas('Em andamento'), { anterior: 'A fazer', proxima: 'Concluído' })
+conferir('setas de Concluído', colunasVizinhas('Concluído'), { anterior: 'Em andamento', proxima: null })
 
 console.log(`${ok}/${tot} — tarefas`)
 process.exit(ok === tot ? 0 : 1)

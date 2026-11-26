@@ -134,7 +134,7 @@ Abaixo, o botão "Começar". O valor gravado é o rótulo curto, idêntico ao do
 **O que aparece**
 Título "Quadro", filtro de matéria, opção "só desta semana" e o botão "+ Nova tarefa" sempre visível. Três colunas: A fazer, Em andamento, Concluído, cada uma com o número de cartões. No celular, uma coluna por vez, com abas no topo.
 
-Cada cartão mostra: título; etiqueta da matéria com a cor dela; prazo como gente fala ("hoje", "amanhã", "em 3 dias", "atrasada há 2 dias"); etiqueta de prioridade. Borda esquerda vermelha se atrasada, amarela se vence em até 48 horas, verde se concluída (título riscado).
+Cada cartão (estilo Kanban, como o protótipo; decidido em 25/11/2026) mostra: na primeira linha a etiqueta da matéria com a cor dela, a etiqueta de prazo quando é urgente ("Atrasada 1 d" em vermelho, "Vence hoje" ou "Vence em 2 d" em amarelo) e a prioridade; depois o título em negrito, "Prazo 24/11" (ou "Sem prazo") e os botões ← → (mover para a coluna vizinha) e Editar. Borda esquerda vermelha se atrasada, amarela se vence em até 48 horas, verde se concluída (título riscado). Colunas com fundo cinza claro.
 
 Ordem dentro da coluna: atrasadas primeiro, depois prazo mais próximo, depois prioridade (Alta, Média, Baixa). Tarefas concluídas há mais de 30 dias saem da coluna Concluído.
 
@@ -151,7 +151,7 @@ Ordem dentro da coluna: atrasadas primeiro, depois prazo mais próximo, depois p
 
 **Ações**
 - **+ Nova tarefa:** abre a janela; ao salvar, o cartão aparece na coluna certa sem recarregar.
-- **Arrastar o cartão** (computador) ou **tocar e escolher "Mover para"** (celular): muda a situação. Ao ir para Concluído, guarda a data de conclusão.
+- **Arrastar o cartão** com a caneta, o mouse ou o dedo (o dedo segura um instante antes de arrastar; sem isso, rola a página) para outra coluna — no celular, para uma das abas. **Ou as setas ← →** do cartão. Muda a situação; ao ir para Concluído, guarda a data de conclusão.
 - **Tocar no cartão:** abre a gaveta de detalhes com Editar, Apagar e "Começar foco nesta tarefa".
 - **Começar foco nesta tarefa:** abre Foco já com a matéria e a tarefa escolhidas.
 - **Apagar:** pede confirmação.
