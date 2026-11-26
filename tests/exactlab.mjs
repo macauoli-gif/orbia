@@ -2,6 +2,7 @@
 import {
   ELEMENTOS, elementoPorZ, grupoDe, periodoDe, familiaDe, camadasDe, configEnergetica, configAbreviada, particulas,
   buscar, passaNosFiltros, escala, alternarComparacao, MAX_COMPARAR, FAMILIAS, CLASSIFICACOES, ESTADOS, PROPRIEDADES, eVparaKJmol, kelvinParaCelsius,
+  blocoDe, classificacaoPrevista, textoDescoberta, classeCss, camadaDeValencia, textoValencia, textoGrupo,
 } from '../src/lib/exactlab/tabela.js'
 import { AREAS, filtrarFormulas, contarFormulas } from '../src/lib/exactlab/formulas.js'
 import { ATIVIDADES, GLOSSARIO, corrigirAtividade } from '../src/lib/exactlab/glossario.js'
@@ -43,6 +44,20 @@ conferir('exceção do cobre (3d¹⁰ 4s¹)', camadasDe(el('Cu').config).map((c)
 conferir('ordem de energia (Linus Pauling) do ferro', configEnergetica(el('Fe').config), '1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶')
 
 conferir('forma abreviada separa o gás nobre do subnível', configAbreviada('[Ar]4s1 3d10'), '[Ar] 4s¹ 3d¹⁰')
+
+conferir('blocos s, p, d, f (hélio no bloco s)', ['Na', 'He', 'Cl', 'Fe', 'U'].map((x) => blocoDe(el(x))), ['s', 's', 'p', 'd', 'f'])
+conferir('camada de valência do cloro', camadaDeValencia(el('Cl').config), { camada: 'M', eletrons: 7 })
+conferir('classificação prevista só do 104 em diante', [classificacaoPrevista(el('Lr')), classificacaoPrevista(el('Rf'))], [false, true])
+conferir('descoberta na Antiguidade e com ano', [textoDescoberta(el('Au')), textoDescoberta(el('He'))], ['Conhecido desde a Antiguidade', '1868'])
+conferir('nome de classe de cor sem acento', classeCss('Metais de transição'), 'metais-de-transicao')
+
+// Revisão de 26/11: valência só vale para representativos; paládio não tem 18 elétrons de valência.
+conferir('valência do cloro', textoValencia(el('Cl')), '7 elétrons na camada de valência (M).')
+conferir('paládio: não diz 18 elétrons de valência', textoValencia(el('Pd')).includes('18'), false)
+conferir('lantanídeo sem número de grupo, explicado', textoGrupo(el('Nd')).startsWith('Sem número: a série dos lantanídeos'), true)
+conferir('massa do lítio é a convencional da IUPAC (6,94), não 7', el('Li').massa, 6.94)
+conferir('clorofila é molécula, não átomo', el('Mg').curiosidade.includes('molécula de clorofila'), true)
+conferir('toda propriedade periódica tem o sentido da seta', Object.values(PROPRIEDADES).every((x) => x.sentido?.periodo && x.sentido?.grupo), true)
 
 // ----- partículas -----
 conferir('bromo-79: 35 prótons, 44 nêutrons (não 45: o Br-80 não existe na natureza)', [particulas(el('Br')).protons, particulas(el('Br')).neutrons], [35, 44])

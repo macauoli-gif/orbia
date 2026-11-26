@@ -101,6 +101,33 @@ export function camadasDe(config) {
   return c.map((e, i) => ({ camada: CAMADAS[i], eletrons: e }))
 }
 export const camadaDeValencia = (config) => camadasDe(config).at(-1)
+// Bloco do último subnível preenchido: s (grupos 1–2 e hélio), p (13–18), d (3–12), f (lantanídeos e actinídeos).
+export function blocoDe(el) {
+  if (el.z === 2) return 's'
+  if (el.grupo == null) return 'f'
+  return el.grupo <= 2 ? 's' : el.grupo <= 12 ? 'd' : 'p'
+}
+// Do 104 em diante, quase nada foi medido: a classificação é prevista por cálculos.
+export const classificacaoPrevista = (el) => el.z >= 104
+
+// Frase da ficha sobre a camada de valência. Nos grupos 1, 2 e 13 a 18 (elementos
+// representativos) a última camada diz quantos elétrons fazem ligação. Nos blocos d e f
+// isso não vale: elétrons do subnível d (ou f) de camadas internas também participam
+// (o paládio, por exemplo, termina em 4d¹⁰ e não tem elétron na 5ª camada).
+export function textoValencia(el) {
+  const v = camadaDeValencia(el.config)
+  const representativo = el.z <= 2 || (el.grupo != null && (el.grupo <= 2 || el.grupo >= 13))
+  if (representativo) return `${v.eletrons} elétron${v.eletrons > 1 ? 's' : ''} na camada de valência (${v.camada}).`
+  return `Por ser do bloco ${blocoDe(el)}, os elétrons que fazem ligação não ficam só na última camada (${v.camada}): os do subnível ${blocoDe(el)} também participam.`
+}
+
+// Texto do grupo na ficha (lantanídeos e actinídeos não têm número de grupo).
+export function textoGrupo(el) {
+  if (el.grupo != null) return String(el.grupo)
+  const serie = el.familia === 'Lantanídeos' ? 'lantanídeos' : 'actinídeos'
+  return `Sem número: a série dos ${serie} fica encaixada no lugar do grupo 3 (químicos ainda discutem quais elementos ocupam esse grupo)`
+}
+export const textoDescoberta = (el) => (el.ano === 'Ancient' ? 'Conhecido desde a Antiguidade' : el.ano)
 
 // ---------- os elementos completos ----------
 const TEXTOS = Object.fromEntries([...TEXTOS_1, ...TEXTOS_2, ...TEXTOS_3].map(([z, nome, origem, caracteristicas, aplicacoes, curiosidade]) => [z, { nome, origem, caracteristicas, aplicacoes, curiosidade }]))
@@ -120,7 +147,11 @@ export const elementoPorZ = (z) => ELEMENTOS[z - 1]
 export const particulas = (el) => ({ protons: el.z, eletrons: el.z, neutrons: el.A - el.z, A: el.A })
 
 // ---------- busca e filtros ----------
-const semAcento = (s) => String(s).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
+// Comparação sem acento e sem maiúscula (dono único: fórmulas e tela usam esta).
+export const semAcento = (s) => String(s).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
+// "Metais de transição" -> "metais-de-transicao" (nome da cor no CSS).
+export const classeCss = (s) => semAcento(s).replace(/[^a-z]+/g, '-')
+export const FILTRO_VAZIO = { familia: '', periodo: '', classificacao: '' }
 export function buscar(elementos, termo) {
   const t = semAcento(termo)
   if (!t) return elementos
@@ -136,16 +167,19 @@ export function passaNosFiltros(el, { familia = '', periodo = '', classificacao 
 export const PROPRIEDADES = {
   eletronegatividade: {
     nome: 'Eletronegatividade', unidade: 'escala de Pauling', campo: 'eletronegatividade',
+    sentido: { periodo: 'direita', grupo: 'cima' },
     tendencia: 'Aumenta da esquerda para a direita no período e de baixo para cima no grupo. O flúor é o mais eletronegativo. Gases nobres leves quase não formam ligações, por isso não têm valor na escala.',
     porque: 'Para a direita, o núcleo tem mais prótons e atrai mais os elétrons da ligação; para baixo, os elétrons ficam mais longe do núcleo e são menos atraídos.',
   },
   raio: {
     nome: 'Raio atômico', unidade: 'em pm, raio de van der Waals', campo: 'raio',
+    sentido: { periodo: 'esquerda', grupo: 'baixo' },
     tendencia: 'Aumenta de cima para baixo no grupo e, em geral, da direita para a esquerda no período.',
     porque: 'Para baixo, cada período acrescenta uma camada eletrônica. Para a direita, mais prótons puxam as camadas para perto do núcleo.',
   },
   ionizacao: {
     nome: 'Energia de ionização', unidade: '1ª energia de ionização, em eV', campo: 'ionizacao',
+    sentido: { periodo: 'direita', grupo: 'cima' },
     tendencia: 'Aumenta da esquerda para a direita no período e de baixo para cima no grupo. O hélio tem a maior de todas.',
     porque: 'É a energia para arrancar o elétron mais externo: quanto mais preso ao núcleo (átomo menor, mais prótons), mais energia é necessária.',
   },

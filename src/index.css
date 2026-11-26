@@ -266,6 +266,12 @@ textarea.ipt { min-height: 110px; resize: vertical; line-height: 1.45; }
 .elemento .sim { font-size: 17px; font-weight: 800; font-family: var(--display); }
 .elemento .nome { font-size: 8px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .elemento .estrela { color: hsl(45 95% 45%); }
+.elemento .valor { font-size: 9px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tendencia { width: 100%; max-width: 300px; display: block; margin: 6px 0; }
+.tendencia .mini-cel { fill: var(--accent); }
+.tendencia .seta { stroke: var(--ink); stroke-width: 2; }
+.tendencia .seta-ponta { fill: var(--ink); }
+.tendencia .seta-txt { font-size: 9px; fill: var(--muted); }
 .elemento.marcador { cursor: default; background: transparent; border-style: dashed; border-color: var(--line); }
 .elemento.marcador:hover { transform: none; box-shadow: none; }
 .elemento.apagado { opacity: .2; }

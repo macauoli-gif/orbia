@@ -8,6 +8,17 @@ export const FISICA = [
     ['Aceleração média', 'aₘ = Δv / Δt', [['Δv', 'variação da velocidade (m/s)'], ['aₘ', 'aceleração (m/s²)']]],
     ['Movimento uniforme (MU)', 's = s₀ + v·t', [['s₀', 'posição inicial (m)'], ['v', 'velocidade constante (m/s)']]],
   ] },
+  { assunto: 'Forças, energia e eletricidade (introdução)', serie: EF9, formulas: [
+    ['Peso', 'P = m · g', [['P', 'peso (N)'], ['m', 'massa (kg)'], ['g', 'gravidade (≈ 10 m/s² na Terra)']]],
+    ['Força resultante (2ª Lei de Newton)', 'F = m · a', [['F', 'força (N)'], ['a', 'aceleração (m/s²)']]],
+    ['Densidade', 'd = m / V', [['m', 'massa (g ou kg)'], ['V', 'volume (cm³ ou m³)']]],
+    ['Pressão', 'p = F / A', [['p', 'pressão (Pa)'], ['A', 'área (m²)']]],
+    ['Energia cinética', 'E꜀ = m · v² / 2', [['v', 'velocidade (m/s)'], ['E꜀', 'energia (J)']]],
+    ['Energia potencial gravitacional', 'Eₚ = m · g · h', [['h', 'altura (m)']]],
+    ['Potência', 'P = E / Δt', [['P', 'potência (W)'], ['E', 'energia (J)']]],
+    ['Lei de Ohm', 'U = R · i', [['U', 'tensão (V)'], ['R', 'resistência (Ω)'], ['i', 'corrente (A)']]],
+    ['Consumo de energia elétrica', 'E = P · Δt', [['', 'em kWh: potência em kW vezes horas de uso']]],
+  ] },
   { assunto: 'Movimento uniformemente variado', serie: EM1, formulas: [
     ['Função horária da velocidade', 'v = v₀ + a·t', [['v₀', 'velocidade inicial (m/s)'], ['a', 'aceleração (m/s²)']]],
     ['Função horária da posição', 's = s₀ + v₀·t + a·t² / 2', [['s₀', 'posição inicial (m)']]],

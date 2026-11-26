@@ -6,6 +6,7 @@ import {
   ELEMENTOS, elementoPorZ, FAMILIAS, CLASSIFICACOES, ESTADOS, PROPRIEDADES, CAMADAS,
   buscar, passaNosFiltros, escala, camadasDe, configAbreviada, configEnergetica, particulas,
   estadoPrevisto, alternarComparacao, MAX_COMPARAR, eVparaKJmol, kelvinParaCelsius,
+  classeCss as classe, blocoDe, classificacaoPrevista, textoDescoberta, textoValencia, textoGrupo, FILTRO_VAZIO,
 } from '../lib/exactlab/tabela.js'
 import { GLOSSARIO, COMO_LER, ATIVIDADES, corrigirAtividade } from '../lib/exactlab/glossario.js'
 import { ERRO_GENERICO, Janela, avisar } from '../components/index.jsx'
@@ -14,9 +15,6 @@ const MODOS = [
   ['familias', 'Famílias'], ['classificacao', 'Classificação'], ['estados', 'Estados físicos'],
   ['distribuicao', 'Distribuição eletrônica'], ['propriedades', 'Propriedades periódicas'],
 ]
-// Classe de cor de cada valor (as cores ficam no CSS, com versão clara e escura).
-const classe = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z]+/g, '-')
-const blocoDe = (el) => (el.z === 2 ? 's' : el.grupo == null ? 'f' : el.grupo <= 2 ? 's' : el.grupo <= 12 ? 'd' : 'p')
 const BLOCOS = [['s', 'Bloco s'], ['p', 'Bloco p'], ['d', 'Bloco d'], ['f', 'Bloco f']]
 const fmt = (v, casas = 2) => (v == null ? 'não determinado' : Number(v).toLocaleString('pt-BR', { maximumFractionDigits: casas }))
 
@@ -24,7 +22,7 @@ export default function TabelaPeriodica() {
   const [modo, setModo] = useState('familias')
   const [prop, setProp] = useState('eletronegatividade')
   const [termo, setTermo] = useState('')
-  const [f, setF] = useState({ familia: '', periodo: '', classificacao: '' })
+  const [f, setF] = useState(FILTRO_VAZIO)
   const [aberto, setAberto] = useState(null)      // ficha do elemento
   const [comparando, setComparando] = useState(false)
   const [comparar, setComparar] = useState([])
@@ -51,11 +49,13 @@ export default function TabelaPeriodica() {
     setAberto(el)
   }
 
+  // Muda na hora; se o banco recusar, desfaz só este elemento (sem apagar outra mudança feita no meio).
   async function alternarFavorito(z) {
     const era = favoritos.includes(z)
-    setFavoritos(era ? favoritos.filter((x) => x !== z) : [...favoritos, z])
+    const aplicar = (marcar) => setFavoritos((lista) => (marcar ? [...new Set([...lista, z])] : lista.filter((x) => x !== z)))
+    aplicar(!era)
     const r = era ? await dados.desfavoritar(z) : await dados.favoritar(z)
-    if (r.erro) { setFavoritos(favoritos); avisar(ERRO_GENERICO, true) }
+    if (r.erro) { aplicar(era); avisar(ERRO_GENERICO, true) }
   }
 
   function comecarAtividade(a) { setAtividade(a); setMarcados([]); setResultado(null); setComparando(false); setPainel('atividades') }
@@ -99,7 +99,7 @@ export default function TabelaPeriodica() {
           <select className="ipt" aria-label="Filtrar por classificação" value={f.classificacao} onChange={(e) => setF({ ...f, classificacao: e.target.value })}>
             <option value="">Todas as classificações</option>{CLASSIFICACOES.map((x) => <option key={x}>{x}</option>)}
           </select>
-          {(f.familia || f.periodo || f.classificacao || temBusca) && <button className="btn" onClick={() => { setF({ familia: '', periodo: '', classificacao: '' }); setTermo('') }}>Limpar</button>}
+          {(f.familia || f.periodo || f.classificacao || temBusca) && <button className="btn" onClick={() => { setF(FILTRO_VAZIO); setTermo('') }}>Limpar</button>}
           <button className={'btn' + (comparando ? ' primary' : '')} aria-pressed={comparando} onClick={() => { setComparando(!comparando); setAtividade(null) }}>
             {comparando ? `Comparando (${comparar.length}/${MAX_COMPARAR})` : 'Comparar elementos'}
           </button>
@@ -112,6 +112,7 @@ export default function TabelaPeriodica() {
             {Object.entries(PROPRIEDADES).map(([id, p]) => <button key={id} role="radio" aria-checked={prop === id} onClick={() => setProp(id)}>{p.nome}</button>)}
           </div>
           <p><b>{PROPRIEDADES[prop].nome}</b> <span className="small muted">({PROPRIEDADES[prop].unidade})</span>: {PROPRIEDADES[prop].tendencia}</p>
+          <Tendencia sentido={PROPRIEDADES[prop].sentido} nome={PROPRIEDADES[prop].nome} />
           <p className="small muted"><b>Por quê?</b> {PROPRIEDADES[prop].porque}</p>
         </div>
       )}
@@ -138,14 +139,12 @@ export default function TabelaPeriodica() {
           ))}
           {ELEMENTOS.map((el) => (
             <button key={el.z} className={classeCelula(el)} style={{ gridRow: el.linha, gridColumn: el.coluna, ...estiloCelula(el) }}
-              onClick={() => tocar(el)} aria-label={`${el.nome}, ${el.simbolo}, número atômico ${el.z}`} aria-pressed={comparando || atividade ? comparar.includes(el.z) || marcados.includes(el.z) : undefined}>
+              onClick={() => tocar(el)} aria-label={`${el.nome}, ${el.simbolo}, número atômico ${el.z}`} aria-pressed={atividade ? marcados.includes(el.z) : comparando ? comparar.includes(el.z) : undefined}>
               <span className="z">{el.z}{favoritos.includes(el.z) && <span className="estrela" aria-label="favorito"> ★</span>}</span>
               <span className="sim">{el.simbolo}</span>
-              <span className="nome">
-                {modo === 'distribuicao' ? camadasDe(el.config).map((c) => c.eletrons).join('·')
-                  : modo === 'propriedades' ? fmt(el[PROPRIEDADES[prop].campo], prop === 'eletronegatividade' ? 2 : 1).replace('não determinado', '—')
-                    : el.nome}
-              </span>
+              <span className="nome">{el.nome}</span>
+              {modo === 'distribuicao' && <span className="valor">{camadasDe(el.config).map((c) => c.eletrons).join('·')}</span>}
+              {modo === 'propriedades' && <span className="valor">{fmt(el[PROPRIEDADES[prop].campo], prop === 'eletronegatividade' ? 2 : 1).replace('não determinado', '—')}</span>}
             </button>
           ))}
         </div>
@@ -177,6 +176,24 @@ export default function TabelaPeriodica() {
         aoComparar={() => { setComparando(true); setComparar(comparar.includes(aberto.z) ? comparar : alternarComparacao(comparar, aberto.z)); setAtividade(null); setAberto(null) }}
         aoFechar={() => setAberto(null)} />}
     </section>
+  )
+}
+
+// Desenho da tendência: uma tabela em miniatura com setas no sentido em que a propriedade aumenta.
+function Tendencia({ sentido, nome }) {
+  const dir = sentido.periodo === 'direita'
+  const cima = sentido.grupo === 'cima'
+  return (
+    <svg className="tendencia" viewBox="0 0 220 120" role="img" aria-label={`${nome} aumenta para a ${sentido.periodo} no período e para ${sentido.grupo === 'cima' ? 'cima' : 'baixo'} no grupo`}>
+      <defs><marker id="ponta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" className="seta-ponta" /></marker></defs>
+      {Array.from({ length: 18 }, (_, c) => Array.from({ length: 7 }, (_, l) => (
+        <rect key={`${c}-${l}`} x={30 + c * 9} y={22 + l * 9} width="8" height="8" rx="1.5" className="mini-cel" style={{ opacity: 0.25 + 0.75 * ((dir ? c : 17 - c) / 17 * 0.5 + (cima ? 6 - l : l) / 6 * 0.5) }} />
+      )))}
+      <line x1={dir ? 30 : 190} y1="12" x2={dir ? 190 : 30} y2="12" className="seta" markerEnd="url(#ponta)" />
+      <text x="110" y="9" textAnchor="middle" className="seta-txt">aumenta no período</text>
+      <line x1="18" y1={cima ? 85 : 22} x2="18" y2={cima ? 22 : 85} className="seta" markerEnd="url(#ponta)" />
+      <text x="10" y="54" textAnchor="middle" className="seta-txt" transform="rotate(-90 10 54)">aumenta no grupo</text>
+    </svg>
   )
 }
 
@@ -247,14 +264,15 @@ function Ficha({ el, favorito, aoFavoritar, aoComparar, aoFechar }) {
         <dl className="ficha-dados">
           <div><dt>Número atômico (Z)</dt><dd>{el.z}</dd></div>
           <div><dt>Massa atômica</dt><dd>{fmt(el.massa, 4)} u{el.isotopoNatural ? '' : ' (do isótopo de vida mais longa)'}</dd></div>
-          <div><dt>Grupo</dt><dd>{el.grupo ?? `Nenhum (bloco f — ${el.familia.toLowerCase()})`}</dd></div>
+          <div><dt>Grupo</dt><dd>{textoGrupo(el)}</dd></div>
           <div><dt>Período</dt><dd>{el.periodo}º</dd></div>
           <div><dt>Família</dt><dd>{el.familia}</dd></div>
-          <div><dt>Classificação</dt><dd>{el.classificacao}{el.z >= 104 ? ' (prevista)' : ''}</dd></div>
+          <div><dt>Classificação</dt><dd>{el.classificacao}{classificacaoPrevista(el) ? ' (prevista)' : ''}</dd></div>
           <div><dt>Estado a 25 °C</dt><dd>{el.estado}{estadoPrevisto(el) ? ' (previsto)' : ''}</dd></div>
-          <div><dt>Descoberta</dt><dd>{el.ano === 'Ancient' ? 'Conhecido desde a Antiguidade' : el.ano}</dd></div>
+          <div><dt>Descoberta</dt><dd>{textoDescoberta(el)}</dd></div>
           {el.fusao != null && <div><dt>Ponto de fusão</dt><dd>{fmt(kelvinParaCelsius(el.fusao), 1)} °C</dd></div>}
           {el.ebulicao != null && <div><dt>Ponto de ebulição</dt><dd>{fmt(kelvinParaCelsius(el.ebulicao), 1)} °C</dd></div>}
+          {el.densidade != null && <div><dt>Densidade</dt><dd>{fmt(el.densidade, 5)} g/cm³</dd></div>}
           <div><dt>Eletronegatividade</dt><dd>{fmt(el.eletronegatividade)}</dd></div>
           <div><dt>Raio atômico</dt><dd>{el.raio == null ? 'não determinado' : `${el.raio} pm (van der Waals)`}</dd></div>
           <div><dt>1ª energia de ionização</dt><dd>{el.ionizacao == null ? 'não determinada' : `${fmt(el.ionizacao, 3)} eV (${fmt(eVparaKJmol(el.ionizacao), 0)} kJ/mol)`}</dd></div>
@@ -263,7 +281,7 @@ function Ficha({ el, favorito, aoFavoritar, aoComparar, aoFechar }) {
         <h3>Distribuição eletrônica{el.configPrevista ? ' (prevista)' : ''}</h3>
         <p className="formula-expr">{configAbreviada(el.config)}</p>
         <p className="small"><b>Ordem de energia (Linus Pauling):</b> {configEnergetica(el.config)}</p>
-        <p className="small"><b>Por camada:</b> {cs.map((c) => `${c.camada} ${c.eletrons}`).join(' · ')} — {cs.at(-1).eletrons} elétron{cs.at(-1).eletrons > 1 ? 's' : ''} na camada de valência ({cs.at(-1).camada}).</p>
+        <p className="small"><b>Por camada:</b> {cs.map((c) => `${c.camada} ${c.eletrons}`).join(' · ')} — {textoValencia(el)}</p>
 
         <h3>Partículas</h3>
         <div className="particulas">

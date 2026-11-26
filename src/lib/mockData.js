@@ -132,12 +132,12 @@ export function criarMock() {
       { id: 's-2', user_id: 'u-maria', materia_id: m('História'), tarefa_id: null, inicio: '2026-11-25T14:00:00-03:00', minutos: 25, saidas_aba: 0, completou: true, created_at: '2026-11-25T14:25:00-03:00' },
       { id: 's-3', user_id: 'u-pedro', materia_id: m('Geografia'), tarefa_id: 't-p2', inicio: '2026-11-24T15:00:00-03:00', minutos: 15, saidas_aba: 3, completou: false, created_at: '2026-11-24T15:15:00-03:00' },
     ],
-    // Maria fez o 2º dia do ENEM 2025 duas vezes (para a evolução ter o que mostrar);
-    // Pedro fez a UERJ uma vez. Respostas de mentira: metade do gabarito, o resto em branco ou errado.
     exactlab_favoritos: [
       { id: 'xf-1', user_id: 'u-maria', numero_atomico: 26, created_at: '2026-11-25T10:00:00-03:00' },
       { id: 'xf-2', user_id: 'u-pedro', numero_atomico: 8, created_at: '2026-11-25T10:00:00-03:00' },
     ],
+    // Maria fez o 2º dia do ENEM 2025 duas vezes (para a evolução ter o que mostrar);
+    // Pedro fez a UERJ uma vez. Respostas de mentira: metade do gabarito, o resto em branco ou errado.
     simulados_tentativas: [
       { id: 'st-1', user_id: 'u-maria', prova_id: 'enem-2025-d2', idioma: null, respostas: respostasDeMentira('enem-2025-d2', 0.4), tempo_seg: 15600, created_at: '2026-11-08T18:00:00-03:00' },
       { id: 'st-2', user_id: 'u-maria', prova_id: 'enem-2025-d2', idioma: null, respostas: respostasDeMentira('enem-2025-d2', 0.6), tempo_seg: 14400, created_at: '2026-11-22T18:00:00-03:00' },

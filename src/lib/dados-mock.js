@@ -408,7 +408,7 @@ export function favoritar(z) {
 }
 export function desfavoritar(z) {
   const f = doAluno('exactlab_favoritos').find((x) => x.numero_atomico === z)
-  if (!f) return eu()?.licenciado ? ok(z) : falha('Sem permissão.')
+  if (!f) return ok(z) // como no banco: a RLS não acha a linha, apaga nada e não dá erro
   const r = apagarDoAluno('exactlab_favoritos', f.id)
   return r.erro ? r : ok(z)
 }

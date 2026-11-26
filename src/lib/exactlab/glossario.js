@@ -10,7 +10,7 @@ export const GLOSSARIO = [
   ['Isótopos', 'Átomos do mesmo elemento (mesmo Z) com números de nêutrons diferentes. Ex.: carbono-12 e carbono-14.'],
   ['Íon', 'Átomo que ganhou elétrons (ânion, carga negativa) ou perdeu elétrons (cátion, carga positiva).'],
   ['Período', 'Linha horizontal da tabela (são 7). O número do período indica quantas camadas eletrônicas o átomo tem.'],
-  ['Grupo ou família', 'Coluna vertical (são 18). Elementos do mesmo grupo costumam ter propriedades químicas parecidas, porque têm o mesmo número de elétrons na última camada (nos grupos 1, 2 e 13 a 18).'],
+  ['Grupo ou família', 'Coluna vertical (são 18). Elementos do mesmo grupo costumam ter propriedades químicas parecidas, porque têm o mesmo número de elétrons na última camada (nos grupos 1, 2 e 13 a 18; o hélio é a exceção: tem 2, e não 8, e fica no grupo 18 por ser gás nobre).'],
   ['Camada de valência', 'A camada eletrônica mais externa do átomo. É ela que participa das ligações químicas.'],
   ['Distribuição eletrônica', 'Maneira como os elétrons se organizam em camadas (K, L, M, N, O, P, Q) e subníveis (s, p, d, f).'],
   ['Subnível', 'Divisão de uma camada: s (até 2 elétrons), p (até 6), d (até 10) e f (até 14).'],

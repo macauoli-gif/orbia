@@ -29,6 +29,14 @@ const MAIS_ABUNDANTE = {
   72: 180, 73: 181, 74: 184, 75: 187, 76: 192, 77: 193, 78: 195, 79: 197, 80: 202, 81: 205, 82: 208, 83: 209, 90: 232, 91: 231, 92: 238,
 }
 
+// O PubChem arredonda a massa de alguns elementos (ex.: lítio "7"). Para esses, usamos o
+// valor convencional da IUPAC/CIAAW (tabela de pesos atômicos padrão abreviados), que é
+// o que aparece nos livros: lítio 6,94; enxofre 32,06; ferro 55,845...
+const MASSA_IUPAC = {
+  3: 6.94, 16: 32.06, 18: 39.95, 20: 40.078, 26: 55.845, 29: 63.546, 30: 65.38, 35: 79.904, 36: 83.798,
+  40: 91.224, 44: 101.07, 48: 112.414, 56: 137.327, 62: 150.36, 76: 190.23, 82: 207.2,
+}
+
 const num = (v) => (v === '' || v == null ? null : Number(v))
 const dados = linhas.map((l) => {
   const Z = Number(l.AtomicNumber)
@@ -36,7 +44,7 @@ const dados = linhas.map((l) => {
   return {
     z: Z,
     simbolo: l.Symbol,
-    massa: num(l.AtomicWeight),
+    massa: MASSA_IUPAC[Z] ?? num(l.AtomicWeight),
     config: l.ElectronConfiguration.replace(/\s*\((predicted|calculated)\)/, '').trim(),
     configPrevista: prevista,
     eletronegatividade: num(l.Electronegativity),
@@ -47,7 +55,7 @@ const dados = linhas.map((l) => {
     ano: l.YearDiscovered,
     fusao: num(l.MeltingPoint), // K
     ebulicao: num(l.BoilingPoint), // K
-    densidade: num(l.Density), // g/cm³ (gases: g/L no PubChem? ver nota na ficha)
+    densidade: num(l.Density), // g/cm³ (também para os gases: o hidrogênio é 0,00008988 g/cm³)
     A: MAIS_ABUNDANTE[Z] ?? Math.round(num(l.AtomicWeight)),
     isotopoNatural: Z in MAIS_ABUNDANTE,
   }

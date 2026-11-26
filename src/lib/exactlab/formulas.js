@@ -2,14 +2,13 @@
 import { MATEMATICA } from './formulas-matematica.js'
 import { FISICA } from './formulas-fisica.js'
 import { QUIMICA } from './formulas-quimica.js'
+import { semAcento } from './tabela.js'
 
 export const AREAS = [
   { id: 'matematica', nome: 'Matemática', grupos: MATEMATICA },
   { id: 'fisica', nome: 'Física', grupos: FISICA },
   { id: 'quimica', nome: 'Química', grupos: QUIMICA },
 ]
-
-const semAcento = (s) => String(s).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
 
 // Grupos de fórmulas que passam no filtro de série e na busca (nome, fórmula ou assunto).
 // Grupo sem nenhuma fórmula que passa some da lista.

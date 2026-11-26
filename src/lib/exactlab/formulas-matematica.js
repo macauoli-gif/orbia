@@ -11,6 +11,13 @@ export const MATEMATICA = [
     ['Expoente fracionário', 'a^(m/n) = ⁿ√(aᵐ)', [['n', 'índice da raiz']]],
     ['Produto de radicais', 'ⁿ√a · ⁿ√b = ⁿ√(a·b)', [['a, b', 'radicandos (não negativos quando n é par)']]],
   ] },
+  { assunto: 'Razão, proporção e regra de três', serie: EF9, formulas: [
+    ['Proporção', 'a/b = c/d ⇔ a·d = b·c', [['a, b, c, d', 'termos (b, d ≠ 0)'], ['', 'propriedade fundamental: produto dos meios = produto dos extremos']]],
+    ['Grandezas diretamente proporcionais', 'y = k · x', [['k', 'constante de proporcionalidade'], ['', 'se x dobra, y dobra']]],
+    ['Grandezas inversamente proporcionais', 'x · y = k', [['k', 'constante'], ['', 'se x dobra, y cai pela metade']]],
+    ['Regra de três simples (direta)', 'a/b = c/x  →  x = b·c / a', [['x', 'valor procurado']]],
+    ['Escala', 'E = d_desenho / d_real', [['', 'as duas medidas na mesma unidade']]],
+  ] },
   { assunto: 'Produtos notáveis e fatoração', serie: EF9, formulas: [
     ['Quadrado da soma', '(a + b)² = a² + 2ab + b²', [['a, b', 'termos']]],
     ['Quadrado da diferença', '(a − b)² = a² − 2ab + b²', [['a, b', 'termos']]],
@@ -76,6 +83,7 @@ export const MATEMATICA = [
     ['Lei dos senos', 'a / sen A = b / sen B = c / sen C = 2R', [['a, b, c', 'lados'], ['A, B, C', 'ângulos opostos'], ['R', 'raio da circunferência circunscrita']]],
     ['Lei dos cossenos', 'a² = b² + c² − 2bc · cos A', [['A', 'ângulo oposto ao lado a']]],
     ['Seno e cosseno da soma', 'sen(a + b) = sen a·cos b + sen b·cos a  ·  cos(a + b) = cos a·cos b − sen a·sen b', [['a, b', 'ângulos']]],
+    ['Arco duplo', 'sen 2x = 2·sen x·cos x  ·  cos 2x = cos²x − sen²x  ·  tg 2x = 2·tg x / (1 − tg²x)', [['x', 'ângulo']]],
     ['Conversão de graus para radianos', 'rad = graus · π / 180', [['π rad', '180°']]],
   ] },
   { assunto: 'Matrizes e determinantes', serie: EM2, formulas: [
@@ -119,6 +127,12 @@ export const MATEMATICA = [
     ['Retas paralelas e perpendiculares', 'paralelas: m₁ = m₂  ·  perpendiculares: m₁ · m₂ = −1', [['m₁, m₂', 'coeficientes angulares']]],
     ['Circunferência', '(x − a)² + (y − b)² = r²', [['(a, b)', 'centro'], ['r', 'raio']]],
     ['Área do triângulo por coordenadas', 'A = |D| / 2', [['D', 'determinante das coordenadas [[x₁, y₁, 1], [x₂, y₂, 1], [x₃, y₃, 1]]']]],
+  ] },
+  { assunto: 'Cônicas', serie: EM3, formulas: [
+    ['Elipse (centro na origem, eixo maior horizontal)', 'x²/a² + y²/b² = 1  ·  a² = b² + c²', [['a', 'semieixo maior'], ['b', 'semieixo menor'], ['c', 'semidistância focal']]],
+    ['Excentricidade da elipse', 'e = c / a', [['e', 'entre 0 e 1 (quanto menor, mais "redonda")']]],
+    ['Hipérbole (centro na origem, focos no eixo x)', 'x²/a² − y²/b² = 1  ·  c² = a² + b²', [['a', 'semieixo real'], ['b', 'semieixo imaginário'], ['c', 'semidistância focal']]],
+    ['Parábola (vértice na origem, foco em (p, 0))', 'y² = 4px', [['p', 'distância do vértice ao foco'], ['', 'diretriz: x = −p']]],
   ] },
   { assunto: 'Números complexos e polinômios', serie: EM3, formulas: [
     ['Unidade imaginária', 'i² = −1', [['i', 'unidade imaginária']]],
