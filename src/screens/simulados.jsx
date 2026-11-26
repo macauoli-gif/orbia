@@ -9,10 +9,9 @@ import {
   evolucao, comparaAreas, tentativaAnterior, textoDuracao, validarTentativa, titulo,
 } from '../lib/simulados.js'
 import { agoraMs } from '../lib/datas.js'
-import { Confirmar, ERRO_GENERICO, Estado, Icon, Janela, PageHeader, avisar } from '../components/index.jsx'
+import { PROVAS } from '../lib/simulados-provas.js'
+import { Confirmar, ERRO_GENERICO, Icon, Janela, PageHeader, avisar } from '../components/index.jsx'
 
-// As provas (~90 KB de gabaritos) só carregam quando o aluno abre Simulados.
-const carregarProvas = () => import('../lib/simulados-provas.js').then((m) => m.PROVAS)
 
 // Rascunho do cartão-resposta neste aparelho: sair da tela não perde as marcações.
 const chaveRascunho = (userId, provaId) => `pauta-simulado:${userId}:${provaId}`
@@ -27,18 +26,13 @@ const dataHora = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-di
 
 export default function Simulados() {
   const { perfil, tentativas, setTentativas } = useEstudo()
-  const [provas, setProvas] = useState(null)
-  const [erro, setErro] = useState(null)
+  const provas = PROVAS
   const [f, setF] = useState({ instituicao: '', ano: '' })
   const [fazendo, setFazendo] = useState(null)      // prova em andamento
   const [vendo, setVendo] = useState(null)          // tentativa aberta no resultado
   const [apagando, setApagando] = useState(null)
 
-  useEffect(() => {
-    carregarProvas().then(setProvas).catch(() => setErro(ERRO_GENERICO))
-  }, [])
-
-  const lista = useMemo(() => (provas ? evolucao(tentativas, provas) : []), [provas, tentativas])
+  const lista = useMemo(() => evolucao(tentativas, provas), [provas, tentativas])
 
   async function apagar(t) {
     const r = await dados.apagarTentativa(t.id)
@@ -52,7 +46,7 @@ export default function Simulados() {
       aoSair={() => setFazendo(null)}
       aoTerminar={(t) => { setTentativas([...tentativas, t]); setFazendo(null); setVendo(t) }} />
   }
-  if (vendo && provas) {
+  if (vendo) {
     const item = lista.find((x) => x.tentativa.id === vendo.id)
     if (item) return <Resultado item={item} anterior={tentativaAnterior(lista, item.tentativa)}
       aoVoltar={() => setVendo(null)} aoRefazer={() => { setVendo(null); setFazendo(item.prova) }}
@@ -60,8 +54,8 @@ export default function Simulados() {
       aoConfirmarApagar={() => apagar(apagando)} aoCancelarApagar={() => setApagando(null)} />
   }
 
-  const anos = provas ? anosDisponiveis(provas, f.instituicao) : []
-  const visiveis = provas ? filtrarProvas(provas, f) : []
+  const anos = anosDisponiveis(provas, f.instituicao)
+  const visiveis = filtrarProvas(provas, f)
   const vezes = (id) => tentativas.filter((t) => t.prova_id === id).length
 
   return (
@@ -70,7 +64,7 @@ export default function Simulados() {
       <p className="small muted" style={{ marginTop: -6, marginBottom: 12 }}>
         Provas anteriores oficiais. Você abre a prova no site da instituição, marca as respostas aqui e o app corrige com o gabarito oficial.
       </p>
-      <Estado carregando={!provas && !erro} erro={erro}>
+      <>
         <div className="toolbar">
           <label className="sr-only" htmlFor="s-inst">Instituição</label>
           <select id="s-inst" className="ipt" value={f.instituicao} onChange={(e) => setF({ instituicao: e.target.value, ano: '' })}>
@@ -97,7 +91,7 @@ export default function Simulados() {
         </div>
 
         <Evolucao lista={lista} aoAbrir={(t) => setVendo(t)} />
-      </Estado>
+      </>
     </div>
   )
 }
