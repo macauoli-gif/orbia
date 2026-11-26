@@ -80,10 +80,24 @@ nenhum sintoma; licença liberada errada é produto dado de graça.
 
 ## Deploy
 
-Ainda não está no ar (etapa 9). O padrão desta casa: a pessoa diz "sobe pro
-GitHub", o agente sobe com git (`git add`, `git commit`, `git push`), e a Vercel
-publica sozinha. A pessoa não digita comando: o agente roda o npm e o git na
-pasta dela.
+No ar em https://pauta-de-estudos-mariaclaudiaoliveiraaraujoo-8447.vercel.app
+(projeto Vercel `pauta-de-estudos`, ligado ao GitHub `macauoli-gif/orbia`, branch
+`main`). A pessoa diz "sobe pro GitHub", o agente roda a régua e sobe com git
+(`git add`, `git commit`, `git push`), e a Vercel publica sozinha em ~1 min.
+A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
+
+- **Plano grátis (Hobby) da Vercel é só para uso não comercial.** Antes de vender:
+  plano Pro (Vercel e Supabase), como está no plano do projeto.
+- **Proteção da Vercel em nível padrão** (`prod_deployment_urls_and_all_previews`):
+  o endereço principal é público; as versões de teste pedem login da Vercel.
+  Não volte para `all_except_custom_domains`: isso tranca o app para os alunos.
+- **Variáveis na Vercel:** o app só usa `VITE_SUPABASE_URL` e
+  `VITE_SUPABASE_PUBLISHABLE_KEY`. As `POSTGRES_*` e `SUPABASE_*` vieram da
+  integração Supabase da Vercel e não são usadas. **Nunca crie variável `VITE_` com
+  segredo** (service role, senha): tudo que começa com `VITE_` vai para o navegador.
+- **Endereço novo do app** (domínio próprio, por exemplo) precisa entrar no
+  Supabase em Authentication → URL Configuration, senão o link de confirmação de
+  conta e o de "esqueci a senha" levam para o lugar errado.
 
 ## Armadilhas desta base
 
