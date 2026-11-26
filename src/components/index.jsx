@@ -28,6 +28,16 @@ const CAMINHOS = {
   estrela: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
 }
 
+// Logotipo compacto da NOUS (manual de identidade: nome sem a ilustração, para app).
+export function Marca({ como: Tag = 'div' }) {
+  return (
+    <Tag className="marca" aria-label="Nous — Think. Learn. Evolve.">
+      <span className="marca-nome" aria-hidden="true">Nous</span>
+      <span className="marca-slogan" aria-hidden="true">Think. Learn. Evolve.</span>
+    </Tag>
+  )
+}
+
 export function Icon({ nome, tamanho = 22 }) {
   return (
     <svg width={tamanho} height={tamanho} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"

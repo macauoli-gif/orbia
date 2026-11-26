@@ -1,40 +1,48 @@
 /* ============================================================
-   DESIGN SYSTEM — Nous
-   Cores, fontes e tema escuro vêm da versão atual
-   (referencia/pauta-de-estudos-v1.html). Tudo que é "sistema" mora
-   aqui; as telas usam estas classes.
+   DESIGN SYSTEM — NOUS (manual de identidade, 26/11/2026)
+   Paleta: vinho #64180F (principal), amarelo claro #F1E99A (títulos e
+   destaques sobre o vinho), creme #F5EBDD (fundo), verde azulado #527C7A,
+   azul profundo #183F50 e dourado #C99A36 (apoio).
+   Fontes: Montserrat (títulos), Source Sans 3 (texto), Libre Baskerville
+   (slogan e frases editoriais). Contraste de todo par texto/fundo ≥ 4,5:1.
+   Tudo que é "sistema" mora aqui; as telas usam estas classes.
    ============================================================ */
 
 :root {
-  --bg: #f3f6f8;
-  --surface: #ffffff;
-  --ink: #14232e;
-  --muted: #5c6f7c;
-  --line: #d9e2e8;
-  --accent: #0b6e8a;           /* cor principal */
-  --accent-ink: #ffffff;
-  --accent-bg: #e2f1f5;
-  --crit: #c4321f;
-  --warn: #8a5300;           /* escurecido da versão atual (#b9700a) para passar 4,5:1 */
-  --ok: #1f7a4d;
-  --crit-bg: #fbe9e6;
-  --warn-bg: #fdf1dc;
-  --ok-bg: #e3f3ea;
+  --vinho: #64180F; --amarelo: #F1E99A; --creme: #F5EBDD;
+  --verde-azulado: #527C7A; --azul-profundo: #183F50; --dourado: #C99A36;
+  --bg: var(--creme);
+  --surface: #FFFCF7;
+  --ink: var(--azul-profundo);
+  --muted: #55636A;
+  --line: #E4D6C4;
+  --accent: var(--vinho);      /* cor principal */
+  --accent-ink: var(--amarelo); /* amarelo claro sobre vinho: alto contraste */
+  --accent-bg: #F4E2DD;
+  --crit: #A8261B;
+  --warn: #7A4E00;
+  --ok: #2F5F5C;
+  --crit-bg: #F8E1DE;
+  --warn-bg: #F7ECCB;
+  --ok-bg: #E1ECEA;
+  --menu-bg: var(--vinho); --menu-ink: var(--creme); --menu-muted: #E3C9C2; --menu-ativo: #7E2A1E; --menu-ativo-ink: var(--amarelo);
   --chip-l: 30%;
-  --shadow: 0 1px 2px rgba(20,35,46,.08), 0 4px 14px rgba(20,35,46,.06);
-  --shadow-pop: 0 12px 40px rgba(20,35,46,.22);
-  --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
-  --body: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  --shadow: 0 1px 2px rgba(100,24,15,.08), 0 4px 14px rgba(24,63,80,.07);
+  --shadow-pop: 0 12px 40px rgba(24,63,80,.22);
+  --display: "Montserrat", "Segoe UI", sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --editorial: "Libre Baskerville", Georgia, serif;
   --tap: 44px;
   --radius: 12px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1a22; --surface: #17252f; --ink: #e8f0f4; --muted: #93a8b5; --line: #29404e;
-    --accent: #4cc0de; --accent-ink: #062631; --accent-bg: #123542;
-    --crit: #ff8c7a; --warn: #f0b95a; --ok: #6fd3a0;
-    --crit-bg: #3a1f1c; --warn-bg: #38290f; --ok-bg: #16352a;
+    --bg: #0F2530; --surface: #173544; --ink: var(--creme); --muted: #B7C3C5; --line: #2C4D5C;
+    --accent: var(--amarelo); --accent-ink: var(--vinho); --accent-bg: #3A3A26;
+    --crit: #FF9F8F; --warn: #E9C46A; --ok: #8FCAC5;
+    --crit-bg: #3D1F1B; --warn-bg: #3A2E12; --ok-bg: #16363A;
+    --menu-bg: #3A0E09; --menu-ink: var(--creme); --menu-muted: #D9BDB6; --menu-ativo: #5A1C14; --menu-ativo-ink: var(--amarelo);
     --chip-l: 76%; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.25);
     --shadow-pop: 0 12px 40px rgba(0,0,0,.5);
     color-scheme: dark;
@@ -47,7 +55,7 @@
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; min-height: 100%; }
 body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--body); -webkit-font-smoothing: antialiased; }
-h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; margin: 0; text-wrap: balance; }
 h1 { font-size: 26px; letter-spacing: -.01em; }
 h2 { font-size: 20px; }
 h3 { font-size: 16px; }
@@ -125,11 +133,13 @@ textarea.ipt { min-height: 110px; resize: vertical; line-height: 1.45; }
 .sidebar { display: none; }
 .app[data-desktop="1"] .sidebar { display: flex; flex-direction: column; gap: 2px; position: fixed; left: 0; top: 0; bottom: 0; width: 248px;
   padding: 20px 12px; background: var(--surface); border-right: 1px solid var(--line); overflow-y: auto; }
-.sidebar .marca { font: 700 20px var(--display); padding: 4px 12px 18px; }
+.app[data-desktop="1"] .sidebar { background: var(--menu-bg); border-right: 0; }
+.sidebar .marca { padding: 6px 12px 18px; }
 .sidebar button { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 12px; border: 0; background: transparent;
   border-radius: 10px; color: var(--muted); text-align: left; font-weight: 500; }
-.sidebar button:hover { background: var(--bg); color: var(--ink); }
-.sidebar button[aria-current="page"] { background: var(--accent-bg); color: var(--accent); font-weight: 700; }
+.sidebar button { color: var(--menu-muted); }
+.sidebar button:hover { background: var(--menu-ativo); color: var(--menu-ink); }
+.sidebar button[aria-current="page"] { background: var(--menu-ativo); color: var(--menu-ativo-ink); font-weight: 700; box-shadow: inset 3px 0 0 var(--dourado); }
 .sidebar .sep { height: 1px; background: var(--line); margin: 10px 8px; }
 
 .page-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 18px 0 12px; }
@@ -219,15 +229,16 @@ textarea.ipt { min-height: 110px; resize: vertical; line-height: 1.45; }
 .exact-topo { padding: 16px 0 6px; }
 .exact-topo h1 { margin: 0; }
 .exact-marca { font-family: var(--display); letter-spacing: -.02em; }
-.exact-marca b { background: linear-gradient(90deg, hsl(330 80% 55%), hsl(265 75% 60%), hsl(195 85% 45%)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.exact-marca b { background: linear-gradient(90deg, var(--vinho), var(--dourado), var(--verde-azulado)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (prefers-color-scheme: dark) { .exact-marca b { background-image: linear-gradient(90deg, var(--amarelo), var(--dourado), #8FCAC5); } }
 .exact-abas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
 .exact-aba { min-height: 52px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; font-size: 15px; color: var(--ink);
   display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .15s, box-shadow .15s, background .15s; }
 .exact-aba:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
 .exact-aba-icone { font-size: 20px; }
-.exact-aba.matematica[aria-selected="true"] { background: hsl(265 var(--cel-s) var(--cel-l)); border-color: hsl(265 70% var(--cel-borda-l)); }
-.exact-aba.fisica[aria-selected="true"] { background: hsl(195 var(--cel-s) var(--cel-l)); border-color: hsl(195 70% var(--cel-borda-l)); }
-.exact-aba.quimica[aria-selected="true"] { background: hsl(330 var(--cel-s) var(--cel-l)); border-color: hsl(330 70% var(--cel-borda-l)); }
+.exact-aba.matematica[aria-selected="true"] { background: var(--vinho); border-color: var(--vinho); color: var(--amarelo); }
+.exact-aba.fisica[aria-selected="true"] { background: var(--azul-profundo); border-color: var(--azul-profundo); color: var(--creme); }
+.exact-aba.quimica[aria-selected="true"] { background: var(--verde-azulado); border-color: var(--verde-azulado); color: #fff; }
 .segmentado { display: flex; flex-wrap: wrap; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; margin-bottom: 12px; }
 .segmentado button { flex: 1 1 auto; min-height: 40px; border: 0; border-radius: 9px; background: transparent; font-weight: 700; color: var(--muted); padding: 0 12px; }
 .segmentado button[aria-selected="true"], .segmentado button[aria-checked="true"] { background: var(--accent-bg); color: var(--accent); }
@@ -241,6 +252,31 @@ textarea.ipt { min-height: 110px; resize: vertical; line-height: 1.45; }
 .formula-vars div { display: flex; gap: 6px; }
 .formula-vars dt { font-weight: 700; font-family: Georgia, serif; min-width: 1.5em; }
 .formula-vars dd { margin: 0; color: var(--muted); }
+
+/* ExactLab: quadro de fórmulas em estilo Kanban (uma coluna por série) */
+.kanban-formulas { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(270px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; align-items: start; }
+.kf-coluna { --serie: var(--verde-azulado); scroll-snap-align: start; background: color-mix(in srgb, var(--serie) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--serie) 30%, var(--line)); border-radius: 16px; padding: 10px; }
+.kf-serie-1 { --serie: var(--azul-profundo); } .kf-serie-2 { --serie: var(--vinho); } .kf-serie-3 { --serie: var(--dourado); }
+@media (prefers-color-scheme: dark) { .kf-serie-1 { --serie: #6FA3B8; } .kf-serie-2 { --serie: #C9604F; } }
+.kf-coluna.sua { box-shadow: 0 0 0 2px var(--serie); }
+.kf-cabeca { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 4px 10px; border-bottom: 3px solid var(--serie); margin-bottom: 10px; }
+.kf-cabeca h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink); }
+.kf-conta { margin-left: auto; min-width: 28px; text-align: center; font: 800 12px var(--display); background: var(--serie); color: #fff; border-radius: 99px; padding: 2px 8px; }
+.kf-serie-3 .kf-conta { color: #2B1F05; }
+@media (prefers-color-scheme: dark) { .kf-conta { color: #0F2530; } }
+.kf-sua { background: var(--accent-bg); color: var(--accent); }
+.kf-cartoes { display: grid; gap: 8px; }
+.kf-cartao { display: grid; gap: 6px; width: 100%; text-align: left; padding: 10px 12px; border-radius: 12px; cursor: pointer;
+  background: hsl(var(--h) var(--cel-s) calc(var(--cel-l) + 6%)); border: 1px solid hsl(var(--h) 45% calc(var(--cel-borda-l) + 20%)); border-left: 6px solid hsl(var(--h) 65% var(--cel-borda-l));
+  color: var(--ink); transition: transform .15s, box-shadow .15s; }
+.kf-cartao:hover, .kf-cartao:focus-visible { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+.kf-titulo { font: 800 15px var(--display); }
+.kf-previa { display: grid; gap: 1px; padding: 6px 8px; border-radius: 8px; background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.kf-previa-nome { font-size: 12px; color: var(--muted); }
+.kf-previa-expr { font-family: "Cambria Math", "STIX Two Math", Georgia, serif; font-size: 15px; overflow-wrap: anywhere; }
+.kf-rodape { font-size: 12px; font-weight: 700; color: hsl(var(--h) 60% 30%); }
+@media (prefers-color-scheme: dark) { .kf-rodape { color: hsl(var(--h) 70% 78%); } }
+.formula { border-left: 4px solid hsl(var(--h, 210) 60% var(--cel-borda-l)); }
 
 .tp-controles { display: grid; gap: 8px; margin-bottom: 8px; }
 .tp-modos, .tp-filtros { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
@@ -448,7 +484,14 @@ button.item:hover { border-color: var(--accent); }
 /* ── Entrada ── */
 .entrada { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
 .entrada .caixa { width: min(440px, 100%); }
-.entrada .marca { font-size: 30px; margin-bottom: 4px; }
+.entrada .marca { margin-bottom: 4px; }
+/* Logotipo compacto (manual: nome NOUS para app e espaços pequenos) */
+.marca { display: grid; gap: 2px; }
+.marca-nome { font: 800 28px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.marca-slogan { font: italic 400 11px/1.2 var(--editorial); letter-spacing: .06em; color: var(--muted); }
+.sidebar .marca-nome { color: var(--amarelo); font-size: 30px; }
+.sidebar .marca-slogan { color: var(--menu-muted); }
+.entrada .marca-nome { font-size: 40px; }
 .series { display: grid; gap: 10px; }
 .serie-card { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; }
 .serie-card:has(input:checked) { border-color: var(--accent); background: var(--accent-bg); }

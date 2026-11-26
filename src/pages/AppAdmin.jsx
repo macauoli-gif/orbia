@@ -2,7 +2,7 @@
 // para telas de estudo. Com licença de cortesia ela entra pelo AppAluno.
 import { useState } from 'react'
 import * as dados from '../lib/dados.js'
-import { Avisos, Icon, useDesktop } from '../components/index.jsx'
+import { Avisos, Icon, useDesktop, Marca } from '../components/index.jsx'
 import Licencas from '../screens/licencas.jsx'
 import { Conta } from '../screens/conta.jsx'
 
@@ -22,7 +22,7 @@ export default function AppAdmin({ perfil: inicial }) {
   return (
     <div className="app" data-desktop={desktop ? '1' : '0'}>
       <nav className="sidebar" aria-label="Menu">
-        <div className="marca">Nous</div>
+        <Marca />
         {MENU.map(([id, rotulo, icone]) => (
           <button key={id} aria-current={tela === id ? 'page' : undefined} onClick={() => setTela(id)}><Icon nome={icone} /> {rotulo}</button>
         ))}

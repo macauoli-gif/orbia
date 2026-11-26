@@ -1,7 +1,7 @@
 // Entrar · Criar conta · Esqueci a senha
 import { useState } from 'react'
 import * as dados from '../lib/dados.js'
-import { Campo } from '../components/index.jsx'
+import { Campo, Marca } from '../components/index.jsx'
 
 export default function Login() {
   const [modo, setModo] = useState('entrar') // entrar | criar | esqueci
@@ -48,7 +48,7 @@ export default function Login() {
     <div className="entrada">
       <div className="caixa stack">
         <div>
-          <h1 className="marca">Nous</h1>
+          <Marca como="h1" />
           <p className="muted">Seu plano de estudos, do 9º ano ao vestibular</p>
         </div>
         <form className="panel form-grid" onSubmit={enviar} noValidate>

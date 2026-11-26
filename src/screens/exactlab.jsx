@@ -1,6 +1,7 @@
 // ExactLab: fórmulas de Matemática, Física e Química (9º EF ao 3º EM) e,
 // na Química, a Tabela Periódica Interativa. Conteúdo e buscas em lib/exactlab/.
 import { useState } from 'react'
+import { Janela } from '../components/index.jsx'
 import { AREAS, filtrarFormulas, contarFormulas } from '../lib/exactlab/formulas.js'
 import { SERIES, configSerie } from '../lib/series.js'
 import { useEstudo } from '../lib/EstudoContext.jsx'
@@ -41,31 +42,54 @@ export default function ExactLab() {
   )
 }
 
+// Quadro de fórmulas em estilo Kanban: uma coluna por série, um cartão por assunto.
+// Tocar no cartão abre todas as fórmulas do assunto. A busca filtra os cartões.
 function Formulas({ area }) {
   const { perfil } = useEstudo()
-  const [serie, setSerie] = useState('')
   const [busca, setBusca] = useState('')
-  const grupos = filtrarFormulas(area.grupos, { serie, busca })
+  const [aberto, setAberto] = useState(null)
+  const grupos = filtrarFormulas(area.grupos, { busca })
 
   return (
     <section aria-label={`Fórmulas de ${area.nome}`}>
       <div className="toolbar">
         <label className="sr-only" htmlFor="f-busca">Buscar fórmula</label>
         <input id="f-busca" className="ipt" type="search" placeholder="Buscar: Bhaskara, Ohm, pH…" value={busca} onChange={(e) => setBusca(e.target.value)} />
-        <label className="sr-only" htmlFor="f-serie">Série</label>
-        <select id="f-serie" className="ipt" value={serie} onChange={(e) => setSerie(e.target.value)}>
-          <option value="">Todas as séries</option>
-          {SERIES.map((s) => <option key={s} value={s}>{configSerie(s).nome}{s === perfil.serie ? ' (a sua)' : ''}</option>)}
-        </select>
+        <span className="small muted">{contarFormulas(grupos)} fórmulas em {grupos.length} assuntos</span>
       </div>
-      <p className="small muted">{contarFormulas(grupos)} fórmulas</p>
-      {grupos.length === 0 && <p className="empty">Nenhuma fórmula com esse filtro. Tente outra palavra ou "Todas as séries".</p>}
-      {grupos.map((g) => (
-        <details key={g.assunto} className="formula-grupo" open={!!busca || grupos.length <= 3}>
-          <summary><b>{g.assunto}</b> <span className="pill plain">{g.serie}</span> <span className="small muted">{g.formulas.length}</span></summary>
+      {grupos.length === 0 && <p className="empty">Nenhuma fórmula com essa busca. Tente outra palavra.</p>}
+      <div className="kanban-formulas">
+        {SERIES.filter((s) => grupos.some((g) => g.serie === s)).map((s, ci) => {
+          const daSerie = grupos.filter((g) => g.serie === s)
+          return (
+            <section key={s} className={'kf-coluna kf-serie-' + ci + (s === perfil.serie ? ' sua' : '')} aria-label={configSerie(s).nome}>
+              <header className="kf-cabeca">
+                <h2>{configSerie(s).nome}</h2>
+                <span className="kf-conta">{contarFormulas(daSerie)}</span>
+                {s === perfil.serie && <span className="pill kf-sua">a sua série</span>}
+              </header>
+              <div className="kf-cartoes">
+                {daSerie.map((g) => (
+                  <button key={g.assunto} className="kf-cartao" style={{ '--h': matizDe(g.assunto) }} onClick={() => setAberto(g)}>
+                    <span className="kf-titulo">{g.assunto}</span>
+                    {g.formulas.slice(0, 2).map(([nome, expr]) => (
+                      <span key={nome} className="kf-previa"><span className="kf-previa-nome">{nome}</span><span className="kf-previa-expr">{expr}</span></span>
+                    ))}
+                    <span className="kf-rodape">{g.formulas.length} fórmula{g.formulas.length > 1 ? 's' : ''} · ver todas</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )
+        })}
+      </div>
+
+      {aberto && (
+        <Janela titulo={aberto.assunto} aoFechar={() => setAberto(null)}>
+          <p className="small muted">{area.nome} · {configSerie(aberto.serie).nome}</p>
           <div className="formulas">
-            {g.formulas.map(([nome, expr, vars, obs]) => (
-              <article key={nome} className="formula">
+            {aberto.formulas.map(([nome, expr, vars, obs]) => (
+              <article key={nome} className="formula" style={{ '--h': matizDe(aberto.assunto) }}>
                 <h3>{nome}</h3>
                 <p className="formula-expr">{expr}</p>
                 <dl className="formula-vars">
@@ -75,8 +99,16 @@ function Formulas({ area }) {
               </article>
             ))}
           </div>
-        </details>
-      ))}
+        </Janela>
+      )}
     </section>
   )
+}
+
+// Cor de cada assunto: sempre a mesma para o mesmo nome (não muda com a busca).
+const MATIZES = [8, 22, 38, 150, 172, 190, 205, 222, 265, 290, 320, 345]
+function matizDe(texto) {
+  let h = 0
+  for (const c of texto) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return MATIZES[h % MATIZES.length]
 }

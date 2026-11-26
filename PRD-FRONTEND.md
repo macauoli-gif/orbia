@@ -16,8 +16,8 @@ App de organização de estudos para alunos do 9º ano do fundamental ao 3º ano
 - React + Vite (versões atuais), sem biblioteca de componente pronta.
 - Visual a partir de um `index.css` próprio, com as variáveis de cor da versão atual.
 - Navegação por estado, sem endereço no navegador.
-- Cor principal #0b6e8a (tema escuro: #4cc0de). Aviso crítico #c4321f, atenção #8a5300 (era #b9700a; escurecido para contraste 4,5:1), em dia #1f7a4d. Fundo #f3f6f8, superfície #ffffff, texto #14232e, texto secundário #5c6f7c, linhas #d9e2e8.
-- Fontes: Bricolage Grotesque (títulos) e DM Sans (texto).
+- Identidade NOUS (manual de identidade, 26/11/2026): vinho #64180F (principal: menu lateral, botões), amarelo claro #F1E99A (títulos e destaques sobre o vinho), creme #F5EBDD (fundo), verde azulado #527C7A, azul profundo #183F50 (texto e tema escuro) e dourado #C99A36 (detalhes). Avisos: crítico #A8261B, atenção #7A4E00, em dia #2F5F5C. Todo par texto/fundo com contraste ≥ 4,5:1. Logotipo compacto: "NOUS" + slogan "Think. Learn. Evolve.".
+- Fontes: Montserrat ExtraBold (títulos), Source Sans 3 (texto) e Libre Baskerville (slogan e frases editoriais).
 - Tema claro e escuro, seguindo o aparelho.
 - Celular: barra inferior fixa com 5 itens (Quadro, Cronograma, Questões, Foco, Mais). Tablet deitado e computador: menu lateral à esquerda com todos os itens.
 - Cada uma das 19 matérias tem uma cor própria, usada em etiquetas, cartões e blocos.
@@ -418,7 +418,7 @@ Acertos, erros, em branco, anuladas (fora da conta), percentual e tempo. Tabela 
 
 **Quem acessa:** aluno. **Chega aqui por:** menu lateral e, no celular, Mais → ExactLab.
 
-**O que aparece:** três abas — Matemática, Física, Química. Em Matemática e Física, as fórmulas agrupadas por assunto, cada uma com nome, a fórmula, o que significa cada letra (com unidade quando houver) e a série em que aparece; busca por nome e filtro por série. Em Química, as mesmas fórmulas e a Tabela Periódica Interativa.
+**O que aparece:** três abas — Matemática (vinho), Física (azul profundo), Química (verde azulado). As fórmulas ficam num quadro em estilo Kanban (26/11/2026): uma coluna por série (9º EF, 1º, 2º e 3º EM, a série do aluno destacada), um cartão colorido por assunto com a prévia de duas fórmulas; tocar no cartão abre todas, com nome, fórmula, o que significa cada letra (com unidade). Busca por nome, fórmula ou assunto. Em Química, as mesmas fórmulas e a Tabela Periódica Interativa.
 
 **Tabela Periódica Interativa**
 - Os 118 elementos na posição oficial (18 grupos, 7 períodos, lantanídeos e actinídeos em linhas separadas). Cada quadrado mostra número atômico, símbolo e nome, com a cor do modo escolhido e legenda.

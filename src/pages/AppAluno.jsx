@@ -2,7 +2,7 @@
 // barra inferior no celular e menu lateral no computador.
 import { useState } from 'react'
 import { EstudoProvider, useEstudo } from '../lib/EstudoContext.jsx'
-import { Avisos, Icon, useDesktop } from '../components/index.jsx'
+import { Avisos, Icon, useDesktop, Marca } from '../components/index.jsx'
 import FaixaMetas from '../screens/faixa-metas.jsx'
 import Quadro from '../screens/quadro.jsx'
 import Cronograma from '../screens/cronograma.jsx'
@@ -76,7 +76,7 @@ function Shell() {
   return (
     <div className="app" data-desktop={desktop ? '1' : '0'}>
       <nav className="sidebar" aria-label="Menu">
-        <div className="marca">Nous</div>
+        <Marca />
         {lateral.map(([id, rotulo, icone]) => (
           <button key={id} aria-current={secao === id ? 'page' : undefined} onClick={() => goto(id)}>
             <Icon nome={icone} /> {rotulo}

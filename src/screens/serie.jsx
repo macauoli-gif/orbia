@@ -1,6 +1,7 @@
 // Série: na primeira entrada e por "Alterar série" em Minha conta.
 import { useState } from 'react'
 import * as dados from '../lib/dados.js'
+import { Marca } from '../components/index.jsx'
 import { SERIES, configSerie, metasSugeridas, semanaSugerida } from '../lib/series.js'
 
 export default function Serie({ perfil, primeiraVez = false, aoTerminar, salvar = dados.salvarPerfil, aoCancelar }) {
@@ -47,7 +48,7 @@ export default function Serie({ perfil, primeiraVez = false, aoTerminar, salvar 
   return (
     <div className={primeiraVez ? 'entrada' : ''}>
       <div className="caixa stack" style={primeiraVez ? null : { maxWidth: 560, paddingTop: 18 }}>
-        {primeiraVez && <h1 className="marca">Nous</h1>}
+        {primeiraVez && <Marca como="h1" />}
         <h2>Em que série você está?</h2>
         <p className="muted small">O app se adapta: metas, cronograma sugerido e as questões mudam conforme a série.</p>
         <fieldset className="series" style={{ border: 0, padding: 0, margin: 0 }}>
