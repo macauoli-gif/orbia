@@ -15,6 +15,8 @@ import Resumos from '../screens/resumos.jsx'
 import EditorPdf from '../screens/editor-pdf.jsx'
 import Flashcards from '../screens/flashcards.jsx'
 import Conta from '../screens/conta.jsx'
+import Licencas from '../screens/licencas.jsx'
+import { podeAdministrar } from '../lib/licenca.js'
 
 const INFERIOR = [
   ['quadro', 'Quadro', 'quadro'],
@@ -29,8 +31,10 @@ const LATERAL = [
   ['flashcards', 'Flashcards', 'flashcards'],
   ['conta', 'Minha conta', 'conta'],
 ]
+// A administradora com licença de cortesia estuda aqui e tem Licenças a mais.
+const LICENCAS = ['licencas', 'Licenças', 'licencas']
 // Qual item do menu fica aceso em cada tela.
-const SECAO = { resolver: 'questoes', caderno: 'questoes', resumos: 'resumos', 'resumo-pdf': 'resumos', flashcards: 'flashcards', conta: 'conta' }
+const SECAO = { resolver: 'questoes', caderno: 'questoes', resumos: 'resumos', 'resumo-pdf': 'resumos', flashcards: 'flashcards', conta: 'conta', licencas: 'licencas' }
 
 export default function AppAluno({ perfil }) {
   return (
@@ -42,12 +46,14 @@ export default function AppAluno({ perfil }) {
 
 function Shell() {
   const desktop = useDesktop()
-  const { carregando, erro } = useEstudo()
+  const { carregando, erro, perfil } = useEstudo()
+  const admin = podeAdministrar(perfil)
+  const lateral = admin ? [...LATERAL, LICENCAS] : LATERAL
   const [rota, setRota] = useState({ tela: 'quadro', params: {} })
   const goto = (tela, params = {}) => { setRota({ tela, params }); window.scrollTo(0, 0) }
 
   const secao = SECAO[rota.tela] || rota.tela
-  const secaoInferior = desktop ? secao : (['resumos', 'flashcards', 'conta'].includes(secao) ? 'mais' : secao)
+  const secaoInferior = desktop ? secao : (['resumos', 'flashcards', 'conta', 'licencas'].includes(secao) ? 'mais' : secao)
   const props = { goto, params: rota.params }
 
   let corpo
@@ -57,11 +63,12 @@ function Shell() {
     case 'resolver': corpo = <Resolver key={rota.params.id + (rota.params.n || '')} {...props} />; break
     case 'caderno': corpo = <Caderno {...props} />; break
     case 'foco': corpo = <Foco {...props} />; break
-    case 'mais': corpo = <Mais {...props} />; break
+    case 'mais': corpo = <Mais {...props} admin={admin} />; break
     case 'resumos': corpo = <Resumos {...props} />; break
     case 'resumo-pdf': corpo = <EditorPdf key={rota.params.id} {...props} />; break
     case 'flashcards': corpo = <Flashcards {...props} />; break
     case 'conta': corpo = <Conta {...props} />; break
+    case 'licencas': corpo = admin ? <Licencas /> : <Quadro {...props} />; break
     default: corpo = <Quadro {...props} />
   }
 
@@ -69,7 +76,7 @@ function Shell() {
     <div className="app" data-desktop={desktop ? '1' : '0'}>
       <nav className="sidebar" aria-label="Menu">
         <div className="marca">Pauta de Estudos</div>
-        {LATERAL.map(([id, rotulo, icone]) => (
+        {lateral.map(([id, rotulo, icone]) => (
           <button key={id} aria-current={secao === id ? 'page' : undefined} onClick={() => goto(id)}>
             <Icon nome={icone} /> {rotulo}
           </button>
@@ -78,8 +85,8 @@ function Shell() {
       <main className="app-body">
         {carregando && <div className="loading">Carregando…</div>}
         {erro && <div className="msg-erro" role="alert" style={{ marginTop: 16 }}>{erro}</div>}
-        {/* O editor de PDF ocupa a tela toda: sem a faixa de metas por cima. */}
-        {!carregando && !erro && <>{rota.tela !== 'resumo-pdf' && <FaixaMetas goto={goto} />}{corpo}</>}
+        {/* O editor de PDF ocupa a tela toda, e Licenças não é estudo: sem a faixa de metas por cima. */}
+        {!carregando && !erro && <>{!['resumo-pdf', 'licencas'].includes(rota.tela) && <FaixaMetas goto={goto} />}{corpo}</>}
       </main>
       <nav className="bottom-nav" aria-label="Menu">
         {INFERIOR.map(([id, rotulo, icone]) => (

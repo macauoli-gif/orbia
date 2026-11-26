@@ -25,7 +25,7 @@ App de organização de estudos para alunos do 9º ano do fundamental ao 3º ano
 ## Perfis
 
 - **Aluno:** entra no Quadro. Vê só os próprios estudos e o conteúdo de fábrica.
-- **Administradora:** entra em Licenças. Vê só os dados da compra de cada aluno (nome, email, data, situação). Nunca vê os estudos.
+- **Administradora:** entra em Licenças. Vê só os dados da compra de cada aluno (nome, email, data, situação). Nunca vê os estudos dos alunos. Se o email dela tiver licença ativa (decidido em 25/11/2026), entra como aluna (Série na primeira vez, depois Quadro), vê só os estudos DELA e tem Licenças no menu (no celular, dentro de Mais).
 
 ## Mapa de navegação
 
@@ -34,6 +34,7 @@ Entrada (Entrar · Criar conta · Esqueci a senha)
 └── Sem licença ativa: aviso + Sair
 └── Aluno: [Série, só na primeira vez] → Quadro · Cronograma · Questões (→ Resolver, Caderno de erros) · Foco · Mais (Banco de resumos · Flashcards · Minha conta)
 └── Administradora: Licenças · Minha conta
+└── Administradora com licença ativa: as telas do Aluno (com os dados dela) + Licenças
 ```
 
 ---
@@ -70,7 +71,7 @@ Nome "Pauta de Estudos", frase curta ("Seu plano de estudos, do 9º ano ao vesti
 | Senha | senha | sim | mínimo 8 caracteres |
 
 **Ações**
-- **Entrar:** confere email e senha. Administradora vai para Licenças. Aluno com licença ativa vai para Série (primeira vez) ou Quadro. Aluno sem licença vai para Sem licença.
+- **Entrar:** confere email e senha. Administradora sem licença vai para Licenças; com licença ativa, entra como aluna. Aluno com licença ativa vai para Série (primeira vez) ou Quadro. Aluno sem licença vai para Sem licença.
 - **Criar conta:** cria a conta e mostra "Enviamos um email para confirmar sua conta. Abra o link e volte aqui para entrar."
 - **Esqueci a senha:** pede o email e mostra "Se este email tiver conta, enviamos um link para criar uma senha nova."
 
@@ -374,7 +375,8 @@ que já existem em referencia/pauta-de-estudos-v1.html.
 - [ ] Uma tarefa com prazo ontem aparece primeiro, com borda vermelha, e gera aviso no topo.
 - [ ] Logado como Pedro, nenhuma tarefa, resumo, resposta ou sessão da Maria Claudia aparece em nenhuma tela.
 - [ ] Quem entra sem licença (ana) ou com licença bloqueada (lucas) vê só a tela Sem licença, com o WhatsApp do suporte.
-- [ ] A administradora vê a tela Licenças e não tem como chegar a nenhuma tela de estudo.
+- [ ] A administradora sem licença vê a tela Licenças e não tem como chegar a nenhuma tela de estudo.
+- [ ] A administradora com licença ativa vê as telas de estudo só com os dados dela, e chega a Licenças pelo menu.
 - [ ] Responder uma questão mostra a correção, a resposta comentada e a explicação de cada alternativa.
 - [ ] Trocar a série muda a semana sugerida, as metas e o que aparece primeiro em questões.
 - [ ] Todas as telas funcionam no celular (375 px) sem rolagem horizontal, e no tema escuro.

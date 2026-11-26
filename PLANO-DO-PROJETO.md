@@ -97,15 +97,16 @@ Tudo o que o aluno cria ou responde (tarefas, cronograma, resumos próprios, que
 ## Perfis de usuário
 
 - **Administradora (você):** vende o app, libera e bloqueia licenças, cuida do conteúdo de fábrica · primeira tela: Licenças
+  - **Administradora que também estuda (decidido em 25/11/2026):** se o email dela tiver licença ativa (cortesia, origem Manual), ela entra como aluna — Quadro e todas as telas de estudo, com os dados DELA — e ganha o item Licenças no menu. Continua sem ver os estudos de nenhum outro aluno. Sem licença, entra só em Licenças e Minha conta, como antes.
 - **Aluno:** comprou a licença e estuda · primeira tela: **Quadro** (a tela do dia a dia)
 
 ### Matriz de permissões (confirmada: a administradora vê só os dados da compra, nunca os estudos)
 
 | Ação | Administradora | Aluno | Sem licença ativa |
 |---|---|---|---|
-| Ver os próprios estudos | — | sim | não |
+| Ver os próprios estudos | só se tiver licença ativa (cortesia) | sim | não |
 | Ver os estudos de outro aluno | **não** | **não** | não |
-| Criar, editar e apagar os próprios registros | — | sim | não |
+| Criar, editar e apagar os próprios registros | só se tiver licença ativa (cortesia) | sim | não |
 | Ver o conteúdo de fábrica | sim | sim | não |
 | Editar o conteúdo de fábrica | sim | não | não |
 | Ver a lista de alunos e licenças (nome, email, data da compra, situação) | sim | não | não |

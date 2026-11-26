@@ -3,6 +3,7 @@
 // Bug corrigido na etapa 6: apagar a tarefa de outro aluno era recusado,
 // mas mesmo assim limpava a ligação nos blocos e sessões dele.
 import * as d from '../src/lib/dados-mock.js'
+import { telaDeEntrada } from '../src/lib/licenca.js'
 
 let ok = 0
 let tot = 0
@@ -56,6 +57,19 @@ conferir('A fazer com data de conclusão é recusado', (await d.salvarTarefa({ t
 await como('admin@exemplo.com')
 for (const f of TABELAS_DO_ALUNO) conferir(`administradora recebe zero em ${f}`, (await d[f]()).data.length, 0)
 conferir('administradora vê as licenças', (await d.listarLicencas()).data.length > 0, true)
+
+// Administradora com licença de cortesia: estuda, mas só o que é dela.
+conferir('administradora libera a própria cortesia', (await d.liberarEmail({ email: 'admin@exemplo.com', nome: 'Administradora' })).erro, null)
+{
+  const r = (await d.carregarEntrada()).data
+  conferir('com cortesia, a entrada leva para as telas de estudo', telaDeEntrada(r), 'serie')
+}
+for (const f of TABELAS_DO_ALUNO) conferir(`com cortesia, ainda zero de alunos em ${f}`, (await d[f]()).data.length, 0)
+conferir('com cortesia, grava a própria tarefa', (await d.salvarTarefa({ titulo: 'minha', materia_id: 'm-artes', prioridade: 'Média', status: 'A fazer', concluida_em: null })).erro, null)
+conferir('com cortesia, vê só a própria tarefa', (await d.listarTarefas()).data.map((t) => t.titulo), ['minha'])
+conferir('com cortesia, vê o conteúdo de fábrica', (await d.listarQuestoes()).data.length > 0, true)
+await como('maria@exemplo.com')
+conferir('Maria não vê a tarefa da administradora', (await d.listarTarefas()).data.some((t) => t.titulo === 'minha'), false)
 
 for (const email of ['ana@exemplo.com', 'lucas@exemplo.com']) {
   await como(email)

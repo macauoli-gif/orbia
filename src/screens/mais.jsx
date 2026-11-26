@@ -7,12 +7,15 @@ const ITENS = [
   ['conta', 'Minha conta', 'Nome, série, metas e sair', 'conta'],
 ]
 
-export default function Mais({ goto }) {
+const LICENCAS = ['licencas', 'Licenças', 'Liberar, bloquear e acompanhar as compras', 'licencas']
+
+export default function Mais({ goto, admin }) {
+  const itens = admin ? [...ITENS, LICENCAS] : ITENS
   return (
     <div>
       <PageHeader titulo="Mais" />
       <div className="lista">
-        {ITENS.map(([id, titulo, linha, icone]) => (
+        {itens.map(([id, titulo, linha, icone]) => (
           <button key={id} className="item row" style={{ flexWrap: 'nowrap' }} onClick={() => goto(id)}>
             <Icon nome={icone} />
             <span className="grow"><b>{titulo}</b><br /><span className="small muted">{linha}</span></span>

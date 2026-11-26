@@ -1,4 +1,5 @@
-// Shell da administradora: Licenças e Minha conta. Nenhum caminho para telas de estudo.
+// Shell da administradora SEM licença: Licenças e Minha conta, nenhum caminho
+// para telas de estudo. Com licença de cortesia ela entra pelo AppAluno.
 import { useState } from 'react'
 import * as dados from '../lib/dados.js'
 import { Avisos, Icon, useDesktop } from '../components/index.jsx'

@@ -84,11 +84,12 @@ function eu() {
   const perfil = db.profiles.find((p) => p.id === sessao.id)
   if (!usuario || !perfil) return null
   const licenca = db.licencas.find((l) => normalizarEmail(l.email) === normalizarEmail(perfil.email)) || null
-  return { usuario, perfil, licenca, licenciado: perfil.role === 'aluno' && licencaAtiva(licenca, usuario.confirmado) }
+  return { usuario, perfil, licenca, licenciado: licencaAtiva(licenca, usuario.confirmado) }
 }
 const ehAdmin = () => eu()?.perfil.role === 'admin'
 
-// Tabela só do aluno: dono e licença ativa. Admin e sem licença: nada.
+// Tabela só do aluno: dono e licença ativa. Sem licença: nada. A administradora
+// só vê os dela, e só se tiver licença de cortesia (igual à RLS).
 function doAluno(tabela) {
   const e = eu()
   if (!e?.licenciado) return []
@@ -98,8 +99,7 @@ function doAluno(tabela) {
 function fabricaEMeus(tabela) {
   const e = eu()
   if (!e) return []
-  if (e.perfil.role === 'admin') return db[tabela].filter((r) => r.user_id == null)
-  if (!e.licenciado) return []
+  if (!e.licenciado) return e.perfil.role === 'admin' ? db[tabela].filter((r) => r.user_id == null) : []
   return db[tabela].filter((r) => r.user_id == null || r.user_id === e.usuario.id)
 }
 // O aluno só responde, lê ou anota o que ele pode ver.
@@ -192,7 +192,7 @@ export function recomecarMock() {
 export function carregarEntrada() {
   const e = eu()
   if (!e) return falha('Sessão expirada. Entre de novo.')
-  return ok({ perfil: e.perfil, licenca: e.perfil.role === 'aluno' ? e.licenca : null, emailConfirmado: e.usuario.confirmado })
+  return ok({ perfil: e.perfil, licenca: e.licenca, emailConfirmado: e.usuario.confirmado })
 }
 // Só o que o aluno pode mudar: nunca role nem email.
 export function salvarPerfil(mudancas) {

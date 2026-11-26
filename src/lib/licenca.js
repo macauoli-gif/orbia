@@ -16,13 +16,18 @@ export function licencaAtiva(licenca, emailConfirmado) {
 // Devolve: 'admin' | 'sem-licenca' | 'licenca-bloqueada' | 'nao-confirmado' | 'serie' | 'aluno'
 export function telaDeEntrada({ perfil, licenca, emailConfirmado }) {
   if (!perfil) return 'sem-licenca'
-  if (perfil.role === 'admin') return 'admin'
+  // A administradora com licença ativa (cortesia) também estuda: entra como
+  // aluna e ganha Licenças no menu. Sem licença, só administra.
+  if (perfil.role === 'admin' && !licencaAtiva(licenca, emailConfirmado)) return 'admin'
   if (!emailConfirmado) return 'nao-confirmado'
   if (!licenca) return 'sem-licenca'
   if (!licencaAtiva(licenca, emailConfirmado)) return 'licenca-bloqueada'
   if (!perfil.serie) return 'serie'
   return 'aluno'
 }
+
+// O menu de estudo mostra Licenças só para a administradora.
+export const podeAdministrar = (perfil) => perfil?.role === 'admin'
 
 export function normalizarEmail(email) {
   return String(email || '').trim().toLowerCase()

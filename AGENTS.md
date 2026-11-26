@@ -33,7 +33,10 @@ Três consequências práticas:
 
 **A unidade é o aluno.** Toda tabela de estudo tem `user_id`; `dados.js` injeta,
 as telas nunca passam. Conteúdo de fábrica = `user_id` vazio, igual para todos.
-A administradora **não vê nada** de estudo: nem no mock, nem na RLS.
+A administradora **não vê nada** de estudo dos alunos: nem no mock, nem na RLS.
+Se o email dela tiver licença ativa (cortesia), ela estuda como aluna, com os
+dados DELA, e ganha Licenças no menu (`telaDeEntrada`). Não existe exceção de
+admin na RLS de estudo: é a mesma `tem_licenca()` de todo mundo — não crie uma.
 O mock e o seed têm **dois alunos** (Maria Claudia e Pedro) de propósito: é o
 que prova a separação. Não reduza para um.
 
@@ -98,6 +101,7 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   segredo** (service role, senha): tudo que começa com `VITE_` vai para o navegador.
 - **Administradora real:** a conta de email da dona do app (role `admin`, definida
   à mão no banco em 26/11/2026). É ela que libera licença na tela Licenças.
+  Tem licença de cortesia (origem Manual) para também estudar no app.
 - **Endereço novo do app** (domínio próprio, por exemplo) precisa entrar no
   Supabase em Authentication → URL Configuration, senão o link de confirmação de
   conta e o de "esqueci a senha" levam para o lugar errado.

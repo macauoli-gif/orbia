@@ -1,5 +1,5 @@
 // Quem entra onde. Esta regra separa quem pagou de quem não pagou.
-import { telaDeEntrada, licencaAtiva, normalizarEmail } from '../src/lib/licenca.js'
+import { telaDeEntrada, licencaAtiva, normalizarEmail, podeAdministrar } from '../src/lib/licenca.js'
 import { serieAlcanca, semanaSugerida, metasSugeridas } from '../src/lib/series.js'
 import { MATERIAS } from '../src/lib/fabrica.js'
 
@@ -15,6 +15,10 @@ const aluno = { role: 'aluno', serie: '2º ano EM' }
 const ativa = { status: 'Ativa' }
 
 conferir('administradora vai para Licenças', telaDeEntrada({ perfil: { role: 'admin' }, licenca: null, emailConfirmado: true }), 'admin')
+conferir('administradora com licença bloqueada só administra', telaDeEntrada({ perfil: { role: 'admin', serie: '2º ano EM' }, licenca: { status: 'Bloqueada' }, emailConfirmado: true }), 'admin')
+conferir('administradora com licença de cortesia estuda', telaDeEntrada({ perfil: { role: 'admin', serie: '2º ano EM' }, licenca: ativa, emailConfirmado: true }), 'aluno')
+conferir('administradora com licença, primeira vez, pede a série', telaDeEntrada({ perfil: { role: 'admin', serie: null }, licenca: ativa, emailConfirmado: true }), 'serie')
+conferir('só a administradora vê Licenças no menu', [podeAdministrar({ role: 'admin' }), podeAdministrar(aluno), podeAdministrar(null)], [true, false, false])
 conferir('aluno com licença ativa e série vai para o Quadro', telaDeEntrada({ perfil: aluno, licenca: ativa, emailConfirmado: true }), 'aluno')
 conferir('primeira entrada pede a série', telaDeEntrada({ perfil: { role: 'aluno', serie: null }, licenca: ativa, emailConfirmado: true }), 'serie')
 conferir('sem licença', telaDeEntrada({ perfil: aluno, licenca: null, emailConfirmado: true }), 'sem-licenca')

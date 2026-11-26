@@ -274,7 +274,7 @@ Escrito em português. Vira RLS na hora de construir. "Aluno com licença" = log
 
 ### Dados do aluno (`tarefas`, `cronograma_blocos`, `sessoes_foco`, `resumos`, `resumo_anotacoes`, `resumos_lidos`, `flashcard_respostas`, `respostas_questoes`, `caderno_erros` e as linhas com `user_id` preenchido de `flashcards`, `questoes`)
 - **Ver / Criar / Editar / Apagar:** só o dono (`user_id` = quem está logado), e só com licença ativa.
-- **Administradora:** **nada.** Não vê, não cria, não edita, não apaga.
+- **Administradora:** **nada** dos alunos. Não vê, não cria, não edita, não apaga. Se o email dela tiver licença ativa (cortesia, 25/11/2026), ela é dona dos próprios estudos como qualquer aluno: a mesma regra (`user_id` = ela e `tem_licenca()`), sem nenhuma exceção para admin.
 - **Sem login ou sem licença:** nada.
 
 Toda tabela recebe GRANT só para `authenticated`. Nada liberado para `anon`.
@@ -323,7 +323,7 @@ Um bucket privado no Storage, `resumos`, só com os PDFs de resumo dos alunos.
 - [ ] Uma conta nova sem licença não recebe nenhuma linha de nenhuma tabela, nem do conteúdo de fábrica.
 - [ ] Uma conta com email não confirmado não é tratada como licenciada, mesmo que exista licença para o email.
 - [ ] Logado como Maria Claudia, uma consulta direta a `tarefas` não devolve nenhuma linha do Pedro (e vice-versa) — testado, não presumido.
-- [ ] Logada como administradora, consultas a `tarefas`, `respostas_questoes`, `sessoes_foco` e `caderno_erros` devolvem zero linhas.
+- [ ] Logada como administradora, consultas a `tarefas`, `respostas_questoes`, `sessoes_foco` e `caderno_erros` devolvem zero linhas de alunos (com licença de cortesia, só as dela).
 - [ ] O aluno não consegue mudar o próprio `role` nem criar ou editar licença.
 - [ ] Um aviso da Hotmart sem o hottok correto é recusado e não cria licença.
 - [ ] Um aviso de compra aprovada cria a licença; um de reembolso para o mesmo email a bloqueia; o mesmo aviso repetido não duplica nada.

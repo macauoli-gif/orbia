@@ -88,8 +88,10 @@ export async function carregarEntrada() {
   if (error || !u?.user) return falha('Sessão expirada. Entre de novo.')
   const perfil = await q(supabase.from('profiles').select('*').eq('id', u.user.id).maybeSingle())
   if (perfil.erro) return perfil
-  // A RLS só devolve a licença do próprio email, e só com o email confirmado.
-  const licenca = perfil.data?.role === 'aluno'
+  // A RLS só devolve a licença do próprio email, e só com o email confirmado
+  // (a administradora vê todas, por isso o filtro pelo email dela). Ela também
+  // pode ter licença de cortesia e estudar.
+  const licenca = perfil.data
     ? await q(supabase.from('licencas').select('*').eq('email', normalizarEmail(u.user.email)).maybeSingle())
     : ok(null)
   if (licenca.erro) return licenca
