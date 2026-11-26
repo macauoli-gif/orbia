@@ -80,7 +80,8 @@ nenhum sintoma; licença liberada errada é produto dado de graça.
 
 ## Deploy
 
-No ar em https://pauta-de-estudos-mariaclaudiaoliveiraaraujoo-8447.vercel.app
+No ar em https://pauta-de-estudos.vercel.app (também responde em
+https://pauta-de-estudos-mariaclaudiaoliveiraaraujoo-8447.vercel.app)
 (projeto Vercel `pauta-de-estudos`, ligado ao GitHub `macauoli-gif/orbia`, branch
 `main`). A pessoa diz "sobe pro GitHub", o agente roda a régua e sobe com git
 (`git add`, `git commit`, `git push`), e a Vercel publica sozinha em ~1 min.
@@ -95,6 +96,8 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   `VITE_SUPABASE_PUBLISHABLE_KEY`. As `POSTGRES_*` e `SUPABASE_*` vieram da
   integração Supabase da Vercel e não são usadas. **Nunca crie variável `VITE_` com
   segredo** (service role, senha): tudo que começa com `VITE_` vai para o navegador.
+- **Administradora real:** a conta de email da dona do app (role `admin`, definida
+  à mão no banco em 26/11/2026). É ela que libera licença na tela Licenças.
 - **Endereço novo do app** (domínio próprio, por exemplo) precisa entrar no
   Supabase em Authentication → URL Configuration, senão o link de confirmação de
   conta e o de "esqueci a senha" levam para o lugar errado.
