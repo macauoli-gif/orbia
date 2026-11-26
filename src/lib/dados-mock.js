@@ -7,6 +7,8 @@
 // O user_id é injetado aqui. As telas nunca passam o dono do registro.
 // ============================================================
 import { criarMock } from './mockData.js'
+import { LETRAS } from './questoes.js'
+import { IDIOMAS, TEMPO_MAXIMO_SEG } from './simulados.js'
 import { licencaAtiva, normalizarEmail } from './licenca.js'
 import { RESUMO_DIGITADO, RESUMO_PDF, camposEditaveis, validarPdf, validarResumo } from './resumos.js'
 
@@ -388,8 +390,9 @@ export const listarTentativas = () => ok(doAluno('simulados_tentativas'))
 export function salvarTentativa(t) {
   if (t.id) return falha('Uma tentativa terminada não pode ser mudada.')
   if (!/^[a-z0-9-]{3,40}$/.test(t.prova_id || '')) return falha('Prova inválida.')
-  if (Object.values(t.respostas || {}).some((r) => !['A', 'B', 'C', 'D', 'E'].includes(r))) return falha('Resposta inválida.')
-  if (!(t.tempo_seg >= 0)) return falha('Tempo inválido.')
+  if (Object.values(t.respostas || {}).some((r) => !LETRAS.includes(r))) return falha('Resposta inválida.')
+  if (t.idioma && !IDIOMAS.includes(t.idioma)) return falha('Língua inválida.')
+  if (!(t.tempo_seg >= 0 && t.tempo_seg <= TEMPO_MAXIMO_SEG)) return falha('Tempo inválido.')
   return salvarDoAluno('simulados_tentativas', { prova_id: t.prova_id, idioma: t.idioma || null, respostas: t.respostas || {}, tempo_seg: t.tempo_seg })
 }
 export const apagarTentativa = (id) => apagarDoAluno('simulados_tentativas', id)

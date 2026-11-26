@@ -35,6 +35,7 @@ conferir('Pedro não responde questão própria da Maria', (await d.registrarRes
 conferir('Pedro não apaga o simulado da Maria', (await d.apagarTentativa('st-1')).erro != null, true)
 conferir('Pedro grava o próprio simulado', (await d.salvarTentativa({ prova_id: 'fuvest-2027', respostas: { 1: 'E' }, tempo_seg: 60 })).erro, null)
 conferir('simulado com letra inválida é recusado (CHECK)', (await d.salvarTentativa({ prova_id: 'fuvest-2027', respostas: { 1: 'Z' }, tempo_seg: 60 })).erro != null, true)
+conferir('simulado com mais de 24 h é recusado, como no banco', (await d.salvarTentativa({ prova_id: 'fuvest-2027', respostas: {}, tempo_seg: 90000 })).erro != null, true)
 conferir('simulado terminado não se edita', (await d.salvarTentativa({ id: 'st-3', prova_id: 'uerj-2026-1', respostas: {}, tempo_seg: 1 })).erro != null, true)
 
 // O bug: apagar tarefa de outro aluno.

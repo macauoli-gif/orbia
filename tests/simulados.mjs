@@ -1,5 +1,5 @@
 // Simulados: correção, línguas, áreas, evolução e conferência do catálogo oficial.
-import { corrigir, gabaritoDa, evolucao, comparaAreas, tentativaAnterior, filtrarProvas, anosDisponiveis, validarTentativa, textoDuracao, INSTITUICOES } from '../src/lib/simulados.js'
+import { corrigir, gabaritoDa, evolucao, comparaAreas, tentativaAnterior, filtrarProvas, anosDisponiveis, validarTentativa, textoDuracao, INSTITUICOES, tempoParaGravar } from '../src/lib/simulados.js'
 import { PROVAS } from '../src/lib/simulados-provas.js'
 import { progressoDaSemana } from '../src/lib/metas.js'
 
@@ -43,6 +43,9 @@ conferir('validar: língua obrigatória', validarTentativa({ prova_id: 'teste-20
 conferir('validar: questão que não existe', validarTentativa({ prova_id: 'teste-2026', idioma: 'Inglês', respostas: { 9: 'A' }, tempo_seg: 1 }, [P]), 'A prova não tem a questão 9.')
 conferir('validar: letra E em prova A–D', validarTentativa({ prova_id: 'unicamp-2027', respostas: { 1: 'E' }, tempo_seg: 1 }, PROVAS), 'Resposta inválida na questão 1.')
 conferir('validar: tudo certo', validarTentativa({ prova_id: 'teste-2026', idioma: 'Inglês', respostas: { 1: 'A' }, tempo_seg: 1 }, [P]), null)
+// Bug da revisão: rascunho reaberto dias depois tinha tempo > 24 h e o banco recusava para sempre.
+conferir('tempo gravado nunca passa de 24 h', [tempoParaGravar(3 * 86400), tempoParaGravar(-5), tempoParaGravar(61.6)], [86400, 0, 62])
+conferir('validar: tempo acima de 24 h é recusado (CHECK)', validarTentativa({ prova_id: 'teste-2026', idioma: 'Inglês', respostas: {}, tempo_seg: 90000 }, [P]), 'Tempo inválido.')
 conferir('duração', [textoDuracao(75), textoDuracao(3 * 3600 + 5 * 60)], ['1 min 15 s', '3 h 05 min'])
 
 // ----- catálogo oficial (gerado dos PDFs) -----

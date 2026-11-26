@@ -6,7 +6,7 @@ import * as dados from '../lib/dados.js'
 import { useEstudo } from '../lib/EstudoContext.jsx'
 import {
   INSTITUICOES, anosDisponiveis, filtrarProvas, idiomasDa, letrasDa, marcadas,
-  evolucao, comparaAreas, tentativaAnterior, textoDuracao, validarTentativa, titulo,
+  evolucao, comparaAreas, tentativaAnterior, textoDuracao, validarTentativa, titulo, tempoParaGravar,
 } from '../lib/simulados.js'
 import { agoraMs } from '../lib/datas.js'
 import { PROVAS } from '../lib/simulados-provas.js'
@@ -198,7 +198,7 @@ function Fazer({ prova, userId, provas, aoSair, aoTerminar }) {
 
   async function terminar() {
     const respostas = Object.fromEntries(Object.entries(r.respostas).filter(([, v]) => v))
-    const t = { prova_id: prova.id, idioma: r.idioma || null, respostas, tempo_seg: passou }
+    const t = { prova_id: prova.id, idioma: r.idioma || null, respostas, tempo_seg: tempoParaGravar(passou) }
     const problema = validarTentativa(t, provas)
     if (problema) { avisar(problema, true); setConfirmando(false); return }
     setSalvando(true)
@@ -264,7 +264,7 @@ function Fazer({ prova, userId, provas, aoSair, aoTerminar }) {
 
       {confirmando && (
         <Janela titulo="Terminar a prova?" aoFechar={() => setConfirmando(false)} centro>
-          <p>{feitas < total ? `Você deixou ${total - feitas} ${total - feitas === 1 ? 'questão' : 'questões'} em branco. Elas contam como erro.` : 'Todas as questões estão marcadas.'} Depois de corrigir não dá para mudar as respostas.</p>
+          <p>{feitas < total ? `Você deixou ${total - feitas} ${total - feitas === 1 ? 'questão' : 'questões'} em branco. Elas entram no total como não acertadas.` : 'Todas as questões estão marcadas.'} Depois de corrigir não dá para mudar as respostas.</p>
           <div className="janela-acoes">
             <button className="btn" onClick={() => setConfirmando(false)}>Continuar a prova</button>
             <button className="btn primary" disabled={salvando} onClick={terminar}>{salvando ? 'Corrigindo…' : 'Corrigir'}</button>

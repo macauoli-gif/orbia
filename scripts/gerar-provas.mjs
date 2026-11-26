@@ -187,6 +187,8 @@ const FUV = [
 for (const [ano, nome, pv, gb] of FUV) await garantir(`fuvest${ano}.pdf`, F + gb)
 for (const [ano, nome, pv, gb] of FUV) provas.push({ id: `fuvest-${ano}`, instituicao: 'Fuvest', ano, nome: `1ª fase · ${nome}`, alternativas: 5, tempo_min: 300, link_prova: F + pv, link_gabarito: F + gb, ...(await fuvest(`fuvest${ano}.pdf`)) })
 const U = 'https://www.comvest.unicamp.br/'
+// Unicamp 2023: o gabarito da 1ª fase não está mais publicado no site da Comvest
+// (conferido em 26/11/2026); por isso a Unicamp tem 4 anos e não 5.
 const UNI = [
   [2027, 'Q', 'vest2027/F1/F1_2027_Q_Y.pdf', 'wp-content/uploads/2026/10/gabarito_2027_QY.pdf'],
   [2026, 'Q', 'vest2026/F1/f12026Q_X.pdf', 'wp-content/uploads/2025/10/Q_X-gabarito.pdf'],

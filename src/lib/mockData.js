@@ -9,6 +9,7 @@
 // ============================================================
 import { MATERIAS, FLASHCARDS_APP, QUESTOES_APP } from './fabrica.js'
 import { PROVAS } from './simulados-provas.js'
+import { LETRAS } from './questoes.js'
 import { semanaSugerida, metasSugeridas } from './series.js'
 
 // false = o app usa o banco de verdade (Supabase). true = volta para os dados
@@ -43,7 +44,7 @@ function blocosDe(user_id, serie, tarefas) {
 // e uma errada nas outras, deixando 1 em cada 10 em branco.
 function respostasDeMentira(provaId, fracao, idioma = null) {
   const p = PROVAS.find((x) => x.id === provaId)
-  const letras = ['A', 'B', 'C', 'D', 'E'].slice(0, p.alternativas)
+  const letras = LETRAS.slice(0, p.alternativas)
   const r = {}
   p.questoes.forEach((q, i) => {
     const certa = q.r ?? p.variantes?.[idioma]?.[q.n]
