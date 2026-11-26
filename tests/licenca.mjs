@@ -1,6 +1,6 @@
 // Quem entra onde. Esta regra separa quem pagou de quem não pagou.
 import { telaDeEntrada, licencaAtiva, normalizarEmail, podeAdministrar } from '../src/lib/licenca.js'
-import { serieAlcanca, semanaSugerida, metasSugeridas } from '../src/lib/series.js'
+import { semanaSugerida, metasSugeridas } from '../src/lib/series.js'
 import { MATERIAS } from '../src/lib/fabrica.js'
 
 let ok = 0
@@ -28,9 +28,6 @@ conferir('sem perfil não entra', telaDeEntrada({ perfil: null, licenca: ativa, 
 conferir('licença ativa exige email confirmado', licencaAtiva(ativa, false), false)
 conferir('email da compra compara sem maiúscula e espaço', normalizarEmail('  Maria@Exemplo.COM '), 'maria@exemplo.com')
 
-conferir('conteúdo do 2º ano aparece no 3º', serieAlcanca('2º ano EM', '3º ano EM'), true)
-conferir('conteúdo do 2º ano não aparece no 9º', serieAlcanca('2º ano EM', '9º ano EF'), false)
-conferir('sem série mínima aparece para todos', serieAlcanca(null, '9º ano EF'), true)
 
 const s9 = semanaSugerida('9º ano EF', MATERIAS)
 const s3 = semanaSugerida('3º ano EM', MATERIAS)

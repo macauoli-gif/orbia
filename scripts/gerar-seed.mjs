@@ -61,9 +61,6 @@ function exemplo() {
   const senha = env.match(/^SENHA_CONTAS_TESTE=(.+)$/m)?.[1]?.trim()
   if (!senha) throw new Error('Falta SENHA_CONTAS_TESTE no .env.local')
   const db = criarMock()
-  // O PDF de exemplo e as anotações dele não entram: o arquivo precisa subir
-  // pelo Storage (pelo app), e o banco recusa resumo PDF sem o arquivo no caminho certo.
-  const resumos = db.resumos.filter((r) => r.tipo === 'Digitado')
   const doMock = (u) => db.profiles.find((p) => p.id === u.id)
 
   const contas = db.usuarios.map((u) => {
@@ -92,10 +89,6 @@ ${linhas('flashcards', ['id', 'user_id', 'materia_id', 'frente', 'verso', 'serie
     db.flashcards.filter((f) => f.user_id).map((f) => [id(f.id), id(f.user_id), id(f.materia_id), q(f.frente), q(f.verso), 'null']))}
 ${linhas('questoes', ['id', 'user_id', 'materia_id', 'assunto', 'nivel', 'instituicao', 'ano', 'enunciado', 'alternativas', 'correta', 'resposta_comentada'],
     db.questoes.filter((x) => x.user_id).map((x) => [id(x.id), id(x.user_id), id(x.materia_id), q(x.assunto), q(x.nivel), q(x.instituicao), q(x.ano), q(x.enunciado), j(x.alternativas), q(x.correta), q(x.resposta_comentada)]))}
-${linhas('resumos', ['id', 'user_id', 'tipo', 'materia_id', 'titulo', 'texto', 'created_at'],
-    resumos.map((r) => [id(r.id), id(r.user_id), q(r.tipo), id(r.materia_id), q(r.titulo), q(r.texto), q(r.created_at)]))}
-${linhas('resumos_lidos', ['id', 'user_id', 'resumo_id', 'created_at'],
-    db.resumos_lidos.filter((l) => resumos.some((r) => r.id === l.resumo_id)).map((l) => [id(l.id), id(l.user_id), id(l.resumo_id), q(l.created_at)]))}
 ${linhas('tarefas', ['id', 'user_id', 'titulo', 'materia_id', 'prazo', 'prioridade', 'status', 'observacao', 'concluida_em', 'created_at'],
     db.tarefas.map((t) => [id(t.id), id(t.user_id), q(t.titulo), id(t.materia_id), q(t.prazo), q(t.prioridade), q(t.status), q(t.observacao || null), q(t.concluida_em), q(t.created_at)]))}
 ${linhas('cronograma_blocos', ['id', 'user_id', 'dia_semana', 'inicio', 'fim', 'materia_id', 'titulo', 'tipo', 'tarefa_id'],

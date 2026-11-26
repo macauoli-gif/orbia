@@ -7,7 +7,6 @@ const CAMINHOS = {
   questoes: 'M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.6V14M12 17.5v.5M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18z',
   foco: 'M12 8v4l3 2M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18z',
   mais: 'M5 12h.01M12 12h.01M19 12h.01',
-  resumos: 'M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7',
   flashcards: 'M4 7h12v12H4zM8 3h12v12',
   conta: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
   licencas: 'M4 7h16v10H4zM8 11h4M8 14h8M16 10h1',

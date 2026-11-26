@@ -1,7 +1,7 @@
-# Pauta de Estudos
+# Nous (antes "Pauta de Estudos")
 
 App de organização de estudos (9º ano EF ao 3º ano EM), vendido por licença vitalícia na Hotmart. Cada aluno só vê os próprios estudos; a administradora só vê dados da compra.
-React + Vite + Supabase + Vercel. Bibliotecas no app: só `@supabase/supabase-js` e `pdfjs-dist` (aprovada em 25/11/2026 para mostrar os resumos em PDF; carregada só quando um PDF é aberto, em `src/components/pdf.js`). Nenhuma outra sem a dona do projeto aprovar. Perfis: aluno (`src/pages/AppAluno.jsx`) e administradora (`src/pages/AppAdmin.jsx`). Quem entra onde: `src/lib/licenca.js`.
+React + Vite + Supabase + Vercel. Biblioteca no app: só `@supabase/supabase-js`. Nenhuma outra sem a dona do projeto aprovar. (`pdfjs-dist` ficou só como ferramenta de desenvolvimento: o `scripts/gerar-provas.mjs` lê os gabaritos oficiais em PDF; não vai para o app.) O nome do app mudou para **Nous** em 26/11/2026; o endereço na Vercel e o repositório continuam com o nome antigo. Perfis: aluno (`src/pages/AppAluno.jsx`) e administradora (`src/pages/AppAdmin.jsx`). Quem entra onde: `src/lib/licenca.js`.
 Fonte das decisões: `PLANO-DO-PROJETO.md`, `PRD-FRONTEND.md`, `PRD-BACKEND.md`. Quando mudar uma decisão, mude lá primeiro.
 
 ## Onde o código novo vai
@@ -41,8 +41,10 @@ O mock e o seed têm **dois alunos** (Maria Claudia e Pedro) de propósito: é o
 que prova a separação. Não reduza para um.
 
 `src/lib/fabrica.js` foi gerado a partir de `referencia/pauta-de-estudos-v1.html`
-(a versão antiga). Na Etapa 7 vira o seed das tabelas de conteúdo. **Não há
-resumos do app** (decidido em 25/11/2026): a aba Resumos é só do aluno.
+(a versão antiga). Na Etapa 7 vira o seed das tabelas de conteúdo.
+**O Banco de resumos saiu do app em 26/11/2026.** As tabelas `resumos`,
+`resumo_anotacoes`, `resumos_lidos` e o bucket `resumos` continuam no banco até a
+dona decidir apagar (limpeza nunca toca no banco); nenhuma tela usa.
 
 ## Régua de verificação
 
@@ -125,9 +127,6 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   do git). `admin@exemplo.com` é administradora: **apagar essas contas antes
   de vender** com `supabase/limpar-dados-de-exemplo.sql` (instruções dentro;
   a trava recusa enquanto não houver administradora de verdade).
-- **O PDF de exemplo da Maria no mock** (`exemplo:/exemplos/...`) não existe no
-  banco: lá, PDF só entra pelo app (Storage), porque o CHECK exige o arquivo
-  no caminho `<user_id>/<resumo_id>.pdf`.
 - **`tarefas.concluida_em` é obrigatório em `'Concluído'` e vazio nos outros.**
   Mudar status sempre por `comStatus()` (`lib/tarefas.js`); senão o banco recusa.
 - **Blocos de "Prova anterior" da semana sugerida não têm matéria**
@@ -135,19 +134,8 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   (CHECK `cronograma_materia_no_estudo`).
 - **O banco devolve hora como `"14:00:00"`**; `dados-supabase.js` corta para
   `"14:00"` (`hhmm`). Coluna `time` nova precisa do mesmo corte.
-- **Resumos em PDF: o arquivo original nunca muda.** Anotação (caneta e texto)
-  mora em `resumo_anotacoes`, uma linha por página, com coordenadas de 0 a 1
-  relativas à página. Não "queime" anotação dentro do PDF.
-- **pdf.js 6 fecha o documento por `doc.loadingTask.destroy()`**, não por
-  `doc.destroy()` (que não existe e derruba a tela). Use `fecharPdf()`.
-- **`public/pdfjs/` é gerado** por `scripts/copiar-pdfjs.mjs` (roda sozinho
-  antes do dev e do build) a partir da versão instalada. Não edite nem suba
-  para o git; se o PDF abrir sem fontes, é essa pasta faltando.
-- **No mock, os PDFs moram no IndexedDB do navegador** (`dados-mock.js`); os de
-  exemplo, em `public/exemplos/`. No banco, é o bucket privado `resumos`,
-  caminho `<user_id>/<resumo_id>.pdf`.
-- **A caneta não foi testada num tablet de verdade** (só mouse). Antes de
-  vender, testar: pressão, dedo rolando com caneta por perto, "Só caneta".
+- **O arrasto do Quadro com caneta não foi testado num tablet de verdade**
+  (só mouse e eventos simulados). Antes de vender, testar caneta e dedo.
 - **Datas:** "hoje" sempre por `hojeISO()` (`lib/datas.js`). `toISOString()`
   vira UTC e pula um dia depois das 21h no Brasil.
 - **Simulados: provas e gabaritos oficiais moram no código**, não no banco

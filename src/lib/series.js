@@ -12,12 +12,6 @@ export function metasSugeridas(serie) {
   return { meta_questoes_semana: c.meta_questoes_semana, meta_foco_min_semana: c.meta_foco_min_semana, meta_provas_mes: c.meta_provas_mes }
 }
 
-// O conteúdo pode aparecer para esta série? (serie_minima vazia = todas)
-export function serieAlcanca(serieMinima, serie) {
-  if (!serieMinima) return true
-  return SERIES.indexOf(serieMinima) <= SERIES.indexOf(serie)
-}
-
 export function temFimDeSemana(serie) {
   return (configSerie(serie)?.vestibular || 0) > 0
 }

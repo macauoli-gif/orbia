@@ -4,9 +4,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // O pdf.js (~500 kB) só é baixado quando o aluno abre um resumo em PDF
-    // (import dinâmico em src/components/pdf.js); não pesa na abertura do app.
-    // O limite sobe só o bastante para ele não sujar a saída do npm run check.
+    // O pacote principal leva os dados oficiais embutidos (gabaritos dos Simulados
+    // e os 118 elementos do ExactLab), por isso passa dos 500 kB padrão do Vite.
+    // O limite sobe só o bastante para não sujar a saída do npm run check.
     chunkSizeWarningLimit: 1600,
   },
 })

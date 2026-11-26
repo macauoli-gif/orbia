@@ -9,7 +9,7 @@
 
 App de organização de estudos para alunos do 9º ano do fundamental ao 3º ano do ensino médio, vendido por licença vitalícia na Hotmart. Usado no celular, no tablet (às vezes com caneta) e no computador.
 
-**Escopo do lançamento (v1):** Entrada, Sem licença, Série, Quadro, Cronograma, Questões, Caderno de erros, Foco, Simulados (provas anteriores; 25/11/2026), Banco de resumos, Flashcards, Minha conta e Licenças. O treino de Simulados com o banco do app, Desempenho e Espaço para cálculo ficam para a v1.1 (ver o fim do arquivo).
+**Escopo do lançamento (v1):** Entrada, Sem licença, Série, Quadro, Cronograma, Questões, Caderno de erros, Foco, Simulados (provas anteriores; 25/11/2026), ExactLab (26/11/2026), Flashcards, Minha conta e Licenças. O Banco de resumos saiu em 26/11/2026. O treino de Simulados com o banco do app, Desempenho e Espaço para cálculo ficam para a v1.1 (ver o fim do arquivo).
 
 ## Padrão técnico
 
@@ -32,7 +32,7 @@ App de organização de estudos para alunos do 9º ano do fundamental ao 3º ano
 ```
 Entrada (Entrar · Criar conta · Esqueci a senha)
 └── Sem licença ativa: aviso + Sair
-└── Aluno: [Série, só na primeira vez] → Quadro · Cronograma · Questões (→ Resolver, Caderno de erros) · Foco · Mais (Banco de resumos · Flashcards · Minha conta)
+└── Aluno: [Série, só na primeira vez] → Quadro · Cronograma · Questões (→ Resolver, Caderno de erros) · Foco · Mais (Simulados · ExactLab · Flashcards · Minha conta)
 └── Administradora: Licenças · Minha conta
 └── Administradora com licença ativa: as telas do Aluno (com os dados dela) + Licenças
 ```
@@ -247,7 +247,7 @@ Matéria e tarefa (opcionais), tempo de foco (padrão 25 min) e de pausa (padrã
 
 ---
 
-## Tela: Banco de resumos
+## Tela: Banco de resumos — RETIRADA em 26/11/2026 (mantida aqui só como histórico)
 
 **Quem acessa:** aluno.
 **Chega aqui por:** Mais → Banco de resumos.

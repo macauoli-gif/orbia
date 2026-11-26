@@ -17,8 +17,7 @@ export function ultimaResposta(questaoId, respostas) {
 
 // Questão de fábrica sugerida para a série: a da PRÓPRIA série (decidido em
 // 25/11/2026: cada série com o seu nível). Nas questões, serie_minima funciona
-// como "série da questão"; vazia = vale para todas. Flashcards e resumos
-// continuam com a regra de série mínima (serieAlcanca).
+// como "série da questão"; vazia = vale para todas.
 export const questaoDaSerie = (q, serie) => !q.serie_minima || q.serie_minima === serie
 
 export function filtrarQuestoes(questoes, f, { serie, respostas = [], caderno = [] }) {

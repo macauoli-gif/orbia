@@ -1,4 +1,6 @@
-# Plano do Projeto — Pauta de Estudos
+# Plano do Projeto — Nous (antes "Pauta de Estudos")
+
+> **26/11/2026:** o app passou a se chamar **Nous**, e o Banco de resumos saiu do app (a dona pediu). O visual segue o manual de identidade da marca.
 
 > Fonte da verdade deste projeto. Quando mudar de ideia, mude aqui primeiro.
 > Última atualização: 25/11/2026
@@ -185,7 +187,7 @@ O app já existe, foi feito para uma aluna real e cobre do 9º ano ao 3º ano co
 - **Cores de aviso:** atrasado #c4321f, atenção #8a5300 (escurecido de #b9700a em 25/11/2026 para o texto ficar legível: contraste 4,5:1), em dia #1f7a4d
 - **Fontes:** Bricolage Grotesque (títulos) e DM Sans (texto), as mesmas da versão atual
 - **Tema:** claro e escuro, seguindo o aparelho
-- **Logo:** sem logo por enquanto; o nome "Pauta de Estudos" no topo
+- **Logo:** o nome "Nous" no topo (logo e cores conforme o manual de identidade)
 
 ---
 

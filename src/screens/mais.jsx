@@ -4,7 +4,6 @@ import { Icon, PageHeader } from '../components/index.jsx'
 const ITENS = [
   ['simulados', 'Simulados', 'Provas anteriores do ENEM e vestibulares, com correção', 'simulados'],
   ['exactlab', 'ExactLab', 'Fórmulas e tabela periódica interativa', 'exactlab'],
-  ['resumos', 'Banco de resumos', 'Seus PDFs anotados e resumos digitados', 'resumos'],
   ['flashcards', 'Flashcards', 'Pergunta na frente, resposta no verso', 'flashcards'],
   ['conta', 'Minha conta', 'Nome, série, metas e sair', 'conta'],
 ]

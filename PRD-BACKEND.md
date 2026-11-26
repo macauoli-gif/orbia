@@ -12,7 +12,7 @@
 - Chave estrangeira termina em `_id`.
 - Campo de lista fechada vira CHECK, e o texto é **idêntico** ao usado na interface (com acento e maiúscula: `'A fazer'`, `'Média'`).
 - Datas como `date` ou `timestamptz`.
-- Arquivos: só os PDFs de resumo dos alunos, no Storage (ver "Arquivos").
+- Arquivos: o Storage tinha os PDFs de resumo dos alunos. O Banco de resumos saiu do app em 26/11/2026; o bucket e as tabelas `resumos`, `resumo_anotacoes` e `resumos_lidos` continuam no banco, sem uso, até a dona decidir apagar.
 
 ---
 

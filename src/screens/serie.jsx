@@ -47,9 +47,9 @@ export default function Serie({ perfil, primeiraVez = false, aoTerminar, salvar 
   return (
     <div className={primeiraVez ? 'entrada' : ''}>
       <div className="caixa stack" style={primeiraVez ? null : { maxWidth: 560, paddingTop: 18 }}>
-        {primeiraVez && <h1 className="marca">Pauta de Estudos</h1>}
+        {primeiraVez && <h1 className="marca">Nous</h1>}
         <h2>Em que série você está?</h2>
-        <p className="muted small">O app se adapta: metas, cronograma sugerido e a ordem dos resumos e questões mudam conforme a série.</p>
+        <p className="muted small">O app se adapta: metas, cronograma sugerido e as questões mudam conforme a série.</p>
         <fieldset className="series" style={{ border: 0, padding: 0, margin: 0 }}>
           <legend className="sr-only">Série</legend>
           {SERIES.map((s) => (

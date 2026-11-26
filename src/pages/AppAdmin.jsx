@@ -22,7 +22,7 @@ export default function AppAdmin({ perfil: inicial }) {
   return (
     <div className="app" data-desktop={desktop ? '1' : '0'}>
       <nav className="sidebar" aria-label="Menu">
-        <div className="marca">Pauta de Estudos</div>
+        <div className="marca">Nous</div>
         {MENU.map(([id, rotulo, icone]) => (
           <button key={id} aria-current={tela === id ? 'page' : undefined} onClick={() => setTela(id)}><Icon nome={icone} /> {rotulo}</button>
         ))}

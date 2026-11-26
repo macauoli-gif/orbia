@@ -5,14 +5,12 @@
 // mesmas respostas { data, erro }.
 //
 // Quem decide o que cada pessoa vê é a RLS do banco (supabase/migrations).
-// As conferências daqui (validarResumo, comStatus…) só dão mensagem clara
+// As conferências daqui (comStatus, validarTentativa…) só dão mensagem clara
 // antes de o banco recusar; não substituem a RLS.
 // ============================================================
 import { supabase } from './supabase.js'
 import { normalizarEmail } from './licenca.js'
-import { RESUMO_DIGITADO, RESUMO_PDF, camposEditaveis, validarPdf, validarResumo } from './resumos.js'
 
-const PASTA_PDFS = 'resumos'
 const ERRO_REDE = 'Sem conexão com o servidor. Confira sua internet e tente de novo.'
 
 // Mensagens do Supabase em inglês viram frases para quem usa o app.
@@ -168,74 +166,6 @@ export async function trocarSemana(blocos) {
     if (apagou.erro) return apagou
   }
   return ok(novos.data.map(hhmm))
-}
-
-// ---------- resumos (só do aluno) e PDFs ----------
-export const listarResumos = () => listar('resumos')
-export async function salvarResumo(r) {
-  if (!r.id) {
-    if (r.tipo && r.tipo !== RESUMO_DIGITADO) return falha('Use "Enviar PDF" para resumo em PDF.')
-    const novo = { titulo: r.titulo?.trim(), materia_id: r.materia_id, texto: r.texto, tipo: RESUMO_DIGITADO }
-    const erro = Object.values(validarResumo(novo))[0]
-    return erro ? falha(erro) : q(supabase.from('resumos').insert({ ...novo, user_id: eu() }).select().single())
-  }
-  const atual = await q(supabase.from('resumos').select('*').eq('id', r.id).maybeSingle())
-  if (atual.erro) return atual
-  if (!atual.data) return falha('Resumo não encontrado.')
-  const mudancas = so(r, camposEditaveis(atual.data.tipo))
-  if ('titulo' in mudancas) mudancas.titulo = mudancas.titulo?.trim()
-  const erro = Object.values(validarResumo({ ...atual.data, ...mudancas }))[0]
-  return erro ? falha(erro) : q(supabase.from('resumos').update(mudancas).eq('id', r.id).select().single())
-}
-export async function enviarResumoPdf({ arquivo, titulo, materia_id, paginas }) {
-  if (!eu()) return falha('Sessão expirada. Entre de novo.')
-  if (!arquivo) return falha('Escolha um arquivo.')
-  const inicio = new Uint8Array(await arquivo.slice(0, 4).arrayBuffer())
-  const problema = validarPdf({ nome: arquivo.name, tamanho: arquivo.size, tipo: arquivo.type }, inicio)
-  if (problema) return falha(problema)
-  const id = crypto.randomUUID()
-  const caminho = `${eu()}/${id}.pdf` // a mesma regra do CHECK resumos_tipo_coerente e da pasta
-  const novo = { id, user_id: eu(), tipo: RESUMO_PDF, materia_id, titulo: titulo?.trim(), texto: null, arquivo_path: caminho, arquivo_nome: arquivo.name || null, paginas }
-  const erro = Object.values(validarResumo(novo))[0]
-  if (erro) return falha(erro)
-  const subiu = await q(supabase.storage.from(PASTA_PDFS).upload(caminho, arquivo, { contentType: 'application/pdf', upsert: false }))
-  if (subiu.erro) return falha('Não conseguimos enviar o PDF. ' + subiu.erro)
-  const r = await q(supabase.from('resumos').insert(novo).select().single())
-  if (r.erro) await supabase.storage.from(PASTA_PDFS).remove([caminho]) // sem resumo, o arquivo não fica órfão
-  return r
-}
-export async function lerPdfDoResumo(resumoId) {
-  const r = await q(supabase.from('resumos').select('tipo, arquivo_path').eq('id', resumoId).maybeSingle())
-  if (r.erro) return r
-  if (!r.data || r.data.tipo !== RESUMO_PDF) return falha('Resumo não encontrado.')
-  const arq = await q(supabase.storage.from(PASTA_PDFS).download(r.data.arquivo_path))
-  if (arq.erro) return falha('Não conseguimos abrir o arquivo. ' + arq.erro)
-  return ok(new Uint8Array(await arq.data.arrayBuffer()))
-}
-export async function apagarResumo(id) {
-  const r = await q(supabase.from('resumos').select('arquivo_path').eq('id', id).maybeSingle())
-  if (r.erro) return r
-  if (!r.data) return falha('Resumo não encontrado.')
-  // Anotações e "lido" saem junto (on delete cascade).
-  const apagou = await apagar('resumos', id)
-  if (apagou.erro) return apagou
-  if (r.data.arquivo_path) await supabase.storage.from(PASTA_PDFS).remove([r.data.arquivo_path])
-  return apagou
-}
-export const listarAnotacoes = (resumoId) =>
-  listar(() => supabase.from('resumo_anotacoes').select('*').eq('resumo_id', resumoId), 'pagina')
-// Uma linha por página (único por resumo_id + pagina): grava por cima se já existe.
-export const salvarAnotacao = (resumoId, pagina, { tracos, textos }) =>
-  q(supabase.from('resumo_anotacoes')
-    .upsert({ user_id: eu(), resumo_id: resumoId, pagina, tracos, textos, atualizado_em: new Date().toISOString() }, { onConflict: 'resumo_id,pagina' })
-    .select().single())
-
-export const listarResumosLidos = () => listar('resumos_lidos')
-export async function marcarResumoLido(resumoId, lido) {
-  if (lido) {
-    return q(supabase.from('resumos_lidos').upsert({ user_id: eu(), resumo_id: resumoId }, { onConflict: 'user_id,resumo_id', ignoreDuplicates: true }))
-  }
-  return q(supabase.from('resumos_lidos').delete().eq('resumo_id', resumoId))
 }
 
 // ---------- flashcards ----------
