@@ -3,13 +3,6 @@ import { useState } from 'react'
 import * as dados from '../lib/dados.js'
 import { SERIES, configSerie, metasSugeridas, semanaSugerida } from '../lib/series.js'
 
-const LINHA = {
-  '9º ano EF': 'Base forte, sem foco em vestibular.',
-  '1º ano EM': 'Conhecer o formato das provas.',
-  '2º ano EM': 'Uma prova anterior por mês.',
-  '3º ano EM': 'Uma prova anterior por semana.',
-}
-
 export default function Serie({ perfil, primeiraVez = false, aoTerminar, salvar = dados.salvarPerfil, aoCancelar }) {
   const [serie, setSerie] = useState(perfil.serie || '')
   const [etapa, setEtapa] = useState('escolher') // escolher | oferta
@@ -62,7 +55,7 @@ export default function Serie({ perfil, primeiraVez = false, aoTerminar, salvar 
           {SERIES.map((s) => (
             <label key={s} className="serie-card">
               <input type="radio" name="serie" value={s} checked={serie === s} onChange={() => { setSerie(s); setErro(null) }} />
-              <div><b>{configSerie(s).nome}</b><span>{LINHA[s]}</span></div>
+              <div><b>{configSerie(s).nome}</b></div>
             </label>
           ))}
         </fieldset>

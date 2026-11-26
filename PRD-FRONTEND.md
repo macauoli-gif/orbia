@@ -101,11 +101,7 @@ Mostra o email com que a pessoa entrou. Botões: "Falar no WhatsApp" (abre `http
 **Quem acessa:** aluno, só na primeira entrada (e por "Alterar série" em Minha conta).
 
 **O que aparece**
-"Em que série você está?" e quatro cartões de escolha, cada um com uma linha explicando o foco:
-- 9º ano do fundamental — "Base forte, sem foco em vestibular."
-- 1º ano do ensino médio — "Conhecer o formato das provas."
-- 2º ano do ensino médio — "Uma prova anterior por mês."
-- 3º ano do ensino médio — "Uma prova anterior por semana."
+"Em que série você está?" e quatro cartões de escolha, só com o nome da série (9º ano do fundamental, 1º, 2º e 3º ano do ensino médio). Sem linha de descrição embaixo (decidido em 25/11/2026).
 Abaixo, o botão "Começar". O valor gravado é o rótulo curto, idêntico ao do banco: `9º ano EF`, `1º ano EM`, `2º ano EM`, `3º ano EM`; o nome longo é só o texto do cartão.
 
 **Ações**
