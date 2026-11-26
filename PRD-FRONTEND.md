@@ -55,6 +55,23 @@ Linha com o nome do aluno e a série. Abaixo, três medidores da semana: questõ
 
 ---
 
+## Painel do dia (topo do Quadro, a tela inicial) — decidido em 25/11/2026
+
+**Quem acessa:** aluno (e a administradora com licença).
+
+**O que aparece** (igual ao painel da versão antiga)
+Data por extenso, "Olá, nome · série" e o botão "Alterar nome ou série" (abre Minha conta). Quatro contadores: tarefas atrasadas (vermelho), vencem em até 48 h (amarelo), pendências no total, blocos de hoje sem registro (amarelo); em verde quando zerados. Lista de avisos: tarefa atrasada, vence hoje, vence em 1 ou 2 dias, bloco de hoje acontecendo agora e bloco de hoje que já passou sem ser marcado. Mostra 5 e o botão "Ver todos os N avisos". Abaixo, "Metas da semana · série": questões, tempo de foco e provas anteriores no mês (chega em breve), o aviso de ritmo e o foco da série.
+
+No Quadro a faixa de metas não aparece (o painel já mostra tudo); nas outras telas ela continua.
+
+**Ações**
+- **Tocar num aviso de tarefa:** abre o cartão da tarefa. **Num aviso de bloco:** abre o Cronograma.
+
+**Estado vazio**
+"Tudo em dia. Nenhum aviso agora."
+
+---
+
 ## Tela: Entrada
 
 **Quem acessa:** todos, antes de entrar.

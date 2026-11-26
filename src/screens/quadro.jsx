@@ -7,6 +7,7 @@ import {
   comStatus, validarTarefa, prazoNestaSemana,
 } from '../lib/tarefas.js'
 import { dataCurta } from '../lib/datas.js'
+import Painel from './painel.jsx'
 import { Campo, Confirmar, ERRO_GENERICO, Icon, Janela, MateriaChip, PageHeader, avisar, useDesktop } from '../components/index.jsx'
 
 const CLASSE = { atrasada: 'crit', perto: 'warn', concluida: 'done', normal: '' }
@@ -57,6 +58,7 @@ export default function Quadro({ goto, params }) {
 
   return (
     <div>
+      <Painel goto={goto} />
       <PageHeader titulo="Quadro">
         <button className="btn primary" onClick={() => setEditando({})}><Icon nome="mais_sinal" /> Nova tarefa</button>
       </PageHeader>

@@ -85,8 +85,8 @@ function Shell() {
       <main className="app-body">
         {carregando && <div className="loading">Carregando…</div>}
         {erro && <div className="msg-erro" role="alert" style={{ marginTop: 16 }}>{erro}</div>}
-        {/* O editor de PDF ocupa a tela toda, e Licenças não é estudo: sem a faixa de metas por cima. */}
-        {!carregando && !erro && <>{!['resumo-pdf', 'licencas'].includes(rota.tela) && <FaixaMetas goto={goto} />}{corpo}</>}
+        {/* O Quadro tem o painel completo; o editor de PDF ocupa a tela toda; Licenças não é estudo: sem a faixa nos três. */}
+        {!carregando && !erro && <>{!['quadro', 'resumo-pdf', 'licencas'].includes(rota.tela) && <FaixaMetas goto={goto} />}{corpo}</>}
       </main>
       <nav className="bottom-nav" aria-label="Menu">
         {INFERIOR.map(([id, rotulo, icone]) => (
