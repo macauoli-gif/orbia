@@ -40,8 +40,9 @@ admin na RLS de estudo: é a mesma `tem_licenca()` de todo mundo — não crie u
 O mock e o seed têm **dois alunos** (Maria Claudia e Pedro) de propósito: é o
 que prova a separação. Não reduza para um.
 
-`src/lib/fabrica.js` foi gerado a partir de `referencia/pauta-de-estudos-v1.html`
-(a versão antiga). Na Etapa 7 vira o seed das tabelas de conteúdo.
+`src/lib/fabrica.js` nasceu de `referencia/pauta-de-estudos-v1.html` (a versão antiga)
+e hoje é editado à mão (as questões reais entraram assim). É a fonte do seed das
+tabelas de conteúdo (`scripts/gerar-seed.mjs`).
 **O Banco de resumos saiu do app em 26/11/2026.** As tabelas `resumos`,
 `resumo_anotacoes`, `resumos_lidos` e o bucket `resumos` continuam no banco até a
 dona decidir apagar (limpeza nunca toca no banco); nenhuma tela usa.
@@ -151,7 +152,8 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   nova só entra copiada fiel da prova oficial, **sem figura e sem texto de outros autores**
   (poema, letra, reportagem: direito autoral, o app é vendido), com a fonte no fim do
   comentário. Fuvest/Unicamp e particulares, não. Migration nova por prefixo
-  (`gerar-seed.mjs questoes <prefixo>`); confira o banco contra o código por md5.
+  (`gerar-seed.mjs questoes <prefixo>`); depois, `node scripts/conferir-questoes.mjs`
+  dá a digital do código e o SQL da do banco: têm de bater.
 - **ExactLab: números dos elementos vêm do PubChem (NIH)**, gerados por
   `node scripts/gerar-elementos.mjs` em `src/lib/exactlab/elementos-dados.js` (não edite à mão).
   Os textos em português (`textos-elementos-*.js`) e as fórmulas são escritos à mão: mudou

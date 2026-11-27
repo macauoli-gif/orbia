@@ -35,7 +35,8 @@ function fabrica() {
 -- Pauta de Estudos — conteúdo de fábrica (igual para todos os alunos).
 -- GERADO por scripts/gerar-seed.mjs a partir de src/lib/fabrica.js
 -- (que veio de referencia/pauta-de-estudos-v1.html). Não edite à mão:
--- mude fabrica.js e gere de novo. Conteúdo autoral, a conferir por professor.
+-- mude fabrica.js e gere de novo. (As questões de fábrica atuais entram pela
+-- migration de questões reais, 27/11/2026; esta é só a carga inicial.)
 -- ============================================================
 
 ${linhas('materias', ['id', 'nome', 'cor', 'ordem'], MATERIAS.map((m) => [id(m.id), q(m.nome), q(m.cor), q(m.ordem)]))}
