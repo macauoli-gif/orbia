@@ -261,8 +261,7 @@ Escrito em português. Vira RLS na hora de construir. "Aluno com licença" = log
 ### `licencas`
 - **Ver:** a administradora vê todas. O aluno vê só a linha do próprio email (para a tela Sem licença saber o motivo).
 - **Criar / Editar:** a administradora (liberar à mão, bloquear, desbloquear) e o receptor da Hotmart.
-- **Apagar ("Tirar da lista", 26/11/2026):** só a administradora. Apaga a licença; a conta e os estudos da pessoa ficam (sem a licença, ela perde o acesso).
-- **Apagar:** ninguém (bloquear em vez de apagar, para não perder o histórico de vendas).
+- **Apagar ("Tirar da lista", 26/11/2026):** só a administradora. Apaga a licença; a conta e os estudos da pessoa ficam (sem a licença, ela perde o acesso). A dona aceitou que o histórico daquela venda some junto; para guardar o histórico, use Bloquear.
 - **Sem login:** nada.
 
 ### `hotmart_eventos`

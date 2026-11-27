@@ -247,7 +247,7 @@ export const desbloquearLicenca = (id) =>
   q(supabase.from('licencas').update({ status: 'Ativa', bloqueada_em: null }).eq('id', id).select().single())
 // "Tirar da lista": apaga a licença (a pessoa perde o acesso). A conta e os estudos
 // ficam no banco; se ela comprar de novo, a licença nova devolve tudo.
-export async function tirarDaLista(id) {
+export async function apagarLicenca(id) {
   const r = await q(supabase.from('licencas').delete().eq('id', id).select('id'))
   if (r.erro) return r
   return r.data.length ? ok(null) : falha('Licença não encontrada.')

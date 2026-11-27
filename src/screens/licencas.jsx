@@ -99,7 +99,7 @@ export default function Licencas({ meuEmail = '' }) {
       {tirando && <Confirmar rotulo="Tirar da lista"
         texto={`Tirar ${tirando.nome || tirando.email} da lista? A licença é apagada e a pessoa perde o acesso ao app. A conta e os estudos dela continuam guardados: se ela comprar de novo (ou você liberar o email de novo), volta tudo.${normalizarEmail(tirando.email) === normalizarEmail(meuEmail) ? ' Atenção: este é o seu próprio email; você perde o acesso às telas de estudo.' : ''}`}
         aoCancelar={() => setTirando(null)} aoConfirmar={async () => {
-          const r = await dados.tirarDaLista(tirando.id)
+          const r = await dados.apagarLicenca(tirando.id)
           setTirando(null)
           if (r.erro) avisar(ERRO_GENERICO, true); else { avisar('Tirado da lista.'); carregar() }
         }} />}

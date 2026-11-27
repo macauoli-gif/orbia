@@ -323,7 +323,7 @@ export function desbloquearLicenca(id) {
   return ok(l)
 }
 // Como no banco: só a administradora apaga licença; a conta da pessoa continua.
-export function tirarDaLista(id) {
+export function apagarLicenca(id) {
   if (!ehAdmin()) return falha('Sem permissão.')
   const antes = db.licencas.length
   db.licencas = db.licencas.filter((l) => l.id !== id)
