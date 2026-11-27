@@ -237,10 +237,10 @@ Lista das questões erradas ou salvas para revisar, com matéria, motivo e anota
 **Chega aqui por:** item Foco do menu; "Começar foco nesta tarefa" no Quadro.
 
 **O que aparece**
-Matéria e tarefa (opcionais), tempo de foco (padrão 25 min) e de pausa (padrão 5 min), relógio grande, botões Começar, Pausar e Encerrar. Durante o foco, tela cheia com o relógio e a matéria. Abaixo, "Sessões de hoje" e o total de minutos da semana.
+Matéria e tarefa (opcionais), tempo de foco (padrão 25 min) e de pausa (padrão 5 min), relógio grande e dois botões para começar: **Só o tempo** (tela cheia com o relógio e a matéria) e **Usar o app junto** (27/11/2026: o aluno navega pelo app e um relógio pequeno fica no canto de todas as telas, acima do menu de baixo no celular, com pausar, tela cheia e encerrar; tocar nele volta ao Foco). Dá para trocar de modo durante a sessão, e a sessão continua ao trocar de tela. Abaixo, "Sessões de hoje" e o total de minutos da semana.
 
 **Ações**
-- **Começar:** inicia a contagem e entra em tela de foco. Cada vez que o aluno sai da aba, conta uma saída e mostra o número ao terminar.
+- **Começar (nos dois modos):** inicia a contagem. Cada vez que o aluno sai da aba (ou do app, no celular), conta uma saída e mostra o número ao terminar; navegar dentro do app não conta.
 - **Encerrar / terminar o tempo:** grava a sessão (início, minutos, saídas, matéria, tarefa, se completou).
 
 **Estado vazio**

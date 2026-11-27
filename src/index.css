@@ -432,6 +432,15 @@ button.item:hover { border-color: var(--accent); }
 .tela-cheia { position: fixed; inset: 0; z-index: 50; background: var(--bg); display: flex; flex-direction: column; align-items: center;
   justify-content: center; gap: 22px; padding: 24px 16px; overflow-y: auto; }
 .tela-cheia .fechar { position: absolute; top: 12px; right: 12px; }
+/* Foco: escolha do modo e relógio pequeno que flutua nas outras telas */
+.foco-modos { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.mini-foco { position: fixed; right: 12px; bottom: calc(74px + env(safe-area-inset-bottom)); z-index: 30; display: flex; align-items: center; gap: 2px;
+  padding: 4px 6px 4px 4px; border-radius: 999px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+.app[data-desktop="1"] .mini-foco { bottom: 20px; right: 20px; }
+.mini-foco-tempo { display: flex; flex-direction: column; align-items: flex-start; min-height: var(--tap); padding: 4px 12px; border: 0; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink); line-height: 1.1; }
+.mini-foco-tempo span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.mini-foco-tempo b { font: 700 20px/1 var(--display); font-variant-numeric: tabular-nums; }
 .relogio { font: 700 clamp(64px, 20vw, 140px)/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .flash { width: min(640px, 100%); min-height: 260px; border: 1px solid var(--line); border-left: 6px solid hsl(var(--h, 200) 60% 50%);
   border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); padding: 24px; font: 700 22px/1.35 var(--display);

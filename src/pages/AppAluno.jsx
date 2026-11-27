@@ -10,6 +10,7 @@ import Questoes from '../screens/questoes.jsx'
 import Resolver from '../screens/resolver.jsx'
 import Caderno from '../screens/caderno.jsx'
 import Foco from '../screens/foco.jsx'
+import { FocoSessaoProvider, FocoFlutuante } from '../screens/foco-sessao.jsx'
 import Mais from '../screens/mais.jsx'
 import Flashcards from '../screens/flashcards.jsx'
 import Simulados from '../screens/simulados.jsx'
@@ -40,7 +41,9 @@ const SECAO = { resolver: 'questoes', caderno: 'questoes', flashcards: 'flashcar
 export default function AppAluno({ perfil }) {
   return (
     <EstudoProvider perfilInicial={perfil}>
-      <Shell />
+      <FocoSessaoProvider>
+        <Shell />
+      </FocoSessaoProvider>
     </EstudoProvider>
   )
 }
@@ -96,6 +99,7 @@ function Shell() {
           </button>
         ))}
       </nav>
+      <FocoFlutuante tela={rota.tela} goto={goto} />
       <Avisos />
     </div>
   )

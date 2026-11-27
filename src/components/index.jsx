@@ -21,6 +21,8 @@ const CAMINHOS = {
   play: 'M8 5l11 7-11 7z',
   pausa: 'M8 5v14M16 5v14',
   parar: 'M6 6h12v12H6z',
+  telacheia: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
+  janela: 'M3 5h18v14H3zM3 9h18M14 13h4v3h-4z',
   whatsapp: 'M4 20l1.3-3.9A8 8 0 1 1 8 18.7zM9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.5-1.5-1-2-2l1-1-1-2z',
   caderno: 'M6 3h12v18H6zM9 3v18M12 8h4M12 12h4',
   simulados: 'M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M8.5 13l2.5 2.5L15.5 11',
