@@ -100,14 +100,14 @@ export function criarMock() {
       { id: 'q-m1', user_id: 'u-maria', materia_id: m('Matemática'), assunto: 'Porcentagem', nivel: 'Fácil', instituicao: 'Outra', ano: 2025, enunciado: 'Uma camiseta de R$ 80,00 teve 25% de desconto. Qual o preço final?', alternativas: [{ letra: 'A', texto: 'R$ 55,00', explicacao: '' }, { letra: 'B', texto: 'R$ 60,00', explicacao: '25% de 80 é 20; 80 − 20 = 60.' }, { letra: 'C', texto: 'R$ 64,00', explicacao: '' }, { letra: 'D', texto: 'R$ 70,00', explicacao: '' }], correta: 'B', resposta_comentada: '25% = 1/4. Um quarto de 80 é 20.', serie_minima: null, created_at: '2026-11-20T10:00:00-03:00' },
     ],
     respostas_questoes: [
-      { id: 'rq-1', user_id: 'u-maria', questao_id: 'q-mat-01', escolhida: 'B', acertou: true, tempo_seg: 70, created_at: '2026-11-24T16:00:00-03:00' },
+      { id: 'rq-1', user_id: 'u-maria', questao_id: QUESTOES_APP[20].id, escolhida: 'B', acertou: QUESTOES_APP[20].correta === 'B', tempo_seg: 70, created_at: '2026-11-24T16:00:00-03:00' },
       { id: 'rq-2', user_id: 'u-maria', questao_id: QUESTOES_APP[1].id, escolhida: 'A', acertou: QUESTOES_APP[1].correta === 'A', tempo_seg: 95, created_at: '2026-11-24T16:05:00-03:00' },
       { id: 'rq-3', user_id: 'u-maria', questao_id: QUESTOES_APP[5].id, escolhida: 'E', acertou: QUESTOES_APP[5].correta === 'E', tempo_seg: 120, created_at: '2026-11-25T09:00:00-03:00' },
-      { id: 'rq-4', user_id: 'u-pedro', questao_id: 'q-mat-01', escolhida: 'C', acertou: false, tempo_seg: 40, created_at: '2026-11-24T10:00:00-03:00' },
+      { id: 'rq-4', user_id: 'u-pedro', questao_id: QUESTOES_APP[20].id, escolhida: 'C', acertou: QUESTOES_APP[20].correta === 'C', tempo_seg: 40, created_at: '2026-11-24T10:00:00-03:00' },
     ],
     caderno_erros: [
       { id: 'ce-1', user_id: 'u-maria', questao_id: QUESTOES_APP[5].id, motivo: 'Falta de atenção', anotacao: 'Li rápido demais o enunciado.', revisar: true, created_at: '2026-11-25T09:02:00-03:00' },
-      { id: 'ce-2', user_id: 'u-pedro', questao_id: 'q-mat-01', motivo: 'Não sabia o conteúdo', anotacao: 'Rever soma e produto.', revisar: true, created_at: '2026-11-24T10:01:00-03:00' },
+      { id: 'ce-2', user_id: 'u-pedro', questao_id: QUESTOES_APP[20].id, motivo: 'Não sabia o conteúdo', anotacao: 'Rever soma e produto.', revisar: true, created_at: '2026-11-24T10:01:00-03:00' },
     ],
     tarefas,
     cronograma_blocos: [...blocosDe('u-maria', '2º ano EM', tarefas), ...blocosDe('u-pedro', '9º ano EF', tarefas)],

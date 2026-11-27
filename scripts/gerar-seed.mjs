@@ -7,7 +7,8 @@
 //   node scripts/gerar-seed.mjs exemplo  (imprime o SQL das pessoas de exemplo)
 //   node scripts/gerar-seed.mjs questoes q2-  > supabase/migrations/..._questoes_q2.sql
 //     (só as questões de fábrica cujo id começa com o prefixo: conteúdo novo
-//     depois da primeira carga, sem reescrever a migration antiga)
+//     depois da primeira carga, sem reescrever a migration antiga. As de 27/11/2026
+//     são as reais, prefixo qr-)
 //
 // Os ids do mock ('m-matematica', 't-m1') viram uuids fixos (md5 do id): rodar
 // de novo dá os mesmos ids, e "on conflict do nothing" deixa repetir sem duplicar.
@@ -48,8 +49,7 @@ function questoesNovas(prefixo) {
   return `-- ============================================================
 -- Pauta de Estudos — questões de fábrica novas (ids ${prefixo}*).
 -- GERADO por scripts/gerar-seed.mjs questoes ${prefixo} a partir de src/lib/fabrica.js.
--- Não edite à mão. Questões autorais, no estilo e no nível de provas de
--- instituições reconhecidas pelo MEC (não copiam questões reais). A conferir por professor.
+-- Não edite à mão. De onde vêm as questões: comentário acima de QUESTOES_APP em fabrica.js.
 -- ============================================================
 
 ${linhas("questoes", ["id", "user_id", "materia_id", "assunto", "nivel", "instituicao", "ano", "enunciado", "alternativas", "correta", "resposta_comentada", "serie_minima"],

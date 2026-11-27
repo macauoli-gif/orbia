@@ -253,7 +253,7 @@ O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 # Limitações conhecidas da versão atual (para não perder de vista)
 
-- O conteúdo das questões do app é autoral e precisa ser conferido por um professor.
+- As questões do app são de provas oficiais (ENEM e IFSC, 27/11/2026), com gabarito oficial; os comentários das respostas são do app e precisam ser conferidos por um professor.
 - As provas feitas ainda não entram no Desempenho por assunto.
 - O espaço de cálculo foi testado com mouse e caneta simulada, não num tablet de verdade.
 - Os links oficiais do Inep, da Fuvest e da Comvest não foram conferidos.

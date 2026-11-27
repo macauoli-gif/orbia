@@ -32,9 +32,10 @@ const materias = new Set(MATERIAS.map((m) => m.id))
 const problemas = QUESTOES_APP.filter((x) =>
   !materias.has(x.materia_id) || !NIVEIS.includes(x.nivel) || !x.enunciado?.trim() || !x.assunto?.trim() ||
   x.alternativas.length < 4 || x.alternativas.length > 5 ||
-  !x.alternativas.some((a) => a.letra === x.correta) || !x.alternativas.every((a, i) => a.letra === LETRAS[i] && a.texto && a.explicacao) ||
+  !x.alternativas.some((a) => a.letra === x.correta) || !x.alternativas.every((a, i) => a.letra === LETRAS[i] && a.texto?.trim()) ||
   (x.serie_minima && !SERIES.includes(x.serie_minima)))
 conferir('todas as questões de fábrica são válidas', problemas.map((x) => x.id), [])
+conferir('toda questão de fábrica diz de que prova veio', QUESTOES_APP.filter((x) => !/Fonte: (ENEM|IFSC)/.test(x.resposta_comentada) || !x.instituicao || !x.ano).map((x) => x.id), [])
 conferir('ids sem repetição', new Set(QUESTOES_APP.map((x) => x.id)).size, QUESTOES_APP.length)
 
 console.log(`${ok}/${tot} — questoes`)

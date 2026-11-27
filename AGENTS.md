@@ -147,6 +147,11 @@ A pessoa não digita comando: o agente roda o npm e o git na pasta dela.
   (ENEM caderno azul; Fuvest V1/V; Unicamp Q): outra cor tem outra ordem. Ano novo
   ou gabarito retificado = ajustar a lista do script, rodar e conferir anuladas.
   No banco fica só a tentativa (`simulados_tentativas`, sem update).
+- **Questões de fábrica são reais** (ENEM e IFSC, gabarito oficial; 27/11/2026). Questão
+  nova só entra copiada fiel da prova oficial, **sem figura e sem texto de outros autores**
+  (poema, letra, reportagem: direito autoral, o app é vendido), com a fonte no fim do
+  comentário. Fuvest/Unicamp e particulares, não. Migration nova por prefixo
+  (`gerar-seed.mjs questoes <prefixo>`); confira o banco contra o código por md5.
 - **ExactLab: números dos elementos vêm do PubChem (NIH)**, gerados por
   `node scripts/gerar-elementos.mjs` em `src/lib/exactlab/elementos-dados.js` (não edite à mão).
   Os textos em português (`textos-elementos-*.js`) e as fórmulas são escritos à mão: mudou
