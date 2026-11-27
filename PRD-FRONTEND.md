@@ -298,10 +298,10 @@ Filtro por matéria, botão "Jogar", lista dos cartões (pergunta, começo da re
 
 **Ações**
 - **Jogar:** abre o jogo em tela cheia, como na versão atual: pergunta na frente, toque para virar e ver a resposta grande, botões "Errei" e "Acertei" (e setas do teclado). No fim, o resultado com estrelas. Cada resposta é gravada.
-- **+ Meu flashcard / Editar / Apagar** (só os do aluno).
+- **+ Meu flashcard / Editar / Apagar.** Todo flashcard da lista é do aluno: os modelos do app saíram em 26/11/2026, a pedido da dona (cada aluno faz os próprios).
 
 **Estado vazio**
-"Nenhum flashcard nesta matéria. Crie o primeiro."
+"Nenhum flashcard nesta matéria. Crie o primeiro." (sem nenhum: "Você ainda não tem flashcards. Crie o primeiro em 'Meu flashcard'.")
 
 ---
 

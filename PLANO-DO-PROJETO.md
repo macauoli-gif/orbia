@@ -69,6 +69,7 @@ O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para se
 
 ### Flashcards
 - Jogo em tela cheia: pergunta na frente, resposta grande ao virar; setas para "errei" e "acertei"
+- **Cada aluno faz os próprios** e pode editar e apagar (26/11/2026: os flashcards de fábrica saíram)
 
 ### Questões
 - **Filtros:** matéria, assunto, nível, instituição, ano, resolvidas ou pendentes

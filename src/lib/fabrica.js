@@ -2,7 +2,8 @@
 // CONTEÚDO DE FÁBRICA — igual para todos os alunos.
 // Gerado a partir de referencia/pauta-de-estudos-v1.html (a versão atual).
 // Mesmos nomes de campo das tabelas do banco (PRD-BACKEND.md):
-// na Etapa 7 isto vira o seed de materias, flashcards e questoes.
+// na Etapa 7 isto vira o seed de materias e questoes. (Os flashcards do app saíram
+// em 26/11/2026: cada aluno faz os próprios.)
 // (Os resumos do app saíram em 25/11/2026: a aba Resumos é só do aluno.)
 // O conteúdo é autoral e precisa ser conferido por um professor.
 // ============================================================
@@ -121,57 +122,6 @@ export const MATERIAS = [
     "nome": "Sociologia",
     "cor": "135",
     "ordem": 19
-  }
-]
-
-export const FLASHCARDS_APP = [
-  {
-    "id": "f-1",
-    "user_id": null,
-    "materia_id": "m-quimica",
-    "frente": "O que é a regra do octeto?",
-    "verso": "Átomos tendem a ganhar, perder ou compartilhar elétrons até ficar com 8 elétrons na camada de valência.",
-    "serie_minima": "9º ano EF"
-  },
-  {
-    "id": "f-2",
-    "user_id": null,
-    "materia_id": "m-quimica",
-    "frente": "Qual a diferença entre ligação iônica e covalente?",
-    "verso": "Iônica: transferência de elétrons (metal e ametal). Covalente: compartilhamento de pares de elétrons (ametais).",
-    "serie_minima": "9º ano EF"
-  },
-  {
-    "id": "f-3",
-    "user_id": null,
-    "materia_id": "m-matematica",
-    "frente": "Qual a fórmula de Bhaskara?",
-    "verso": "x = (−b ± √Δ) / 2a, com Δ = b² − 4ac.",
-    "serie_minima": "9º ano EF"
-  },
-  {
-    "id": "f-4",
-    "user_id": null,
-    "materia_id": "m-matematica",
-    "frente": "O que o sinal de Δ indica numa equação do 2º grau?",
-    "verso": "Δ > 0: duas raízes reais diferentes. Δ = 0: uma raiz real. Δ < 0: nenhuma raiz real.",
-    "serie_minima": "9º ano EF"
-  },
-  {
-    "id": "f-5",
-    "user_id": null,
-    "materia_id": "m-fisica",
-    "frente": "Qual a primeira lei de Ohm?",
-    "verso": "U = R · i. A tensão é igual à resistência vezes a corrente.",
-    "serie_minima": "9º ano EF"
-  },
-  {
-    "id": "f-6",
-    "user_id": null,
-    "materia_id": "m-historia",
-    "frente": "Onde e quando começou a Revolução Industrial?",
-    "verso": "Na Inglaterra, na segunda metade do século XVIII.",
-    "serie_minima": "9º ano EF"
   }
 ]
 

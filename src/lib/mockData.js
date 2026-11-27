@@ -7,7 +7,7 @@
 // que um não vê nada do outro. A camada de dados (dados.js) aplica
 // no mock as mesmas regras que a RLS vai aplicar no banco.
 // ============================================================
-import { MATERIAS, FLASHCARDS_APP, QUESTOES_APP } from './fabrica.js'
+import { MATERIAS, QUESTOES_APP } from './fabrica.js'
 import { PROVAS } from './simulados-provas.js'
 import { LETRAS } from './questoes.js'
 import { semanaSugerida, metasSugeridas } from './series.js'
@@ -88,13 +88,12 @@ export function criarMock() {
     ],
     materias: MATERIAS,
     flashcards: [
-      ...FLASHCARDS_APP,
       { id: 'f-m1', user_id: 'u-maria', materia_id: m('Biologia'), frente: 'Qual organela faz a respiração celular?', verso: 'A mitocôndria.', serie_minima: null, created_at: '2026-11-17T10:00:00-03:00' },
       { id: 'f-p1', user_id: 'u-pedro', materia_id: m('Geografia'), frente: 'Quantos biomas continentais o Brasil tem?', verso: 'Seis.', serie_minima: null, created_at: '2026-11-21T10:00:00-03:00' },
     ],
     flashcard_respostas: [
-      { id: 'fr-1', user_id: 'u-maria', flashcard_id: 'f-1', acertou: true, created_at: '2026-11-24T15:00:00-03:00' },
-      { id: 'fr-2', user_id: 'u-maria', flashcard_id: 'f-3', acertou: false, created_at: '2026-11-24T15:01:00-03:00' },
+      { id: 'fr-1', user_id: 'u-maria', flashcard_id: 'f-m1', acertou: true, created_at: '2026-11-24T15:00:00-03:00' },
+      { id: 'fr-2', user_id: 'u-maria', flashcard_id: 'f-m1', acertou: false, created_at: '2026-11-24T15:01:00-03:00' },
     ],
     questoes: [
       ...QUESTOES_APP,

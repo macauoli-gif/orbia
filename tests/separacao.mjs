@@ -14,7 +14,7 @@ function conferir(descricao, real, esperado) {
 }
 const donos = (r) => [...new Set(r.data.map((x) => x.user_id))]
 const como = async (email) => { await d.sair(); await d.entrar(email, 'exemplo123') }
-const TABELAS_DO_ALUNO = ['listarTarefas', 'listarBlocos', 'listarRespostasQuestoes', 'listarCaderno', 'listarSessoesFoco', 'listarRespostasFlashcards', 'listarTentativas']
+const TABELAS_DO_ALUNO = ['listarTarefas', 'listarBlocos', 'listarRespostasQuestoes', 'listarCaderno', 'listarSessoesFoco', 'listarFlashcards', 'listarRespostasFlashcards', 'listarTentativas']
 
 await d.recomecarMock()
 
@@ -23,7 +23,8 @@ for (const f of TABELAS_DO_ALUNO) {
   const r = await d[f]()
   conferir(`Pedro só recebe linhas dele em ${f}`, donos(r).filter((u) => u !== 'u-pedro'), [])
 }
-conferir('Pedro vê o conteúdo de fábrica (flashcards)', (await d.listarFlashcards()).data.some((x) => x.user_id == null), true)
+conferir('Pedro edita o próprio flashcard', (await d.salvarFlashcard({ id: 'f-p1', materia_id: 'm-geografia', frente: 'Quantos biomas?', verso: 'Seis.' })).data?.frente, 'Quantos biomas?')
+conferir('Pedro não edita o flashcard da Maria', (await d.salvarFlashcard({ id: 'f-m1', materia_id: 'm-biologia', frente: 'x', verso: 'y' })).erro != null, true)
 conferir('Pedro não responde questão própria da Maria', (await d.registrarRespostaQuestao({ questao_id: 'q-m1', escolhida: 'B', acertou: true, tempo_seg: 1 })).erro != null, true)
 conferir('Pedro só vê os próprios favoritos do ExactLab', (await d.listarFavoritos()).data, [8])
 await d.desfavoritar(26) // o favorito 26 é da Maria: para o Pedro não existe
@@ -39,6 +40,7 @@ conferir('Pedro não apaga tarefa da Maria', (await d.apagarTarefa('t-m1')).erro
 await como('maria@exemplo.com')
 conferir('o favorito da Maria continua lá', (await d.listarFavoritos()).data, [26])
 conferir('o simulado da Maria continua lá e o do Pedro não aparece para ela', (await d.listarTentativas()).data.map((t) => t.id).sort(), ['st-1', 'st-2'])
+conferir('o flashcard da Maria continua como era', (await d.listarFlashcards()).data.map((f) => f.frente), ['Qual organela faz a respiração celular?'])
 conferir('a tarefa da Maria continua lá', (await d.listarTarefas()).data.some((t) => t.id === 't-m1'), true)
 conferir('a ligação bloco → tarefa da Maria continua', (await d.listarBlocos()).data.some((b) => b.tarefa_id === 't-m1'), true)
 conferir('a sessão de foco da Maria continua ligada', (await d.listarSessoesFoco()).data.some((s) => s.tarefa_id === 't-m1'), true)

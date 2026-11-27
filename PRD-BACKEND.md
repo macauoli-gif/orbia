@@ -140,7 +140,7 @@ As anotações de um resumo em PDF, uma linha por página. Coordenadas de 0 a 1,
 | Campo | Tipo | Obrigatório | Observação |
 |---|---|---|---|
 | id | uuid | sim | chave |
-| user_id | uuid | não | vazio = do app |
+| user_id | uuid | não | vazio = do app (desde 26/11/2026 não há nenhum: cada aluno faz os próprios) |
 | materia_id | uuid | sim | → materias |
 | frente | text | sim | a pergunta |
 | verso | text | sim | a resposta |

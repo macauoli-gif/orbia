@@ -43,7 +43,7 @@ export default function Flashcards() {
           {usadas.map((m) => <option key={m.id} value={m.id}>{m.nome}</option>)}
         </select>
       </div>
-      <Estado carregando={carregando} erro={erro} vazio={lista.length === 0} textoVazio="Nenhum flashcard nesta matéria. Crie o primeiro.">
+      <Estado carregando={carregando} erro={erro} vazio={lista.length === 0} textoVazio={cards.length ? 'Nenhum flashcard nesta matéria. Crie o primeiro.' : 'Você ainda não tem flashcards. Crie o primeiro em "Meu flashcard".'}>
         <div className="lista">
           {lista.map((c) => {
             const p = placar(c.id)
@@ -51,17 +51,14 @@ export default function Flashcards() {
               <div key={c.id} className="item">
                 <div className="linha">
                   <MateriaChip materia={materiaPorId[c.materia_id]} />
-                  <span className={'pill ' + (c.user_id ? 'info' : 'plain')}>{c.user_id ? 'Meu' : 'Do app'}</span>
                   <span className="small muted">{p.certo} acertos · {p.errado} erros</span>
                 </div>
                 <p style={{ fontWeight: 700 }}>{c.frente}</p>
                 <p className="trecho">{c.verso}</p>
-                {c.user_id && (
-                  <div className="row" style={{ marginTop: 6 }}>
-                    <button className="btn" onClick={() => setEditando(c)}><Icon nome="lapis" tamanho={18} /> Editar</button>
-                    <button className="btn ghost" onClick={() => setApagando(c)}><Icon nome="lixo" tamanho={18} /> Apagar</button>
-                  </div>
-                )}
+                <div className="row" style={{ marginTop: 6 }}>
+                  <button className="btn" onClick={() => setEditando(c)}><Icon nome="lapis" tamanho={18} /> Editar</button>
+                  <button className="btn ghost" onClick={() => setApagando(c)}><Icon nome="lixo" tamanho={18} /> Apagar</button>
+                </div>
               </div>
             )
           })}

@@ -13,7 +13,7 @@
 // para o git: o SQL de exemplo não é salvo em arquivo por isso.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { MATERIAS, FLASHCARDS_APP, QUESTOES_APP } from '../src/lib/fabrica.js'
+import { MATERIAS, QUESTOES_APP } from '../src/lib/fabrica.js'
 import { criarMock } from '../src/lib/mockData.js'
 
 const uuid = (id) => {
@@ -36,8 +36,6 @@ function fabrica() {
 -- ============================================================
 
 ${linhas('materias', ['id', 'nome', 'cor', 'ordem'], MATERIAS.map((m) => [id(m.id), q(m.nome), q(m.cor), q(m.ordem)]))}
-${linhas('flashcards', ['id', 'user_id', 'materia_id', 'frente', 'verso', 'serie_minima'],
-    FLASHCARDS_APP.map((f) => [id(f.id), 'null', id(f.materia_id), q(f.frente), q(f.verso), q(f.serie_minima)]))}
 ${linhas('questoes', ['id', 'user_id', 'materia_id', 'assunto', 'nivel', 'instituicao', 'ano', 'enunciado', 'alternativas', 'correta', 'resposta_comentada', 'serie_minima'],
     QUESTOES_APP.map((x) => [id(x.id), 'null', id(x.materia_id), q(x.assunto), q(x.nivel), q(x.instituicao), q(x.ano), q(x.enunciado), j(x.alternativas), q(x.correta), q(x.resposta_comentada), q(x.serie_minima)]))}`
 }
