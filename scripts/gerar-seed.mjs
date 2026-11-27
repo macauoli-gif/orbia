@@ -2,6 +2,8 @@
 // (src/lib/fabrica.js e src/lib/mockData.js), para banco e mock nunca divergirem.
 //
 //   node scripts/gerar-seed.mjs fabrica  > supabase/migrations/..._conteudo_de_fabrica.sql
+//     (o arquivo de 25/11/2026 é histórico: ainda tem os flashcards de fábrica,
+//     que a migration 20261126160000 apaga. Não gere por cima dele.)
 //   node scripts/gerar-seed.mjs exemplo  (imprime o SQL das pessoas de exemplo)
 //   node scripts/gerar-seed.mjs questoes q2-  > supabase/migrations/..._questoes_q2.sql
 //     (só as questões de fábrica cujo id começa com o prefixo: conteúdo novo

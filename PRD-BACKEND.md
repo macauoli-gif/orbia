@@ -269,7 +269,7 @@ Escrito em português. Vira RLS na hora de construir. "Aluno com licença" = log
 - **Criar:** só o receptor da Hotmart.
 - **Editar / Apagar:** ninguém pelo app.
 
-### Conteúdo de fábrica (`materias` e as linhas com `user_id` vazio de `flashcards`, `questoes`)
+### Conteúdo de fábrica (`materias` e as linhas com `user_id` vazio de `questoes`; `flashcards` não tem mais nenhuma desde 26/11/2026)
 - **Ver:** aluno com licença e a administradora.
 - **Criar / Editar / Apagar:** só a administradora (na v1, pela construção; o editor na tela vem na v1.1).
 - **Sem login ou sem licença:** nada.

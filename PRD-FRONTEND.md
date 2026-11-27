@@ -377,7 +377,7 @@ Tarefas do Pedro Souza
 1. Classes de palavras — Língua portuguesa — prazo 27/11 — Média — A fazer
 2. Mapa dos biomas — Geografia — prazo 24/11 — Alta — Em andamento (atrasada)
 
-Conteúdo de fábrica: os resumos, flashcards, questões, vestibulares e a semana sugerida
+Conteúdo de fábrica: as questões, vestibulares e a semana sugerida
 que já existem em referencia/pauta-de-estudos-v1.html.
 ```
 

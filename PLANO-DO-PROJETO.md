@@ -26,7 +26,7 @@ Um app de organização de estudos, vendido por licença de uso, que deixa cada 
 
 ## A solução
 
-O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para ser vendido: conta com email e senha, dados guardados com segurança fora do navegador (não se perdem ao trocar de aparelho), licença vitalícia liberada e bloqueada sozinha pela Hotmart, e uma tela para você administrar as licenças sem ver os estudos de ninguém. O conteúdo de fábrica (questões e flashcards) passa a ser um só, igual para todos; o que cada aluno cria ou responde é só dele.
+O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para ser vendido: conta com email e senha, dados guardados com segurança fora do navegador (não se perdem ao trocar de aparelho), licença vitalícia liberada e bloqueada sozinha pela Hotmart, e uma tela para você administrar as licenças sem ver os estudos de ninguém. O conteúdo de fábrica (questões) passa a ser um só, igual para todos; o que cada aluno cria ou responde é só dele.
 
 **O que ele NÃO faz (v1), proposta:**
 - Grupos de estudo ou chat entre alunos (a versão atual também não tem)
@@ -95,7 +95,7 @@ O app mantém o que a versão atual já faz (abaixo) e ganha o que falta para se
 
 Aluno (cada licença é um aluno) — vai existir mais de um? **sim, um por licença vendida**. Alguém trabalha em mais de um ao mesmo tempo? **não; só a administradora enxerga a lista de alunos, e mesmo ela não vê os estudos de ninguém**.
 
-Tudo o que o aluno cria ou responde (tarefas, cronograma, resumos próprios, questões próprias, respostas, caderno de erros, simulados, sessões de foco, metas, série) pertence a ele e só ele vê, inclusive os PDFs de resumo e as anotações. O conteúdo do app (questões e flashcards de fábrica, links de vestibulares) é um só, igual para todos, e só a administradora edita.
+Tudo o que o aluno cria ou responde (tarefas, cronograma, resumos próprios, questões próprias, respostas, caderno de erros, simulados, sessões de foco, metas, série) pertence a ele e só ele vê, inclusive os PDFs de resumo e as anotações. O conteúdo do app (questões de fábrica, links de vestibulares; flashcards de fábrica saíram em 26/11/2026) é um só, igual para todos, e só a administradora edita.
 
 ## Perfis de usuário
 
@@ -156,7 +156,7 @@ Com até cinco semanas, o lançamento leva o que o aluno usa toda semana e o que
 - Login, licença pela Hotmart (liberação e bloqueio automáticos) e a tela Licenças
 - Entrada por série, metas e avisos no topo
 - Quadro (a tela do dia a dia), Cronograma, Simulados, ExactLab, Flashcards, Questões (com caderno de erros) e Foco
-- Conteúdo de fábrica (questões, flashcards, matérias, semana sugerida) trazido da versão atual
+- Conteúdo de fábrica (questões, matérias, semana sugerida) trazido da versão atual
 
 **Simulados de vestibulares — trazido para o lançamento em 25/11/2026:** provas anteriores oficiais de ENEM (2 dias), Fuvest 1ª fase, Unicamp 1ª fase e UERJ (exames de qualificação), dos últimos 5 anos com gabarito publicado, com o gabarito oficial já cadastrado (lido dos PDFs oficiais). O aluno escolhe a instituição e o ano, abre a prova no site oficial, marca no cartão-resposta com cronômetro, e vê a correção (acertos, erros, em branco, anuladas fora da conta), por área/disciplina quando o gabarito oficial separa (ENEM e UERJ), o mapa da prova e a evolução a cada tentativa. O app não guarda cópia das provas.
 
@@ -235,7 +235,7 @@ Tela de entrada (Entrar / Criar conta / Esqueci a senha)
 O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 - **Contas e venda:** perfis, licenças, avisos da Hotmart.
-- **Conteúdo de fábrica (igual para todos, só a administradora muda):** matérias, flashcards e questões do app, vestibulares.
+- **Conteúdo de fábrica (igual para todos, só a administradora muda):** matérias e questões do app, vestibulares.
 - **Do aluno (só ele vê):** tarefas, cronograma, questões próprias, simulados feitos, favoritos do ExactLab, respostas de flashcards e de questões, caderno de erros, sessões de foco.
 
 ## A pergunta de um ano
@@ -253,7 +253,7 @@ O detalhe campo a campo está no `PRD-BACKEND.md`. Em resumo, três grupos:
 
 # Limitações conhecidas da versão atual (para não perder de vista)
 
-- O conteúdo das questões e dos flashcards do app é autoral e precisa ser conferido por um professor.
+- O conteúdo das questões do app é autoral e precisa ser conferido por um professor.
 - As provas feitas ainda não entram no Desempenho por assunto.
 - O espaço de cálculo foi testado com mouse e caneta simulada, não num tablet de verdade.
 - Os links oficiais do Inep, da Fuvest e da Comvest não foram conferidos.
